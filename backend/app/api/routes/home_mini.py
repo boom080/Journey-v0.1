@@ -6,7 +6,7 @@ from app.models.user import User
 from app.schemas.home_mini import HomeSummaryResponse
 from app.services.home_mini import build_home_summary
 
-router = APIRouter(prefix="/home", tags=["Home"])
+router = APIRouter(prefix="/home", tags=["Mini Home"])
 
 
 @router.get("/summary", response_model=HomeSummaryResponse)

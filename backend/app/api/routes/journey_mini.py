@@ -11,7 +11,7 @@ from app.models.user import User
 from app.schemas.journey_mini import JourneyListResponse
 from app.services.journey_mini import build_journey_days
 
-router = APIRouter(prefix="/journey-days", tags=["Journey"])
+router = APIRouter(prefix="/journey-days", tags=["Mini Journey"])
 
 
 @router.get("", response_model=JourneyListResponse)

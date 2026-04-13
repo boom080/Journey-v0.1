@@ -9,7 +9,7 @@ from fastapi import HTTPException, status
 
 load_dotenv()
 
-logger = logging.getLogger("journey.wechat")
+logger = logging.getLogger("journey.mini.wechat")
 
 WECHAT_APP_ID = os.getenv("WECHAT_APP_ID", "").strip()
 WECHAT_APP_SECRET = os.getenv("WECHAT_APP_SECRET", "").strip()

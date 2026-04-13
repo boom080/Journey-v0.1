@@ -6,6 +6,7 @@ from fastapi import APIRouter, Body, Depends
 from sqlalchemy.orm import Session
 
 from app.api.deps_mini import get_activated_user, get_db
+from app.core.logging import build_error_log_fields, normalize_log_value
 from app.models.user import User
 from app.schemas.ai_mini import (
     AIRequestContext,
@@ -18,9 +19,9 @@ from app.schemas.ai_mini import (
 from app.services.ai_service import get_ai_service
 from app.services.home_mini import build_home_summary
 
-logger = logging.getLogger("journey.ai.route")
+logger = logging.getLogger("journey.mini.ai.route")
 
-router = APIRouter(prefix="/ai", tags=["AI"])
+router = APIRouter(prefix="/ai", tags=["Mini AI"])
 
 
 def _model_to_dict(model: Any) -> Dict[str, Any]:
@@ -113,6 +114,24 @@ def _attach_trace(result: AIResult, trace_id: str) -> AIResult:
     )
 
 
+def _build_result_log_fields(result: AIResult) -> Dict[str, str]:
+    error_fields = build_error_log_fields(
+        result.extra.get("fallback_error_message")
+        or result.extra.get("fallback_error")
+        or ""
+    )
+
+    return {
+        "source": normalize_log_value(result.extra.get("response_source"), "unknown"),
+        "provider": normalize_log_value(result.provider, "-"),
+        "model": normalize_log_value(result.extra.get("model_name") or result.model, "-"),
+        "error": error_fields["error"],
+        "error_type": error_fields["error_type"],
+        "error_message": error_fields["error_message"],
+        "fallback_to": normalize_log_value(result.extra.get("fallback_to"), "-"),
+    }
+
+
 @router.post("/food-text-estimate", response_model=AIResult)
 def estimate_food_text(
     payload: FoodTextEstimateRequest,
@@ -144,14 +163,18 @@ def estimate_food_text(
     )
     result = _fill_food_defaults(result, payload)
     result = _attach_trace(result, trace_id)
+    log_fields = _build_result_log_fields(result)
     logger.info(
-        "ai_food_estimate_result trace_id=%s endpoint=food-text-estimate gateway_attempted=%s source=%s provider=%s model=%s error=%s",
+        "ai_food_estimate_result trace_id=%s endpoint=food-text-estimate gateway_attempted=%s source=%s provider=%s model=%s error=%s error_type=%s error_message=%s fallback_to=%s",
         trace_id,
         result.extra.get("gateway_attempted"),
-        result.extra.get("response_source"),
-        result.provider,
-        result.extra.get("model_name") or result.model,
-        result.extra.get("fallback_error", ""),
+        log_fields["source"],
+        log_fields["provider"],
+        log_fields["model"],
+        log_fields["error"],
+        log_fields["error_type"],
+        log_fields["error_message"],
+        log_fields["fallback_to"],
     )
     return result
 
@@ -186,14 +209,18 @@ def estimate_activity_text(
     )
     result = _fill_activity_defaults(result, payload)
     result = _attach_trace(result, trace_id)
+    log_fields = _build_result_log_fields(result)
     logger.info(
-        "ai_activity_estimate_result trace_id=%s endpoint=activity-text-estimate gateway_attempted=%s source=%s provider=%s model=%s error=%s",
+        "ai_activity_estimate_result trace_id=%s endpoint=activity-text-estimate gateway_attempted=%s source=%s provider=%s model=%s error=%s error_type=%s error_message=%s fallback_to=%s",
         trace_id,
         result.extra.get("gateway_attempted"),
-        result.extra.get("response_source"),
-        result.provider,
-        result.extra.get("model_name") or result.model,
-        result.extra.get("fallback_error", ""),
+        log_fields["source"],
+        log_fields["provider"],
+        log_fields["model"],
+        log_fields["error"],
+        log_fields["error_type"],
+        log_fields["error_message"],
+        log_fields["fallback_to"],
     )
     return result
 
@@ -244,13 +271,17 @@ def generate_home_suggestion(
             "trace_id": trace_id,
         },
     )
+    log_fields = _build_result_log_fields(result)
     logger.info(
-        "ai_home_suggestion_result trace_id=%s endpoint=home-suggestion gateway_attempted=%s source=%s provider=%s model=%s error=%s",
+        "ai_home_suggestion_result trace_id=%s endpoint=home-suggestion gateway_attempted=%s source=%s provider=%s model=%s error=%s error_type=%s error_message=%s fallback_to=%s",
         trace_id,
         result.extra.get("gateway_attempted"),
-        result.extra.get("response_source"),
-        result.provider,
-        result.extra.get("model_name") or result.model,
-        result.extra.get("fallback_error", ""),
+        log_fields["source"],
+        log_fields["provider"],
+        log_fields["model"],
+        log_fields["error"],
+        log_fields["error_type"],
+        log_fields["error_message"],
+        log_fields["fallback_to"],
     )
     return result

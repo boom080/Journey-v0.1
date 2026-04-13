@@ -9,8 +9,8 @@ from app.models.user import User
 
 GOAL_SUGGESTIONS = {
     "减脂": "今天节奏不错，继续稳定记录吃了什么和做了什么。",
-    "增肌": "记住把饮食和训练一起记录，首页会更容易给出有用建议。",
-    "维持": "继续轻量记录今天的饮食和活动，保持真实生活节奏。"
+    "增肌": "记得把饮食和训练一起记录，首页会更容易给出有用建议。",
+    "维持": "继续轻量记录今天的饮食和活动，保持真实生活节奏。",
 }
 
 
@@ -34,8 +34,11 @@ def build_home_summary(db: Session, user: User) -> dict:
     for item in food_records[:2]:
         updates.append(
             {
-                "title": item.meal,
+                "kind": "food",
+                "title": item.detail or item.meal,
                 "description": item.detail,
+                "detail": item.detail,
+                "meal": item.meal,
                 "time_text": item.time_text,
                 "kcal": f"+{item.kcal:g} kcal",
             }
@@ -44,7 +47,9 @@ def build_home_summary(db: Session, user: User) -> dict:
     for item in activity_records[:2]:
         updates.append(
             {
+                "kind": "activity",
                 "title": item.name,
+                "name": item.name,
                 "description": item.location or "已记录活动",
                 "time_text": item.time_text,
                 "kcal": f"-{item.kcal:g} kcal",

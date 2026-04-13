@@ -23,8 +23,10 @@ class UserProfilePayload(BaseModel):
     is_activated: bool
     invite_code_id: Optional[int] = None
     goal: str
+    gender: Optional[str] = None
     height: Optional[float] = None
     weight: Optional[float] = None
+    body_fat_rate: Optional[float] = None
 
 
 class TokenResponse(BaseModel):

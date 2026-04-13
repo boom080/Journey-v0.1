@@ -110,7 +110,8 @@ def _build_food_items(text: str, context: AIRequestContext) -> List[AIResultItem
         kcal = _extract_explicit_kcal(candidate) or _estimate_by_keywords(candidate, FOOD_KEYWORD_KCAL, 260)
         items.append(
             AIResultItem(
-                title=meal,
+                title=candidate,
+                name=candidate,
                 detail=candidate,
                 meal=meal,
                 location=location,
@@ -128,7 +129,8 @@ def _build_food_items(text: str, context: AIRequestContext) -> List[AIResultItem
 
     return [
         AIResultItem(
-            title=meal,
+            title=text.strip(),
+            name=text.strip(),
             detail=text.strip(),
             meal=meal,
             location=location,

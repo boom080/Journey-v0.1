@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useRef, useState } from "react";
 import { useDidShow } from "@tarojs/taro";
 import { getSession } from "../store/session";
 import { ROUTES, replaceRoute, relaunchTo } from "./router";
@@ -31,54 +31,121 @@ function canRender(mode, session) {
   return Boolean(session.isActivated);
 }
 
-export function usePageGuard(mode = "activated") {
-  const [ready, setReady] = useState(() => canRender(mode, readSessionSafely()));
+function createGuardState(mode, session) {
+  if (mode === "guest") {
+    if (!session.token) {
+      return {
+        ready: true,
+        checking: false,
+        message: ""
+      };
+    }
+
+    return {
+      ready: false,
+      checking: true,
+      message: session.isActivated ? "正在直接进入首页..." : "正在继续进入邀请码页...",
+      redirectTo: session.isActivated ? ROUTES.home : ROUTES.invite,
+      redirectMethod: "relaunch"
+    };
+  }
+
+  if (!session.token) {
+    return {
+      ready: false,
+      checking: true,
+      message: "正在恢复登录状态...",
+      redirectTo: ROUTES.auth,
+      redirectMethod: "relaunch"
+    };
+  }
+
+  if (mode === "invite") {
+    if (session.isActivated) {
+      return {
+        ready: false,
+        checking: true,
+        message: "邀请码已通过，正在进入首页...",
+        redirectTo: ROUTES.home,
+        redirectMethod: "relaunch"
+      };
+    }
+
+    return {
+      ready: true,
+      checking: false,
+      message: ""
+    };
+  }
+
+  if (!session.isActivated) {
+    return {
+      ready: false,
+      checking: true,
+      message: "正在继续进入邀请码页...",
+      redirectTo: ROUTES.invite,
+      redirectMethod: "relaunch"
+    };
+  }
+
+  return {
+    ready: true,
+    checking: false,
+    message: ""
+  };
+}
+
+function isSameGuardState(prev, next) {
+  return (
+    prev.ready === next.ready &&
+    prev.checking === next.checking &&
+    prev.message === next.message &&
+    prev.redirectTo === next.redirectTo &&
+    prev.redirectMethod === next.redirectMethod
+  );
+}
+
+function runGuardRedirect(target, method) {
+  if (!target) {
+    return Promise.resolve();
+  }
+
+  if (method === "relaunch") {
+    return relaunchTo(target);
+  }
+
+  return replaceRoute(target);
+}
+
+export function usePageGuardState(mode = "activated") {
+  const redirectRef = useRef("");
+  const [state, setState] = useState(() => createGuardState(mode, readSessionSafely()));
 
   useDidShow(() => {
     const session = readSessionSafely();
+    const nextState = createGuardState(mode, session);
 
-    if (mode === "guest") {
-      if (!session.token) {
-        setReady(true);
-        return;
-      }
+    setState((prev) => (isSameGuardState(prev, nextState) ? prev : nextState));
 
-      setReady(false);
+    const redirectKey = nextState.redirectTo ? `${nextState.redirectMethod || "replace"}:${nextState.redirectTo}` : "";
 
-      if (session.isActivated) {
-        replaceRoute(ROUTES.home);
-        return;
-      }
-
-      replaceRoute(ROUTES.invite);
+    if (!nextState.redirectTo) {
+      redirectRef.current = "";
       return;
     }
 
-    if (!session.token) {
-      setReady(false);
-      relaunchTo(ROUTES.auth);
+    if (redirectRef.current === redirectKey) {
       return;
     }
 
-    if (mode === "invite") {
-      if (session.isActivated) {
-        setReady(false);
-        replaceRoute(ROUTES.home);
-        return;
-      }
-
-      setReady(true);
-      return;
-    }
-
-    if (!session.isActivated) {
-      setReady(false);
-      replaceRoute(ROUTES.invite);
-      return;
-    }
-
-    setReady(true);
+    redirectRef.current = redirectKey;
+    runGuardRedirect(nextState.redirectTo, nextState.redirectMethod);
   });
 
-  return ready;
+  return state;
+}
+
+export function usePageGuard(mode = "activated") {
+  const state = usePageGuardState(mode);
+  return state.ready && canRender(mode, readSessionSafely());
 }

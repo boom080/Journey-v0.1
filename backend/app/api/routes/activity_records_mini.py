@@ -21,7 +21,7 @@ from app.schemas.activity_record_mini import (
     MessageResponse,
 )
 
-router = APIRouter(prefix="/activity-records", tags=["Activity Records"])
+router = APIRouter(prefix="/activity-records", tags=["Mini Activity Records"])
 
 
 def build_activity_record_response(record: ActivityRecord) -> ActivityRecordResponse:

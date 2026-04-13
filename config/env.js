@@ -1,5 +1,9 @@
 const fs = require("fs");
 const path = require("path");
+const API_BASE_URL_ENV_KEY = "TARO_APP_API_BASE_URL";
+const REQUEST_TIMEOUT_ENV_KEY = "TARO_APP_REQUEST_TIMEOUT";
+const DEFAULT_API_BASE_URL = "http://127.0.0.1:8000";
+const DEFAULT_REQUEST_TIMEOUT = 10000;
 
 function parseEnvFile(filePath) {
   if (!fs.existsSync(filePath)) {
@@ -35,11 +39,17 @@ function loadAppEnv() {
   const envFileValues = parseEnvFile(envPath);
 
   return {
-    apiBaseUrl: process.env.TARO_APP_API_BASE_URL || envFileValues.TARO_APP_API_BASE_URL || "http://127.0.0.1:8000",
-    requestTimeout: Number(process.env.TARO_APP_REQUEST_TIMEOUT || envFileValues.TARO_APP_REQUEST_TIMEOUT || 10000),
+    apiBaseUrl: process.env[API_BASE_URL_ENV_KEY] || envFileValues[API_BASE_URL_ENV_KEY] || DEFAULT_API_BASE_URL,
+    requestTimeout: Number(
+      process.env[REQUEST_TIMEOUT_ENV_KEY] || envFileValues[REQUEST_TIMEOUT_ENV_KEY] || DEFAULT_REQUEST_TIMEOUT
+    )
   };
 }
 
 module.exports = {
+  API_BASE_URL_ENV_KEY,
+  REQUEST_TIMEOUT_ENV_KEY,
+  DEFAULT_API_BASE_URL,
+  DEFAULT_REQUEST_TIMEOUT,
   loadAppEnv,
 };

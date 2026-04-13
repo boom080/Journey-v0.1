@@ -1,4 +1,5 @@
-﻿import { todayString } from "./day";
+import { currentTimeString, todayString } from "./day";
+import { getFoodDisplayName } from "./food-name";
 
 export function createEmptyAiResult(aiType) {
   return {
@@ -34,11 +35,13 @@ export function normalizeAiResult(payload, aiType) {
 }
 
 export function buildFoodRecordFromAi(item, defaults = {}) {
+  const normalizedFoodName = getFoodDisplayName(item, defaults.detail || "");
+
   return {
     record_date: item.record_date || defaults.record_date || todayString(),
-    time_text: item.time_text || defaults.time_text || "",
-    meal: item.meal || defaults.meal || "早餐",
-    detail: item.detail || item.title || defaults.detail || "AI 饮食估算",
+    time_text: item.time_text || defaults.time_text || currentTimeString(),
+    meal: item.meal || defaults.meal || "加餐",
+    detail: normalizedFoodName || item.detail || item.title || defaults.detail || "AI 饮食估算",
     location: item.location || defaults.location || "",
     kcal: Number(item.kcal || defaults.kcal || 0),
     source_type: item.source_type || "ai",
@@ -49,7 +52,7 @@ export function buildFoodRecordFromAi(item, defaults = {}) {
 export function buildActivityRecordFromAi(item, defaults = {}) {
   return {
     record_date: item.record_date || defaults.record_date || todayString(),
-    time_text: item.time_text || defaults.time_text || "",
+    time_text: item.time_text || defaults.time_text || currentTimeString(),
     name: item.name || item.title || defaults.name || "AI 活动估算",
     location: item.location || defaults.location || "",
     kcal: Number(item.kcal || defaults.kcal || 0),

@@ -1,12 +1,92 @@
-$mint-50: #f4fff8;
-$mint-100: #e6f8ed;
-$mint-200: #d0f2de;
-$mint-300: #b4e7cc;
-$mint-500: #53b48a;
-$mint-700: #1e8b62;
-$ink-900: #1d352b;
-$ink-700: #496458;
-$ink-500: #739082;
-$line: #d6ebe0;
+$mint-50: #f6fff9;
+$mint-100: #edf9f2;
+$mint-150: #e4f6ed;
+$mint-200: #d7efe4;
+$mint-300: #c5e7d7;
+$mint-400: #9ed7bf;
+$mint-500: #74c7a2;
+$mint-600: #4fb387;
+$mint-700: #2f8f68;
+$mint-800: #256f52;
+
+$sky-100: #eef5ff;
+$sky-500: #5b8def;
+$sky-700: #366ac9;
+
+$salmon-100: #fff1ec;
+$salmon-500: #f08a6a;
+$salmon-700: #df6a45;
+$rose-100: #fff0ec;
+$rose-500: #ec7f61;
+$rose-700: #d96546;
+
+$amber-100: #fff8e8;
+$amber-500: #d8a750;
+$amber-700: #b17c21;
+
+$danger-100: #fff1f1;
+$danger-500: #d96b6b;
+$danger-700: #bf4b4b;
+
+$ink-950: #173027;
+$ink-900: #214135;
+$ink-800: #325447;
+$ink-700: #4d6a5f;
+$ink-600: #6a8478;
+$ink-500: #88a196;
+$ink-400: #a5b9b0;
+
 $white: #ffffff;
-$danger: #d85e5e;
+$card-white: rgba(255, 255, 255, 0.96);
+$line-soft: #d7ebe1;
+$line-strong: #c4dfd2;
+$mask-mint: rgba(111, 186, 150, 0.12);
+
+$bg-page: linear-gradient(180deg, #ecfbf3 0%, #f7fdfa 48%, #fbfffd 100%);
+$bg-card-soft: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 255, 251, 0.98) 100%);
+$bg-card-tint: linear-gradient(180deg, #fbfffd 0%, #f2fbf6 100%);
+$gradient-primary: linear-gradient(135deg, #78cfaa 0%, #67c49f 48%, #52b98f 100%);
+$gradient-note: linear-gradient(135deg, #204739 0%, #295646 52%, #34705d 100%);
+$gradient-sticker: linear-gradient(135deg, #f5fcf8 0%, #edf9f3 52%, #e3f4eb 100%);
+$sticker-glow: rgba(116, 199, 162, 0.12);
+$sticker-decoration: rgba(116, 199, 162, 0.06);
+$sticker-title: #2c6b54;
+$sticker-copy: #4e6c60;
+$sticker-badge-bg: linear-gradient(180deg, rgba(250, 255, 252, 0.96) 0%, rgba(234, 247, 240, 0.96) 100%);
+$sticker-badge-border: rgba(170, 214, 196, 0.56);
+$sticker-badge-shadow: 0 10rpx 24rpx rgba(90, 146, 120, 0.06);
+$sticker-badge-fill: linear-gradient(180deg, rgba(223, 246, 235, 0.98) 0%, rgba(198, 235, 216, 0.94) 100%);
+
+$radius-xs: 16rpx;
+$radius-sm: 22rpx;
+$radius-md: 28rpx;
+$radius-lg: 36rpx;
+$radius-xl: 44rpx;
+$radius-pill: 999rpx;
+
+$shadow-card: 0 18rpx 42rpx rgba(57, 116, 90, 0.08);
+$shadow-soft: 0 12rpx 28rpx rgba(57, 116, 90, 0.05);
+$shadow-lifted: 0 24rpx 58rpx rgba(53, 111, 85, 0.12);
+
+$motion-fast: 160ms;
+$motion-base: 220ms;
+
+$kcal-intake-soft: rgba(217, 101, 70, 0.12);
+$kcal-burn-soft: rgba(47, 143, 104, 0.12);
+
+$space-page-x: 24rpx;
+$space-page-top: 28rpx;
+$space-page-bottom: 52rpx;
+$space-1: 10rpx;
+$space-2: 14rpx;
+$space-3: 18rpx;
+$space-4: 24rpx;
+$space-5: 30rpx;
+$space-6: 36rpx;
+
+$font-display: 68rpx;
+$font-title: 38rpx;
+$font-subtitle: 30rpx;
+$font-body: 28rpx;
+$font-body-sm: 24rpx;
+$font-caption: 22rpx;

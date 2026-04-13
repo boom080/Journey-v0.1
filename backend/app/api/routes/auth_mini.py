@@ -23,8 +23,8 @@ from app.schemas.auth import (
     WechatLoginRequest,
 )
 
-router = APIRouter(prefix="/auth", tags=["Auth"])
-logger = logging.getLogger("journey.auth")
+router = APIRouter(prefix="/auth", tags=["Mini Auth"])
+logger = logging.getLogger("journey.mini.auth")
 
 
 def build_user_payload(user: User) -> UserProfilePayload:
@@ -37,8 +37,10 @@ def build_user_payload(user: User) -> UserProfilePayload:
         is_activated=user.is_activated,
         invite_code_id=user.invite_code_id,
         goal=user.goal,
+        gender=user.gender,
         height=user.height,
         weight=user.weight,
+        body_fat_rate=user.body_fat_rate,
     )
 
 

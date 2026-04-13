@@ -1,3 +1,4 @@
+import { normalizeProfile } from "../utils/profile";
 import { CACHE_KEYS, clearStorage, getStorage, setStorage } from "./cache";
 
 const defaultSession = {
@@ -25,11 +26,11 @@ export function saveSession(nextSession) {
 }
 
 export function getCachedProfile() {
-  return getStorage(CACHE_KEYS.PROFILE, null);
+  return normalizeProfile(getStorage(CACHE_KEYS.PROFILE, null));
 }
 
 export function saveCachedProfile(profile) {
-  setStorage(CACHE_KEYS.PROFILE, profile);
+  setStorage(CACHE_KEYS.PROFILE, normalizeProfile(profile));
 }
 
 export function getCachedHome() {

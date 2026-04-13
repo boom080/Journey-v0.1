@@ -9,8 +9,10 @@ USER_COLUMN_SQL = {
     "is_activated": "ALTER TABLE users ADD COLUMN is_activated BOOLEAN DEFAULT 0 NOT NULL",
     "invite_code_id": "ALTER TABLE users ADD COLUMN invite_code_id INTEGER",
     "goal": "ALTER TABLE users ADD COLUMN goal VARCHAR(20) DEFAULT '维持' NOT NULL",
+    "gender": "ALTER TABLE users ADD COLUMN gender VARCHAR(20)",
     "height": "ALTER TABLE users ADD COLUMN height FLOAT",
-    "weight": "ALTER TABLE users ADD COLUMN weight FLOAT"
+    "weight": "ALTER TABLE users ADD COLUMN weight FLOAT",
+    "body_fat_rate": "ALTER TABLE users ADD COLUMN body_fat_rate FLOAT"
 }
 
 PROFILE_COLUMN_SQL = {

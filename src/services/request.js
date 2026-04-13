@@ -1,5 +1,5 @@
 ﻿import Taro from "@tarojs/taro";
-import { RUNTIME_CONFIG } from "../config/runtime";
+import { API_BASE_URL_ENV_KEY, DEFAULT_API_BASE_URL, RUNTIME_CONFIG } from "../config/runtime";
 import { clearAllSessionData, getSession } from "../store/session";
 import { ROUTES, relaunchTo, replaceRoute } from "../utils/router";
 
@@ -28,7 +28,7 @@ function isLoopbackBaseUrl(url) {
 
 function getNetworkHint() {
   if (isLoopbackBaseUrl(API_BASE_URL)) {
-    return "如果你在真机或远程调试环境，请把 127.0.0.1 改成电脑局域网 IP。";
+    return `如果你在真机或远程调试环境，请把项目根目录 .env 里的 ${API_BASE_URL_ENV_KEY} 从 ${DEFAULT_API_BASE_URL} 改成电脑局域网 IP，例如 http://192.168.1.8:8000。`;
   }
 
   return "";

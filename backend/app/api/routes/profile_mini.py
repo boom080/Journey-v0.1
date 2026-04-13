@@ -6,7 +6,7 @@ from app.crud.user_mini import update_user
 from app.models.user import User
 from app.schemas.profile_mini import ProfileResponse, ProfileUpdateRequest
 
-router = APIRouter(prefix="/profile", tags=["Profile"])
+router = APIRouter(prefix="/profile", tags=["Mini Profile"])
 
 
 def build_profile_response(user: User) -> ProfileResponse:
@@ -15,8 +15,10 @@ def build_profile_response(user: User) -> ProfileResponse:
         openid=user.openid,
         nickname=user.nickname,
         goal=user.goal,
+        gender=user.gender,
         height=user.height,
         weight=user.weight,
+        body_fat_rate=user.body_fat_rate,
         avatar_url=user.avatar_url,
         is_activated=user.is_activated,
     )

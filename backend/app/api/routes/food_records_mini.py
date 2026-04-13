@@ -21,7 +21,7 @@ from app.schemas.food_record_mini import (
     MessageResponse,
 )
 
-router = APIRouter(prefix="/food-records", tags=["Food Records"])
+router = APIRouter(prefix="/food-records", tags=["Mini Food Records"])
 
 
 def build_food_record_response(record: FoodRecord) -> FoodRecordResponse:

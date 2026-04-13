@@ -1,10 +1,10 @@
-﻿export default defineAppConfig({
+export default defineAppConfig({
   pages: [
-    "pages/auth/index",
-    "pages/invite/index",
     "pages/home/main",
     "pages/journey/main",
     "pages/profile/main",
+    "pages/auth/index",
+    "pages/invite/index",
     "pages/food/main",
     "pages/activity/main"
   ],
