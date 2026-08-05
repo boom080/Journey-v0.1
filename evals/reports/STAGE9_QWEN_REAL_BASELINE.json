@@ -1,0 +1,3700 @@
+{
+  "run_label": "stage9-qwen-real-baseline",
+  "generated_at": "2026-07-28T08:37:43.307414+00:00",
+  "dataset_version": "journey-food-image-real-v1",
+  "dataset_samples": 100,
+  "provider": "qwen",
+  "model": "qwen3.7-flash",
+  "api_base_region": "cn-beijing",
+  "prompt_version": "journey-food-image-1.0.0",
+  "schema_version": "journey-food-image-schema-1",
+  "metrics": {
+    "schema_valid_rate": {
+      "value": 0.53,
+      "threshold": 1.0,
+      "comparison": ">=",
+      "passed": false,
+      "numerator": 53,
+      "denominator": 100
+    },
+    "needs_user_correction_rate": {
+      "value": 0.422222,
+      "threshold": 1.0,
+      "comparison": ">=",
+      "passed": false,
+      "numerator": 38,
+      "denominator": 90
+    },
+    "top3_name_hit_rate": {
+      "value": 0.288889,
+      "threshold": 0.85,
+      "comparison": ">=",
+      "passed": false,
+      "numerator": 26,
+      "denominator": 90
+    },
+    "single_food_portion_median_relative_error": {
+      "value": 1.0,
+      "threshold": 0.3,
+      "comparison": "<=",
+      "passed": false,
+      "numerator": 11,
+      "denominator": 30
+    },
+    "calorie_interval_coverage": {
+      "value": 0.111111,
+      "threshold": 0.8,
+      "comparison": ">=",
+      "passed": false,
+      "numerator": 10,
+      "denominator": 90
+    },
+    "nonfood_abstention_rate": {
+      "value": 1.0,
+      "threshold": 0.95,
+      "comparison": ">=",
+      "passed": true,
+      "numerator": 10,
+      "denominator": 10
+    },
+    "api_latency_p95_ms": {
+      "value": 3273.0,
+      "threshold": 8000,
+      "comparison": "<=",
+      "passed": true,
+      "numerator": null,
+      "denominator": null
+    },
+    "max_estimated_cost_usd": {
+      "value": 7.7e-05,
+      "threshold": 0.01,
+      "comparison": "<=",
+      "passed": true,
+      "numerator": null,
+      "denominator": null
+    },
+    "unconfirmed_auto_write_count": {
+      "value": 0.0,
+      "threshold": 0,
+      "comparison": "<=",
+      "passed": true,
+      "numerator": null,
+      "denominator": null
+    },
+    "privacy_marker_count": {
+      "value": 0.0,
+      "threshold": 0,
+      "comparison": "<=",
+      "passed": true,
+      "numerator": null,
+      "denominator": null
+    },
+    "provider_fallback_count": {
+      "value": 47.0,
+      "threshold": 0,
+      "comparison": "<=",
+      "passed": false,
+      "numerator": null,
+      "denominator": null
+    }
+  },
+  "gate_passed": false,
+  "summary": {
+    "input_tokens": 56706,
+    "output_tokens": 13329,
+    "estimated_cost_usd": 0.00305615,
+    "latency_median_ms": 2279.5,
+    "portion_unscorable_ids": [
+      "n5k-single-food-001",
+      "n5k-single-food-002",
+      "n5k-single-food-003",
+      "n5k-single-food-004",
+      "n5k-single-food-005",
+      "n5k-single-food-006",
+      "n5k-single-food-008",
+      "n5k-single-food-009",
+      "n5k-single-food-010",
+      "n5k-single-food-012",
+      "n5k-single-food-013",
+      "n5k-single-food-015",
+      "n5k-single-food-016",
+      "n5k-single-food-017",
+      "n5k-single-food-022",
+      "n5k-single-food-023",
+      "n5k-single-food-026",
+      "n5k-single-food-028",
+      "n5k-single-food-030"
+    ],
+    "agent_run_count": 100,
+    "tool_trace_count": 100
+  },
+  "results": [
+    {
+      "id": "n5k-single-food-001",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 1807,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "红苹果"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "红苹果",
+        "items": [
+          {
+            "name": "红苹果",
+            "portion_amount": 1.0,
+            "portion_unit": "个",
+            "energy_kcal": 95.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 1.0,
+        "portion_unit": "个",
+        "energy_kcal": 95.0,
+        "energy_min_kcal": 80.0,
+        "energy_max_kcal": 110.0,
+        "confidence": "medium",
+        "assumptions": [
+          "图片显示一个完整的红苹果放在白色盘子中。",
+          "假设该苹果为中等大小（约150-200克可食部）。",
+          "热量基于常见红苹果的平均值估算。"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1107,
+        "output_tokens": 215,
+        "retries": 0,
+        "latency_ms": 1786,
+        "estimated_cost_usd": 5.464e-05
+      }
+    },
+    {
+      "id": "n5k-single-food-002",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 2281,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 2262,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "n5k-single-food-003",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 2507,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 2493,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "n5k-single-food-004",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 2166,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 2148,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "n5k-single-food-005",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 2837,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 2822,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "n5k-single-food-006",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 1843,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 1830,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "n5k-single-food-007",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 1941,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "Cooked Cauliflower",
+        "Cauliflower (cooked)"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "Cooked Cauliflower",
+        "items": [
+          {
+            "name": "Cauliflower (cooked)",
+            "portion_amount": 150.0,
+            "portion_unit": "g",
+            "energy_kcal": 45.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 150.0,
+        "portion_unit": "g",
+        "energy_kcal": 45.0,
+        "energy_min_kcal": 30.0,
+        "energy_max_kcal": 60.0,
+        "confidence": "medium",
+        "assumptions": [
+          "The food appears to be cooked cauliflower florets, possibly steamed or boiled with minimal oil.",
+          "Portion size is estimated based on the visual volume relative to the paper plate size.",
+          "Calorie estimate assumes plain cooking method without heavy sauces or breading."
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1107,
+        "output_tokens": 230,
+        "retries": 0,
+        "latency_ms": 1924,
+        "estimated_cost_usd": 5.631e-05
+      }
+    },
+    {
+      "id": "n5k-single-food-008",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 2531,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 2517,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "n5k-single-food-009",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 1964,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "Cherry Tomatoes"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "Cherry Tomatoes",
+        "items": [
+          {
+            "name": "Cherry Tomatoes",
+            "portion_amount": 10.0,
+            "portion_unit": "pieces",
+            "energy_kcal": 27.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 10.0,
+        "portion_unit": "pieces",
+        "energy_kcal": 27.0,
+        "energy_min_kcal": 15.0,
+        "energy_max_kcal": 40.0,
+        "confidence": "medium",
+        "assumptions": [
+          "Estimated count of approximately 10 cherry tomatoes based on visual arrangement.",
+          "Standard weight assumption for cherry tomatoes is roughly 10-15g each.",
+          "Calorie calculation based on average energy value of raw tomatoes (~18 kcal per 100g)."
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1107,
+        "output_tokens": 204,
+        "retries": 0,
+        "latency_ms": 1947,
+        "estimated_cost_usd": 5.342e-05
+      }
+    },
+    {
+      "id": "n5k-single-food-010",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 1934,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 1920,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "n5k-single-food-011",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2198,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "切片黄瓜",
+        "黄瓜"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "切片黄瓜",
+        "items": [
+          {
+            "name": "黄瓜",
+            "portion_amount": 100.0,
+            "portion_unit": "克",
+            "energy_kcal": 15.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 100.0,
+        "portion_unit": "克",
+        "energy_kcal": 15.0,
+        "energy_min_kcal": 10.0,
+        "energy_max_kcal": 20.0,
+        "confidence": "medium",
+        "assumptions": [
+          "图片显示为少量切好的生黄瓜片，估计重量约100克。",
+          "未观察到明显的调味酱料或油脂，按原味黄瓜计算热量。",
+          "具体数量因视角遮挡可能存在误差，需用户确认实际食用量。"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1107,
+        "output_tokens": 225,
+        "retries": 0,
+        "latency_ms": 2186,
+        "estimated_cost_usd": 5.575e-05
+      }
+    },
+    {
+      "id": "n5k-single-food-012",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 2641,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 2624,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "n5k-single-food-013",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 2278,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 2263,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "n5k-single-food-014",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2802,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "红绿葡萄"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "红绿葡萄",
+        "items": [
+          {
+            "name": "红绿葡萄",
+            "portion_amount": 150.0,
+            "portion_unit": "g",
+            "energy_kcal": 75.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 150.0,
+        "portion_unit": "g",
+        "energy_kcal": 75.0,
+        "energy_min_kcal": 60.0,
+        "energy_max_kcal": 90.0,
+        "confidence": "medium",
+        "assumptions": [
+          "图片显示一个白色纸碗中盛放着约15-20颗椭圆形水果，颜色为深红色和浅绿色，特征符合提子或葡萄。",
+          "份量基于常见一次性纸碗的容量及水果堆叠密度估算，约为150克左右。",
+          "热量按每100克葡萄约50千卡计算，取中间值估算。"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1107,
+        "output_tokens": 239,
+        "retries": 0,
+        "latency_ms": 2784,
+        "estimated_cost_usd": 5.731e-05
+      }
+    },
+    {
+      "id": "n5k-single-food-015",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 2592,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 2573,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "n5k-single-food-016",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 2468,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 2452,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "n5k-single-food-017",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 3132,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 3119,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "n5k-single-food-018",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 1996,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "杂粮粥/燕麦粥",
+        "杂粮粥"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "杂粮粥/燕麦粥",
+        "items": [
+          {
+            "name": "杂粮粥",
+            "portion_amount": 250.0,
+            "portion_unit": "g",
+            "energy_kcal": 120.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 250.0,
+        "portion_unit": "g",
+        "energy_kcal": 120.0,
+        "energy_min_kcal": 80.0,
+        "energy_max_kcal": 160.0,
+        "confidence": "medium",
+        "assumptions": [
+          "图片显示一碗煮熟的谷物粥，含有多种谷物颗粒（如玉米、小米或燕麦）。",
+          "假设碗的标准容量约为250-300毫升，食物装至八分满，估算重量约250克。",
+          "热量基于普通杂粮粥或燕麦粥的平均值估算，未添加糖或奶精。",
+          "由于无法确认具体谷物种类及是否加糖，热量范围较宽。"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1107,
+        "output_tokens": 245,
+        "retries": 0,
+        "latency_ms": 1977,
+        "estimated_cost_usd": 5.797e-05
+      }
+    },
+    {
+      "id": "n5k-single-food-019",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2403,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "切片红洋葱",
+        "红洋葱 (切片)"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "切片红洋葱",
+        "items": [
+          {
+            "name": "红洋葱 (切片)",
+            "portion_amount": 50.0,
+            "portion_unit": "g",
+            "energy_kcal": 21.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 50.0,
+        "portion_unit": "g",
+        "energy_kcal": 21.0,
+        "energy_min_kcal": 15.0,
+        "energy_max_kcal": 30.0,
+        "confidence": "medium",
+        "assumptions": [
+          "图片显示不锈钢碗底有少量切好的紫皮/红洋葱丝。",
+          "分量较少，估计约为50克左右，仅覆盖碗底一小部分。",
+          "热量基于标准生洋葱数据估算（约42 kcal/100g）。"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1107,
+        "output_tokens": 230,
+        "retries": 0,
+        "latency_ms": 2387,
+        "estimated_cost_usd": 5.631e-05
+      }
+    },
+    {
+      "id": "n5k-single-food-020",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2400,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "切块菠萝",
+        "菠萝块"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "切块菠萝",
+        "items": [
+          {
+            "name": "菠萝块",
+            "portion_amount": 150.0,
+            "portion_unit": "g",
+            "energy_kcal": 78.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 150.0,
+        "portion_unit": "g",
+        "energy_kcal": 78.0,
+        "energy_min_kcal": 60.0,
+        "energy_max_kcal": 90.0,
+        "confidence": "medium",
+        "assumptions": [
+          "图片显示为少量切好的黄色水果块，外观特征符合菠萝。",
+          "份量根据盘子大小和块数估算约为150克左右。",
+          "热量按每100克菠萝约52千卡计算得出宽区间。"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1107,
+        "output_tokens": 227,
+        "retries": 0,
+        "latency_ms": 2385,
+        "estimated_cost_usd": 5.597e-05
+      }
+    },
+    {
+      "id": "n5k-single-food-021",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2049,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "Roasted Potato Cubes"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "Roasted Potato Cubes",
+        "items": [
+          {
+            "name": "Roasted Potato Cubes",
+            "portion_amount": 150.0,
+            "portion_unit": "g",
+            "energy_kcal": 245.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 150.0,
+        "portion_unit": "g",
+        "energy_kcal": 245.0,
+        "energy_min_kcal": 200.0,
+        "energy_max_kcal": 290.0,
+        "confidence": "medium",
+        "assumptions": [
+          "The food appears to be diced potatoes that have been roasted or fried with skin on.",
+          "Portion size is estimated based on the visual volume relative to the plate size (approx. 150g).",
+          "Calorie count assumes standard roasting with oil; if deep-fried, calories would be higher.",
+          "No visible heavy sauces or seasonings are accounted for in this base estimate."
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1107,
+        "output_tokens": 265,
+        "retries": 0,
+        "latency_ms": 2034,
+        "estimated_cost_usd": 6.019e-05
+      }
+    },
+    {
+      "id": "n5k-single-food-022",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 2039,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 2024,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "n5k-single-food-023",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 1943,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 1928,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "n5k-single-food-024",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2703,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "炒鸡蛋（疑似含番茄或胡萝卜）",
+        "炒鸡蛋"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "炒鸡蛋（疑似含番茄或胡萝卜）",
+        "items": [
+          {
+            "name": "炒鸡蛋",
+            "portion_amount": 150.0,
+            "portion_unit": "g",
+            "energy_kcal": 210.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 150.0,
+        "portion_unit": "g",
+        "energy_kcal": 210.0,
+        "energy_min_kcal": 180.0,
+        "energy_max_kcal": 250.0,
+        "confidence": "medium",
+        "assumptions": [
+          "图片显示的是盘子里的炒鸡蛋，可能混合了少量番茄或胡萝卜碎。",
+          "无法确定烹饪时使用的油量，热量估算基于标准做法。",
+          "份量目测约为2-3个鸡蛋的量。"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1107,
+        "output_tokens": 231,
+        "retries": 0,
+        "latency_ms": 2685,
+        "estimated_cost_usd": 5.642e-05
+      }
+    },
+    {
+      "id": "n5k-single-food-025",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2368,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "凉拌菠菜胡萝卜",
+        "菠菜",
+        "胡萝卜丝"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "凉拌菠菜胡萝卜",
+        "items": [
+          {
+            "name": "菠菜",
+            "portion_amount": 150.0,
+            "portion_unit": "g",
+            "energy_kcal": 25.0
+          },
+          {
+            "name": "胡萝卜丝",
+            "portion_amount": 20.0,
+            "portion_unit": "g",
+            "energy_kcal": 8.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 170.0,
+        "portion_unit": "g",
+        "energy_kcal": 33.0,
+        "energy_min_kcal": 30.0,
+        "energy_max_kcal": 60.0,
+        "confidence": "medium",
+        "assumptions": [
+          "食物为焯水或清炒后的菠菜拌胡萝卜丝",
+          "未计入可能添加的油脂、芝麻油或酱汁的热量",
+          "份量基于常见凉菜分量估算"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1107,
+        "output_tokens": 253,
+        "retries": 0,
+        "latency_ms": 2349,
+        "estimated_cost_usd": 5.886e-05
+      }
+    },
+    {
+      "id": "n5k-single-food-026",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 2135,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 2121,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "n5k-single-food-027",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2007,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "扁豆豆腐蔬菜混合沙拉",
+        "扁豆",
+        "煎豆腐块"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "扁豆豆腐蔬菜混合沙拉",
+        "items": [
+          {
+            "name": "扁豆",
+            "portion_amount": 30.0,
+            "portion_unit": "g",
+            "energy_kcal": 35.0
+          },
+          {
+            "name": "煎豆腐块",
+            "portion_amount": 40.0,
+            "portion_unit": "g",
+            "energy_kcal": 80.0
+          },
+          {
+            "name": "混合蔬菜丝（胡萝卜、腌菜等）",
+            "portion_amount": 20.0,
+            "portion_unit": "g",
+            "energy_kcal": 10.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 90.0,
+        "portion_unit": "g",
+        "energy_kcal": 125.0,
+        "energy_min_kcal": 100.0,
+        "energy_max_kcal": 150.0,
+        "confidence": "low",
+        "assumptions": [
+          "食物为盘中剩余少量混合料理，主要成分识别为扁豆、豆腐及少量蔬菜",
+          "热量估算基于常见食材单位热量，未考虑烹饪用油具体用量",
+          "份量目测估计，实际重量可能存在偏差"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1107,
+        "output_tokens": 323,
+        "retries": 0,
+        "latency_ms": 1995,
+        "estimated_cost_usd": 6.664e-05
+      }
+    },
+    {
+      "id": "n5k-single-food-028",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 1965,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "Cherry Tomatoes"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "Cherry Tomatoes",
+        "items": [
+          {
+            "name": "Cherry Tomatoes",
+            "portion_amount": 5.0,
+            "portion_unit": "pieces",
+            "energy_kcal": 10.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 5.0,
+        "portion_unit": "pieces",
+        "energy_kcal": 10.0,
+        "energy_min_kcal": 8.0,
+        "energy_max_kcal": 12.0,
+        "confidence": "medium",
+        "assumptions": [
+          "Identified 5 cherry tomatoes based on visual count.",
+          "Calories estimated based on average weight of a single cherry tomato (~10-15g).",
+          "No visible dressing or oil; calories calculated for raw tomatoes only."
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1107,
+        "output_tokens": 219,
+        "retries": 0,
+        "latency_ms": 1948,
+        "estimated_cost_usd": 5.508e-05
+      }
+    },
+    {
+      "id": "n5k-single-food-029",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 1719,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "白米饭"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "白米饭",
+        "items": [
+          {
+            "name": "白米饭",
+            "portion_amount": 200.0,
+            "portion_unit": "g",
+            "energy_kcal": 260.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 200.0,
+        "portion_unit": "g",
+        "energy_kcal": 260.0,
+        "energy_min_kcal": 230.0,
+        "energy_max_kcal": 290.0,
+        "confidence": "medium",
+        "assumptions": [
+          "图片显示为盛在白色纸碗中的熟白米饭",
+          "根据碗的大小和米饭堆积高度，估算分量约为200克（标准一碗饭）",
+          "热量按每100克熟白米饭约130千卡计算"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1107,
+        "output_tokens": 231,
+        "retries": 0,
+        "latency_ms": 1703,
+        "estimated_cost_usd": 5.642e-05
+      }
+    },
+    {
+      "id": "n5k-single-food-030",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 1845,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 1834,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "n5k-mixed-meal-001",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2277,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "混合蔬菜沙拉（胡萝卜丝、黄瓜片、圣女果）",
+        "胡萝卜丝",
+        "黄瓜片"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "混合蔬菜沙拉（胡萝卜丝、黄瓜片、圣女果）",
+        "items": [
+          {
+            "name": "胡萝卜丝",
+            "portion_amount": 50.0,
+            "portion_unit": "g",
+            "energy_kcal": 21.0
+          },
+          {
+            "name": "黄瓜片",
+            "portion_amount": 40.0,
+            "portion_unit": "g",
+            "energy_kcal": 6.0
+          },
+          {
+            "name": "圣女果",
+            "portion_amount": 4.0,
+            "portion_unit": "pcs",
+            "energy_kcal": 12.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 94.0,
+        "portion_unit": "g",
+        "energy_kcal": 39.0,
+        "energy_min_kcal": 30.0,
+        "energy_max_kcal": 50.0,
+        "confidence": "medium",
+        "assumptions": [
+          "假设所有食材均为生食且未添加油或酱料。",
+          "圣女果按平均单颗重约10-15g估算。",
+          "胡萝卜丝和黄瓜片的重量为目测估计值。"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1107,
+        "output_tokens": 315,
+        "retries": 0,
+        "latency_ms": 2259,
+        "estimated_cost_usd": 6.575e-05
+      }
+    },
+    {
+      "id": "n5k-mixed-meal-002",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2623,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "水果拼盘（草莓、橘子、红提）",
+        "草莓",
+        "橘子"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "水果拼盘（草莓、橘子、红提）",
+        "items": [
+          {
+            "name": "草莓",
+            "portion_amount": 4.0,
+            "portion_unit": "片",
+            "energy_kcal": 40.0
+          },
+          {
+            "name": "橘子",
+            "portion_amount": 1.0,
+            "portion_unit": "个",
+            "energy_kcal": 45.0
+          },
+          {
+            "name": "红提",
+            "portion_amount": 15.0,
+            "portion_unit": "颗",
+            "energy_kcal": 80.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": null,
+        "portion_unit": null,
+        "energy_kcal": 165.0,
+        "energy_min_kcal": 140.0,
+        "energy_max_kcal": 200.0,
+        "confidence": "medium",
+        "assumptions": [
+          "草莓按4片切块估算，单片约10kcal",
+          "橘子为中等大小完整果实，约45kcal",
+          "红提约15颗，每颗约5-6g，单颗约5.3kcal",
+          "总热量为各项估算值之和，存在±20%浮动"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1107,
+        "output_tokens": 337,
+        "retries": 0,
+        "latency_ms": 2607,
+        "estimated_cost_usd": 6.819e-05
+      }
+    },
+    {
+      "id": "n5k-mixed-meal-003",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2875,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "混合餐：炒蛋、煎土豆块和腌制蔬菜",
+        "炒鸡蛋",
+        "煎/炸土豆块"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "混合餐：炒蛋、煎土豆块和腌制蔬菜",
+        "items": [
+          {
+            "name": "炒鸡蛋",
+            "portion_amount": 120.0,
+            "portion_unit": "g",
+            "energy_kcal": 190.0
+          },
+          {
+            "name": "煎/炸土豆块",
+            "portion_amount": 150.0,
+            "portion_unit": "g",
+            "energy_kcal": 280.0
+          },
+          {
+            "name": "腌制/煮制绿色蔬菜（疑似抱子甘蓝或类似腌菜）",
+            "portion_amount": 80.0,
+            "portion_unit": "g",
+            "energy_kcal": 30.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 350.0,
+        "portion_unit": "g",
+        "energy_kcal": 500.0,
+        "energy_min_kcal": 450.0,
+        "energy_max_kcal": 580.0,
+        "confidence": "medium",
+        "assumptions": [
+          "黄色蓬松部分识别为炒鸡蛋，含少量油脂",
+          "金黄色块状物判断为油炸或煎制的土豆",
+          "深绿色团块推测为腌制或煮熟的十字花科蔬菜（如抱子甘蓝）",
+          "总热量基于常见烹饪用油量估算，实际可能因油量的多少而浮动",
+          "未识别出明显的酱汁或额外调味品"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1107,
+        "output_tokens": 376,
+        "retries": 0,
+        "latency_ms": 2861,
+        "estimated_cost_usd": 7.253e-05
+      }
+    },
+    {
+      "id": "n5k-mixed-meal-004",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2234,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "凉拌菠菜",
+        "菠菜",
+        "胡萝卜丝"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "凉拌菠菜",
+        "items": [
+          {
+            "name": "菠菜",
+            "portion_amount": 150.0,
+            "portion_unit": "g",
+            "energy_kcal": 30.0
+          },
+          {
+            "name": "胡萝卜丝",
+            "portion_amount": 20.0,
+            "portion_unit": "g",
+            "energy_kcal": 8.0
+          },
+          {
+            "name": "食用油/调料",
+            "portion_amount": 5.0,
+            "portion_unit": "g",
+            "energy_kcal": 45.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 175.0,
+        "portion_unit": "g",
+        "energy_kcal": 83.0,
+        "energy_min_kcal": 60.0,
+        "energy_max_kcal": 120.0,
+        "confidence": "medium",
+        "assumptions": [
+          "图片显示为少量绿叶蔬菜（疑似菠菜）拌胡萝卜丝",
+          "热量估算包含可能的烹饪用油及调味料",
+          "具体食材种类和油量无法精确确认"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1107,
+        "output_tokens": 295,
+        "retries": 0,
+        "latency_ms": 2218,
+        "estimated_cost_usd": 6.353e-05
+      }
+    },
+    {
+      "id": "n5k-mixed-meal-005",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 2050,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 2034,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "n5k-mixed-meal-006",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2521,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "混合餐盘（培根、土豆、杏仁、苹果）",
+        "煎培根",
+        "煮/烤土豆块"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "混合餐盘（培根、土豆、杏仁、苹果）",
+        "items": [
+          {
+            "name": "煎培根",
+            "portion_amount": 30.0,
+            "portion_unit": "g",
+            "energy_kcal": 150.0
+          },
+          {
+            "name": "煮/烤土豆块",
+            "portion_amount": 150.0,
+            "portion_unit": "g",
+            "energy_kcal": 160.0
+          },
+          {
+            "name": "杏仁",
+            "portion_amount": 20.0,
+            "portion_unit": "g",
+            "energy_kcal": 115.0
+          },
+          {
+            "name": "苹果",
+            "portion_amount": 150.0,
+            "portion_unit": "g",
+            "energy_kcal": 78.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": null,
+        "portion_unit": null,
+        "energy_kcal": 503.0,
+        "energy_min_kcal": 450.0,
+        "energy_max_kcal": 560.0,
+        "confidence": "medium",
+        "assumptions": [
+          "培根估算为约3条中等大小，重量约30克",
+          "土豆块估算为中等大小一份，约150克可食部",
+          "杏仁数量约15-20颗，估算重量20克",
+          "苹果为中等大小完整果实，估算重量150克",
+          "未添加额外油脂或酱料的热量计算"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1107,
+        "output_tokens": 399,
+        "retries": 0,
+        "latency_ms": 2505,
+        "estimated_cost_usd": 7.508e-05
+      }
+    },
+    {
+      "id": "n5k-mixed-meal-007",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 2000,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 1989,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "n5k-mixed-meal-008",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 2841,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 2825,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "n5k-mixed-meal-009",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2703,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "混合蔬菜拼盘（胡萝卜、烤土豆、西兰花）",
+        "熟胡萝卜",
+        "烤/煎土豆"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "混合蔬菜拼盘（胡萝卜、烤土豆、西兰花）",
+        "items": [
+          {
+            "name": "熟胡萝卜",
+            "portion_amount": 150.0,
+            "portion_unit": "g",
+            "energy_kcal": 60.0
+          },
+          {
+            "name": "烤/煎土豆",
+            "portion_amount": 120.0,
+            "portion_unit": "g",
+            "energy_kcal": 180.0
+          },
+          {
+            "name": "西兰花",
+            "portion_amount": 80.0,
+            "portion_unit": "g",
+            "energy_kcal": 25.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 350.0,
+        "portion_unit": "g",
+        "energy_kcal": 265.0,
+        "energy_min_kcal": 200.0,
+        "energy_max_kcal": 350.0,
+        "confidence": "medium",
+        "assumptions": [
+          "橙色块状物识别为熟胡萝卜，白色斑点可能是盐或脂肪。",
+          "棕色块状物识别为带皮烤土豆或煎土豆。",
+          "绿色花状物识别为蒸或煮的西兰花。",
+          "热量估算基于常见烹饪方式（少油），实际油量未知。",
+          "份量基于标准餐盘视觉比例进行宽区间估算。"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1107,
+        "output_tokens": 361,
+        "retries": 0,
+        "latency_ms": 2686,
+        "estimated_cost_usd": 7.086e-05
+      }
+    },
+    {
+      "id": "n5k-mixed-meal-010",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 2982,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 2967,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "n5k-mixed-meal-011",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2922,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "煎烤鱼肉（含葱段）",
+        "煎烤鱼肉（带皮，含少量油脂和葱段）"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "煎烤鱼肉（含葱段）",
+        "items": [
+          {
+            "name": "煎烤鱼肉（带皮，含少量油脂和葱段）",
+            "portion_amount": 80.0,
+            "portion_unit": "g",
+            "energy_kcal": 120.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 80.0,
+        "portion_unit": "g",
+        "energy_kcal": 120.0,
+        "energy_min_kcal": 100.0,
+        "energy_max_kcal": 150.0,
+        "confidence": "low",
+        "assumptions": [
+          "图片中食物为两块煎或烤制的鱼块，表面有焦褐色及绿色葱段点缀",
+          "因图像模糊且无参照物，重量估算基于常见单块鱼排大小（约80g）",
+          "热量按中等脂肪含量的海鱼煎制计算，未计入额外食用油量",
+          "实际热量受烹饪用油量、鱼种及是否去皮影响较大",
+          "盘子大部分为空，仅左侧有少量食物残留"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1107,
+        "output_tokens": 290,
+        "retries": 0,
+        "latency_ms": 2908,
+        "estimated_cost_usd": 6.297e-05
+      }
+    },
+    {
+      "id": "n5k-mixed-meal-012",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 3588,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 3574,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "n5k-mixed-meal-013",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2826,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "混合蔬菜沙拉配烤奶酪和谷物",
+        "混合生菜（绿叶与紫叶）",
+        "烤白奶酪块（类似菲达或莫扎里拉）"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "混合蔬菜沙拉配烤奶酪和谷物",
+        "items": [
+          {
+            "name": "混合生菜（绿叶与紫叶）",
+            "portion_amount": 100.0,
+            "portion_unit": "g",
+            "energy_kcal": 15.0
+          },
+          {
+            "name": "烤白奶酪块（类似菲达或莫扎里拉）",
+            "portion_amount": 60.0,
+            "portion_unit": "g",
+            "energy_kcal": 180.0
+          },
+          {
+            "name": "玉米粒",
+            "portion_amount": 40.0,
+            "portion_unit": "g",
+            "energy_kcal": 35.0
+          },
+          {
+            "name": "煮熟的谷物（如 bulgur 小麦或藜麦）",
+            "portion_amount": 80.0,
+            "portion_unit": "g",
+            "energy_kcal": 120.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 280.0,
+        "portion_unit": "g",
+        "energy_kcal": 350.0,
+        "energy_min_kcal": 300.0,
+        "energy_max_kcal": 420.0,
+        "confidence": "medium",
+        "assumptions": [
+          "白色块状物判断为烤制奶酪，具体种类不确定影响热量估算",
+          "中间混合物包含玉米和煮熟谷物，比例估计基于视觉体积",
+          "未识别明显油醋汁或高热量酱料，按无额外油脂估算",
+          "份量基于标准沙拉碗目测估算，可能存在偏差"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1107,
+        "output_tokens": 412,
+        "retries": 0,
+        "latency_ms": 2808,
+        "estimated_cost_usd": 7.653e-05
+      }
+    },
+    {
+      "id": "n5k-mixed-meal-014",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 2258,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 2244,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "n5k-mixed-meal-015",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2388,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "培根、西瓜和蓝莓拼盘",
+        "煎培根",
+        "西瓜块"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "培根、西瓜和蓝莓拼盘",
+        "items": [
+          {
+            "name": "煎培根",
+            "portion_amount": 3.0,
+            "portion_unit": "条",
+            "energy_kcal": 150.0
+          },
+          {
+            "name": "西瓜块",
+            "portion_amount": 150.0,
+            "portion_unit": "g",
+            "energy_kcal": 45.0
+          },
+          {
+            "name": "蓝莓",
+            "portion_amount": 30.0,
+            "portion_unit": "g",
+            "energy_kcal": 16.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": null,
+        "portion_unit": null,
+        "energy_kcal": 211.0,
+        "energy_min_kcal": 180.0,
+        "energy_max_kcal": 250.0,
+        "confidence": "medium",
+        "assumptions": [
+          "图片显示约3条中等大小的煎培根，估算热量基于每条约50大卡。",
+          "红色水果块根据颜色和质地判断为西瓜，估算重量约150克。",
+          "黑色圆形小果实判断为蓝莓，估算数量约20-25颗。",
+          "总热量为各项食物估算值的加和，实际数值可能因烹饪用油量和具体分量而异。"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1107,
+        "output_tokens": 351,
+        "retries": 0,
+        "latency_ms": 2372,
+        "estimated_cost_usd": 6.975e-05
+      }
+    },
+    {
+      "id": "n5k-mixed-meal-016",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 3267,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 3247,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "n5k-mixed-meal-017",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 2621,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 2590,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "n5k-mixed-meal-018",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 2981,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 2962,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "n5k-mixed-meal-019",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2757,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "Roasted Brussels Sprouts and Potatoes",
+        "Roasted Brussels Sprouts",
+        "Roasted Potatoes (with skin)"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "Roasted Brussels Sprouts and Potatoes",
+        "items": [
+          {
+            "name": "Roasted Brussels Sprouts",
+            "portion_amount": 120.0,
+            "portion_unit": "g",
+            "energy_kcal": 85.0
+          },
+          {
+            "name": "Roasted Potatoes (with skin)",
+            "portion_amount": 150.0,
+            "portion_unit": "g",
+            "energy_kcal": 230.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 270.0,
+        "portion_unit": "g",
+        "energy_kcal": 315.0,
+        "energy_min_kcal": 280.0,
+        "energy_max_kcal": 360.0,
+        "confidence": "medium",
+        "assumptions": [
+          "Left item identified as roasted Brussels sprouts based on shape and charred appearance.",
+          "Right item identified as cubed roasted potatoes with skin based on texture and color.",
+          "Portion sizes are visual estimates; actual weight may vary.",
+          "Calorie estimates assume standard roasting with minimal added oil.",
+          "No visible sauces or additional ingredients detected."
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1107,
+        "output_tokens": 308,
+        "retries": 0,
+        "latency_ms": 2742,
+        "estimated_cost_usd": 6.497e-05
+      }
+    },
+    {
+      "id": "n5k-mixed-meal-020",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2898,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "混合餐盘（切块鸡肉、金枪鱼拌饭/碎肉、彩椒）",
+        "切块熟鸡肉",
+        "金枪鱼拌米饭或碎肉混合物（含胡萝卜丝）"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "混合餐盘（切块鸡肉、金枪鱼拌饭/碎肉、彩椒）",
+        "items": [
+          {
+            "name": "切块熟鸡肉",
+            "portion_amount": 150.0,
+            "portion_unit": "g",
+            "energy_kcal": 240.0
+          },
+          {
+            "name": "金枪鱼拌米饭或碎肉混合物（含胡萝卜丝）",
+            "portion_amount": 180.0,
+            "portion_unit": "g",
+            "energy_kcal": 250.0
+          },
+          {
+            "name": "生彩椒条（红、绿）",
+            "portion_amount": 80.0,
+            "portion_unit": "g",
+            "energy_kcal": 25.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 410.0,
+        "portion_unit": "g",
+        "energy_kcal": 515.0,
+        "energy_min_kcal": 450.0,
+        "energy_max_kcal": 600.0,
+        "confidence": "medium",
+        "assumptions": [
+          "中间下方食物判断为金枪鱼罐头拌饭或调味碎肉，因质地松散且混有胡萝卜丝，热量按两者混合估算",
+          "鸡肉为去皮烤或煮鸡胸肉，未添加明显油脂",
+          "蔬菜为生食状态，未加油酱料",
+          "份量基于标准餐盘视觉比例估算，可能存在±20%误差",
+          "未识别到酱汁、面包或其他隐藏成分"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1107,
+        "output_tokens": 396,
+        "retries": 0,
+        "latency_ms": 2882,
+        "estimated_cost_usd": 7.475e-05
+      }
+    },
+    {
+      "id": "n5k-mixed-meal-021",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 2651,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 2634,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "n5k-mixed-meal-022",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2360,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "混合餐盘（炒蛋/奶酪、烤红薯、西瓜）",
+        "炒蛋或碎奶酪",
+        "烤红薯块"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "混合餐盘（炒蛋/奶酪、烤红薯、西瓜）",
+        "items": [
+          {
+            "name": "炒蛋或碎奶酪",
+            "portion_amount": 150.0,
+            "portion_unit": "g",
+            "energy_kcal": 200.0
+          },
+          {
+            "name": "烤红薯块",
+            "portion_amount": 100.0,
+            "portion_unit": "g",
+            "energy_kcal": 100.0
+          },
+          {
+            "name": "西瓜块",
+            "portion_amount": 120.0,
+            "portion_unit": "g",
+            "energy_kcal": 45.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 370.0,
+        "portion_unit": "g",
+        "energy_kcal": 345.0,
+        "energy_min_kcal": 300.0,
+        "energy_max_kcal": 400.0,
+        "confidence": "medium",
+        "assumptions": [
+          "白色块状物识别为炒蛋或软质奶酪（如feta），热量按炒蛋估算",
+          "橙色块状物识别为烤红薯，未加明显油脂",
+          "红色块状物识别为西瓜，水分含量高热量低",
+          "份量基于视觉体积估算，可能存在偏差"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1107,
+        "output_tokens": 348,
+        "retries": 0,
+        "latency_ms": 2346,
+        "estimated_cost_usd": 6.942e-05
+      }
+    },
+    {
+      "id": "n5k-mixed-meal-023",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2206,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "混合餐点（含酱汁肉类/蔬菜及沙拉）",
+        "带酱汁的块状食物（疑似鸡肉或茄子）",
+        "混合生菜沙拉"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "混合餐点（含酱汁肉类/蔬菜及沙拉）",
+        "items": [
+          {
+            "name": "带酱汁的块状食物（疑似鸡肉或茄子）",
+            "portion_amount": 120.0,
+            "portion_unit": "g",
+            "energy_kcal": 250.0
+          },
+          {
+            "name": "混合生菜沙拉",
+            "portion_amount": 80.0,
+            "portion_unit": "g",
+            "energy_kcal": 40.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 200.0,
+        "portion_unit": "g",
+        "energy_kcal": 290.0,
+        "energy_min_kcal": 200.0,
+        "energy_max_kcal": 380.0,
+        "confidence": "low",
+        "assumptions": [
+          "上方深褐色块状物因反光和酱汁遮挡，无法确认具体食材（肉或蔬菜），按常见酱汁烹饪类估算热量。",
+          "沙拉中可能含有隐形油脂或调味汁，热量估算取中等值。",
+          "份量基于盘子大小与食物占比的视觉估算，可能存在偏差。"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1107,
+        "output_tokens": 273,
+        "retries": 0,
+        "latency_ms": 2190,
+        "estimated_cost_usd": 6.108e-05
+      }
+    },
+    {
+      "id": "n5k-mixed-meal-024",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 3496,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "混合蔬菜炒蛋盘",
+        "炒鸡蛋",
+        "烤茄子块"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "混合蔬菜炒蛋盘",
+        "items": [
+          {
+            "name": "炒鸡蛋",
+            "portion_amount": 150.0,
+            "portion_unit": "g",
+            "energy_kcal": 235.0
+          },
+          {
+            "name": "烤茄子块",
+            "portion_amount": 120.0,
+            "portion_unit": "g",
+            "energy_kcal": 100.0
+          },
+          {
+            "name": "清蒸/焯水西兰花",
+            "portion_amount": 100.0,
+            "portion_unit": "g",
+            "energy_kcal": 30.0
+          },
+          {
+            "name": "番茄切片",
+            "portion_amount": 100.0,
+            "portion_unit": "g",
+            "energy_kcal": 22.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 470.0,
+        "portion_unit": "g",
+        "energy_kcal": 387.0,
+        "energy_min_kcal": 350.0,
+        "energy_max_kcal": 450.0,
+        "confidence": "medium",
+        "assumptions": [
+          "食物为混合烹饪，包含鸡蛋、茄子、西兰花和番茄。",
+          "热量估算基于常见食材及少量烹饪用油假设。",
+          "具体油量无法从图片精确判断，故给出宽区间。",
+          "茄子吸油特性可能导致实际热量偏高。"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1107,
+        "output_tokens": 381,
+        "retries": 0,
+        "latency_ms": 3478,
+        "estimated_cost_usd": 7.308e-05
+      }
+    },
+    {
+      "id": "n5k-mixed-meal-025",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 2636,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 2621,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "n5k-mixed-meal-026",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 3415,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 3399,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "n5k-mixed-meal-027",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2778,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "混合水果蔬菜拼盘",
+        "哈密瓜/甜瓜块",
+        "草莓"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "混合水果蔬菜拼盘",
+        "items": [
+          {
+            "name": "哈密瓜/甜瓜块",
+            "portion_amount": 80.0,
+            "portion_unit": "g",
+            "energy_kcal": 35.0
+          },
+          {
+            "name": "草莓",
+            "portion_amount": 2.0,
+            "portion_unit": "pcs",
+            "energy_kcal": 15.0
+          },
+          {
+            "name": "蓝莓",
+            "portion_amount": 15.0,
+            "portion_unit": "g",
+            "energy_kcal": 10.0
+          },
+          {
+            "name": "混合绿叶沙拉菜",
+            "portion_amount": 60.0,
+            "portion_unit": "g",
+            "energy_kcal": 15.0
+          },
+          {
+            "name": "烤土豆块",
+            "portion_amount": 80.0,
+            "portion_unit": "g",
+            "energy_kcal": 100.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 255.0,
+        "portion_unit": "g",
+        "energy_kcal": 175.0,
+        "energy_min_kcal": 140.0,
+        "energy_max_kcal": 210.0,
+        "confidence": "medium",
+        "assumptions": [
+          "土豆块看起来经过烘烤或煎制，可能含有少量油脂，热量按含油估算。",
+          "沙拉菜未看到明显的厚重酱汁，按原味计算。",
+          "水果种类和数量基于视觉估算，可能存在误差。"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1107,
+        "output_tokens": 409,
+        "retries": 0,
+        "latency_ms": 2762,
+        "estimated_cost_usd": 7.619e-05
+      }
+    },
+    {
+      "id": "n5k-mixed-meal-028",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 3938,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 3920,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "n5k-mixed-meal-029",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2812,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "混合水果与烤红薯米饭餐盘",
+        "混合水果（菠萝、草莓、青提、蓝莓）",
+        "烤红薯块"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "混合水果与烤红薯米饭餐盘",
+        "items": [
+          {
+            "name": "混合水果（菠萝、草莓、青提、蓝莓）",
+            "portion_amount": 250.0,
+            "portion_unit": "g",
+            "energy_kcal": 110.0
+          },
+          {
+            "name": "烤红薯块",
+            "portion_amount": 100.0,
+            "portion_unit": "g",
+            "energy_kcal": 90.0
+          },
+          {
+            "name": "米饭（疑似混有鸡蛋或油脂）",
+            "portion_amount": 150.0,
+            "portion_unit": "g",
+            "energy_kcal": 230.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 500.0,
+        "portion_unit": "g",
+        "energy_kcal": 430.0,
+        "energy_min_kcal": 350.0,
+        "energy_max_kcal": 500.0,
+        "confidence": "medium",
+        "assumptions": [
+          "右侧米团中混有白色块状物，推测为炒蛋或奶酪，按含蛋炒饭估算热量。",
+          "右侧橙色块状物外观类似烤红薯或地瓜。",
+          "水果种类识别为菠萝、草莓、青提和蓝莓。",
+          "份量基于标准餐盘视觉比例进行宽区间估算。"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1107,
+        "output_tokens": 363,
+        "retries": 0,
+        "latency_ms": 2795,
+        "estimated_cost_usd": 7.108e-05
+      }
+    },
+    {
+      "id": "n5k-mixed-meal-030",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 2475,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 2458,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "n5k-difficult-meal-001",
+      "category": "difficult_meal",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2917,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "糙米鸡肉沙拉",
+        "糙米饭",
+        "烤/煎鸡肉"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "糙米鸡肉沙拉",
+        "items": [
+          {
+            "name": "糙米饭",
+            "portion_amount": 150.0,
+            "portion_unit": "g",
+            "energy_kcal": 215.0
+          },
+          {
+            "name": "烤/煎鸡肉",
+            "portion_amount": 120.0,
+            "portion_unit": "g",
+            "energy_kcal": 200.0
+          },
+          {
+            "name": "混合生菜沙拉",
+            "portion_amount": 50.0,
+            "portion_unit": "g",
+            "energy_kcal": 10.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 320.0,
+        "portion_unit": "g",
+        "energy_kcal": 425.0,
+        "energy_min_kcal": 350.0,
+        "energy_max_kcal": 500.0,
+        "confidence": "medium",
+        "assumptions": [
+          "图片显示一份混合餐食，包含糙米饭、烤/煎鸡肉块和混合生菜沙拉。",
+          "肉类看起来像是烤鸡胸肉或鸡腿肉，可能带有少量油脂或酱汁。",
+          "蔬菜部分包括绿色和紫色的生菜叶，以及少量红辣椒片。",
+          "由于无法看到完整的原始份量且光线较暗，热量估算基于标准份量的推测。",
+          "米饭看起来是煮熟的糙米，分量中等。"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1107,
+        "output_tokens": 369,
+        "retries": 0,
+        "latency_ms": 2897,
+        "estimated_cost_usd": 7.175e-05
+      }
+    },
+    {
+      "id": "n5k-difficult-meal-002",
+      "category": "difficult_meal",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 3142,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 3126,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "n5k-difficult-meal-003",
+      "category": "difficult_meal",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2333,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "煎鱼排配西葫芦和彩椒",
+        "煎鱼排",
+        "西葫芦片"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "煎鱼排配西葫芦和彩椒",
+        "items": [
+          {
+            "name": "煎鱼排",
+            "portion_amount": 120.0,
+            "portion_unit": "g",
+            "energy_kcal": 180.0
+          },
+          {
+            "name": "西葫芦片",
+            "portion_amount": 100.0,
+            "portion_unit": "g",
+            "energy_kcal": 17.0
+          },
+          {
+            "name": "黄色彩椒块",
+            "portion_amount": 50.0,
+            "portion_unit": "g",
+            "energy_kcal": 15.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 270.0,
+        "portion_unit": "g",
+        "energy_kcal": 212.0,
+        "energy_min_kcal": 190.0,
+        "energy_max_kcal": 240.0,
+        "confidence": "medium",
+        "assumptions": [
+          "鱼排为常见海鱼（如鲈鱼或鳕鱼）煎制，含少量烹饪油",
+          "蔬菜为水煮或清炒，未添加高热量酱料",
+          "份量基于标准餐盘视觉比例估算"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1107,
+        "output_tokens": 326,
+        "retries": 0,
+        "latency_ms": 2316,
+        "estimated_cost_usd": 6.697e-05
+      }
+    },
+    {
+      "id": "n5k-difficult-meal-004",
+      "category": "difficult_meal",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 3009,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 2991,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "n5k-difficult-meal-005",
+      "category": "difficult_meal",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2697,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "香肠与蔬菜沙拉拼盘",
+        "切片煎香肠",
+        "混合蔬菜沙拉（含黄瓜、胡萝卜丝、绿叶菜）"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "香肠与蔬菜沙拉拼盘",
+        "items": [
+          {
+            "name": "切片煎香肠",
+            "portion_amount": 150.0,
+            "portion_unit": "g",
+            "energy_kcal": 350.0
+          },
+          {
+            "name": "混合蔬菜沙拉（含黄瓜、胡萝卜丝、绿叶菜）",
+            "portion_amount": 120.0,
+            "portion_unit": "g",
+            "energy_kcal": 40.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 270.0,
+        "portion_unit": "g",
+        "energy_kcal": 390.0,
+        "energy_min_kcal": 350.0,
+        "energy_max_kcal": 450.0,
+        "confidence": "medium",
+        "assumptions": [
+          "香肠为普通猪肉或混合肉香肠，非纯素或低脂品种",
+          "沙拉未添加高热量酱料（如蛋黄酱、油醋汁过量）",
+          "份量基于常见纸盘容量及视觉比例估算",
+          "香肠切片约12-15片，单片约10-12g",
+          "沙拉包含可见黄瓜片、胡萝卜丝和深绿色叶菜"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1107,
+        "output_tokens": 326,
+        "retries": 0,
+        "latency_ms": 2682,
+        "estimated_cost_usd": 6.697e-05
+      }
+    },
+    {
+      "id": "n5k-difficult-meal-006",
+      "category": "difficult_meal",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 2635,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 2621,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "n5k-difficult-meal-007",
+      "category": "difficult_meal",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 3329,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 3311,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "n5k-difficult-meal-008",
+      "category": "difficult_meal",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2440,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "草莓菠菜沙拉",
+        "草莓",
+        "菠菜"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "草莓菠菜沙拉",
+        "items": [
+          {
+            "name": "草莓",
+            "portion_amount": 150.0,
+            "portion_unit": "g",
+            "energy_kcal": 45.0
+          },
+          {
+            "name": "菠菜",
+            "portion_amount": 80.0,
+            "portion_unit": "g",
+            "energy_kcal": 12.0
+          },
+          {
+            "name": "胡萝卜丝",
+            "portion_amount": 10.0,
+            "portion_unit": "g",
+            "energy_kcal": 4.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 240.0,
+        "portion_unit": "g",
+        "energy_kcal": 61.0,
+        "energy_min_kcal": 50.0,
+        "energy_max_kcal": 80.0,
+        "confidence": "medium",
+        "assumptions": [
+          "红色块状物识别为切开的草莓，基于颜色和果肉纹理判断。",
+          "绿色叶状物识别为煮熟的菠菜或深色绿叶菜，叶片形态符合。",
+          "橙色细丝识别为少量胡萝卜点缀。",
+          "热量估算基于常见食材标准值，未包含额外油醋汁或酱料。",
+          "份量基于盘子大小和食物堆积程度进行视觉估算。"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1107,
+        "output_tokens": 345,
+        "retries": 0,
+        "latency_ms": 2423,
+        "estimated_cost_usd": 6.908e-05
+      }
+    },
+    {
+      "id": "n5k-difficult-meal-009",
+      "category": "difficult_meal",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2177,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "清炒豇豆配煎鸡胸肉",
+        "清炒豇豆",
+        "煎鸡胸肉"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "清炒豇豆配煎鸡胸肉",
+        "items": [
+          {
+            "name": "清炒豇豆",
+            "portion_amount": 200.0,
+            "portion_unit": "g",
+            "energy_kcal": 60.0
+          },
+          {
+            "name": "煎鸡胸肉",
+            "portion_amount": 100.0,
+            "portion_unit": "g",
+            "energy_kcal": 165.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 300.0,
+        "portion_unit": "g",
+        "energy_kcal": 225.0,
+        "energy_min_kcal": 180.0,
+        "energy_max_kcal": 270.0,
+        "confidence": "medium",
+        "assumptions": [
+          "绿色长条蔬菜识别为豇豆（长豆角），估算为清炒或水煮，含少量烹饪油。",
+          "右侧浅色块状物识别为鸡胸肉，表面有煎制痕迹，估算含油脂。",
+          "份量基于标准餐盘视觉比例进行估算，未包含餐具或盘子重量。",
+          "热量计算基于常见食材平均数值，实际热量取决于具体用油量。"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1107,
+        "output_tokens": 288,
+        "retries": 0,
+        "latency_ms": 2165,
+        "estimated_cost_usd": 6.275e-05
+      }
+    },
+    {
+      "id": "n5k-difficult-meal-010",
+      "category": "difficult_meal",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 2798,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 2784,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "off-beverage-001",
+      "category": "beverage",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 1678,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 1670,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "off-beverage-002",
+      "category": "beverage",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 1651,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 1642,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "off-beverage-003",
+      "category": "beverage",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 2256,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 2243,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "off-beverage-004",
+      "category": "beverage",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 1651,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [],
+      "estimate": {
+        "is_food": false,
+        "name": null,
+        "items": [],
+        "meal_type": "other",
+        "portion_amount": null,
+        "portion_unit": null,
+        "energy_kcal": null,
+        "energy_min_kcal": null,
+        "energy_max_kcal": null,
+        "confidence": "low",
+        "assumptions": [
+          "图片显示的是Diet Coke（健怡可乐）的12罐装外包装箱，而非直接可食用的单份食物。",
+          "虽然内容物为饮料，但作为整箱包装商品无法直接进行单份热量估算。",
+          "若将其视为12罐饮料的集合，每罐355ml零卡路里饮料总热量仍接近0，但通常不将整箱包装定义为'食物'。"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 877,
+        "output_tokens": 202,
+        "retries": 0,
+        "latency_ms": 1636,
+        "estimated_cost_usd": 4.681e-05
+      }
+    },
+    {
+      "id": "off-beverage-005",
+      "category": "beverage",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 1028,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [],
+      "estimate": {
+        "is_food": false,
+        "name": null,
+        "items": [],
+        "meal_type": "other",
+        "portion_amount": null,
+        "portion_unit": null,
+        "energy_kcal": null,
+        "energy_min_kcal": null,
+        "energy_max_kcal": null,
+        "confidence": "medium",
+        "assumptions": [
+          "图片显示为一瓶依云（Evian）天然矿泉水。",
+          "水通常不被归类为提供热量的‘食物’，而是饮品。",
+          "如果用户意图分析液体摄入，其热量为0。"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 882,
+        "output_tokens": 92,
+        "retries": 0,
+        "latency_ms": 1014,
+        "estimated_cost_usd": 3.472e-05
+      }
+    },
+    {
+      "id": "off-beverage-006",
+      "category": "beverage",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 1723,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [],
+      "estimate": {
+        "is_food": false,
+        "name": null,
+        "items": [],
+        "meal_type": "other",
+        "portion_amount": null,
+        "portion_unit": null,
+        "energy_kcal": null,
+        "energy_min_kcal": null,
+        "energy_max_kcal": null,
+        "confidence": "low",
+        "assumptions": [
+          "图片显示为一瓶圣培露（S.Pellegrino）气泡水，属于无热量饮料。",
+          "根据系统提示'只分析食物'，液体饮料通常不被归类为固体食物。",
+          "若需将其作为'摄入物'记录，请用户明确修正分类。"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 887,
+        "output_tokens": 174,
+        "retries": 0,
+        "latency_ms": 1549,
+        "estimated_cost_usd": 4.397e-05
+      }
+    },
+    {
+      "id": "off-beverage-007",
+      "category": "beverage",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2069,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "Coca-Cola (No Azúcar / Zero Sugar)",
+        "Coca-Cola No Azúcar (330ml can)"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "Coca-Cola (No Azúcar / Zero Sugar)",
+        "items": [
+          {
+            "name": "Coca-Cola No Azúcar (330ml can)",
+            "portion_amount": 330.0,
+            "portion_unit": "ml",
+            "energy_kcal": 0.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 330.0,
+        "portion_unit": "ml",
+        "energy_kcal": 0.0,
+        "energy_min_kcal": 0.0,
+        "energy_max_kcal": 0.0,
+        "confidence": "medium",
+        "assumptions": [
+          "Image shows a standard 330ml Coca-Cola can labeled 'No Azúcar' (No Sugar/Zero Sugar).",
+          "Zero sugar variants typically contain 0 kcal as they use artificial sweeteners.",
+          "Volume assumed to be standard 330ml based on can proportions and common packaging."
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 879,
+        "output_tokens": 248,
+        "retries": 0,
+        "latency_ms": 2043,
+        "estimated_cost_usd": 5.197e-05
+      }
+    },
+    {
+      "id": "off-beverage-008",
+      "category": "beverage",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 2450,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 2436,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "off-beverage-009",
+      "category": "beverage",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2311,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "Alpro Nutty Almond Drink"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "Alpro Nutty Almond Drink",
+        "items": [
+          {
+            "name": "Alpro Nutty Almond Drink",
+            "portion_amount": 200.0,
+            "portion_unit": "ml",
+            "energy_kcal": 129.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 200.0,
+        "portion_unit": "ml",
+        "energy_kcal": 129.0,
+        "energy_min_kcal": 100.0,
+        "energy_max_kcal": 160.0,
+        "confidence": "medium",
+        "assumptions": [
+          "Assuming a standard serving size of 200ml as this is a common carton size for drinks.",
+          "Calorie estimate based on typical almond drink nutrition (approx. 64kcal per 100ml).",
+          "Product identified as 'Alpro Mediterranean Nutty Almond' based on visible branding."
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 891,
+        "output_tokens": 261,
+        "retries": 0,
+        "latency_ms": 2298,
+        "estimated_cost_usd": 5.375e-05
+      }
+    },
+    {
+      "id": "off-beverage-010",
+      "category": "beverage",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 1853,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [],
+      "estimate": {
+        "is_food": false,
+        "name": null,
+        "items": [],
+        "meal_type": "other",
+        "portion_amount": null,
+        "portion_unit": null,
+        "energy_kcal": null,
+        "energy_min_kcal": null,
+        "energy_max_kcal": null,
+        "confidence": "low",
+        "assumptions": [
+          "图片显示为一瓶瓶装水（Sidi Ali品牌），水通常不被视为提供热量的食物。",
+          "无法从图片中确定具体的液体体积（如毫升数）。"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 885,
+        "output_tokens": 148,
+        "retries": 0,
+        "latency_ms": 1840,
+        "estimated_cost_usd": 4.103e-05
+      }
+    },
+    {
+      "id": "off-packaged-001",
+      "category": "packaged",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 1919,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 1887,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "off-packaged-002",
+      "category": "packaged",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 1539,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 1527,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "off-packaged-003",
+      "category": "packaged",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 1568,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 1552,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "off-packaged-004",
+      "category": "packaged",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 1711,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "Doritos Nacho Cheese Tortilla Chips (Single Packet)",
+        "Doritos Nacho Cheese Tortilla Chips"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "Doritos Nacho Cheese Tortilla Chips (Single Packet)",
+        "items": [
+          {
+            "name": "Doritos Nacho Cheese Tortilla Chips",
+            "portion_amount": 28.3,
+            "portion_unit": "g",
+            "energy_kcal": 150.0
+          }
+        ],
+        "meal_type": "snack",
+        "portion_amount": 28.3,
+        "portion_unit": "g",
+        "energy_kcal": 150.0,
+        "energy_min_kcal": 140.0,
+        "energy_max_kcal": 160.0,
+        "confidence": "medium",
+        "assumptions": [
+          "The image shows a standard single-serving size packet (1 oz / 28.3 g) of Doritos Nacho Cheese.",
+          "The calorie count printed on the bag (150) corresponds to this specific serving size.",
+          "The blue item in the background is indistinct and excluded from analysis."
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 939,
+        "output_tokens": 260,
+        "retries": 0,
+        "latency_ms": 1698,
+        "estimated_cost_usd": 5.497e-05
+      }
+    },
+    {
+      "id": "off-packaged-005",
+      "category": "packaged",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 1385,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [],
+      "estimate": {
+        "is_food": false,
+        "name": null,
+        "items": [],
+        "meal_type": "other",
+        "portion_amount": null,
+        "portion_unit": null,
+        "energy_kcal": null,
+        "energy_min_kcal": null,
+        "energy_max_kcal": null,
+        "confidence": "low",
+        "assumptions": [
+          "图片显示的是未烹饪的意大利面包装盒，而非烹饪后的食物。",
+          "无法确定盒内剩余的具体重量或份数。"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 877,
+        "output_tokens": 140,
+        "retries": 0,
+        "latency_ms": 1369,
+        "estimated_cost_usd": 3.992e-05
+      }
+    },
+    {
+      "id": "off-packaged-006",
+      "category": "packaged",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 1943,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 1930,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "off-packaged-007",
+      "category": "packaged",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 2594,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 2583,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "off-packaged-008",
+      "category": "packaged",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 3273,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 3259,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "off-packaged-009",
+      "category": "packaged",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 1966,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 1953,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "off-packaged-010",
+      "category": "packaged",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 1367,
+      "schema_valid": false,
+      "fallback_used": true,
+      "predicted_names": [],
+      "estimate": null,
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "retries": 0,
+        "latency_ms": 1358,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "openverse-nonfood-001",
+      "category": "nonfood",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 1142,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [],
+      "estimate": {
+        "is_food": false,
+        "name": null,
+        "items": [],
+        "meal_type": "other",
+        "portion_amount": null,
+        "portion_unit": null,
+        "energy_kcal": null,
+        "energy_min_kcal": null,
+        "energy_max_kcal": null,
+        "confidence": "low",
+        "assumptions": [
+          "图片显示的是电脑键盘，不是食物。"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1035,
+        "output_tokens": 119,
+        "retries": 0,
+        "latency_ms": 1129,
+        "estimated_cost_usd": 4.197e-05
+      }
+    },
+    {
+      "id": "openverse-nonfood-002",
+      "category": "nonfood",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 1637,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [],
+      "estimate": {
+        "is_food": false,
+        "name": null,
+        "items": [],
+        "meal_type": "other",
+        "portion_amount": null,
+        "portion_unit": null,
+        "energy_kcal": null,
+        "energy_min_kcal": null,
+        "energy_max_kcal": null,
+        "confidence": "low",
+        "assumptions": [
+          "图片显示的是乡村房屋的外墙、窗户上的蕾丝窗帘和一把黄色椅子的靠背。",
+          "画面中没有任何可见的食物或饮料。"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1035,
+        "output_tokens": 142,
+        "retries": 0,
+        "latency_ms": 1624,
+        "estimated_cost_usd": 4.453e-05
+      }
+    },
+    {
+      "id": "openverse-nonfood-003",
+      "category": "nonfood",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 1173,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [],
+      "estimate": {
+        "is_food": false,
+        "name": null,
+        "items": [],
+        "meal_type": "other",
+        "portion_amount": null,
+        "portion_unit": null,
+        "energy_kcal": null,
+        "energy_min_kcal": null,
+        "energy_max_kcal": null,
+        "confidence": "low",
+        "assumptions": [
+          "图片显示的是运动鞋的鞋舌和织物细节，并非食物。"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1073,
+        "output_tokens": 124,
+        "retries": 0,
+        "latency_ms": 1161,
+        "estimated_cost_usd": 4.358e-05
+      }
+    },
+    {
+      "id": "openverse-nonfood-004",
+      "category": "nonfood",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 1311,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [],
+      "estimate": {
+        "is_food": false,
+        "name": null,
+        "items": [],
+        "meal_type": "other",
+        "portion_amount": null,
+        "portion_unit": null,
+        "energy_kcal": null,
+        "energy_min_kcal": null,
+        "energy_max_kcal": null,
+        "confidence": "low",
+        "assumptions": [
+          "图片显示的是由自行车轮和金属管构成的艺术装置或建筑结构，并非食物。"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1035,
+        "output_tokens": 128,
+        "retries": 0,
+        "latency_ms": 1299,
+        "estimated_cost_usd": 4.297e-05
+      }
+    },
+    {
+      "id": "openverse-nonfood-005",
+      "category": "nonfood",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 1171,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [],
+      "estimate": {
+        "is_food": false,
+        "name": null,
+        "items": [],
+        "meal_type": "other",
+        "portion_amount": null,
+        "portion_unit": null,
+        "energy_kcal": null,
+        "energy_min_kcal": null,
+        "energy_max_kcal": null,
+        "confidence": "low",
+        "assumptions": [
+          "图片显示的是Beats Solo耳机，属于电子产品，不是食物。"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1035,
+        "output_tokens": 124,
+        "retries": 0,
+        "latency_ms": 1161,
+        "estimated_cost_usd": 4.253e-05
+      }
+    },
+    {
+      "id": "openverse-nonfood-006",
+      "category": "nonfood",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 1163,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [],
+      "estimate": {
+        "is_food": false,
+        "name": null,
+        "items": [],
+        "meal_type": "other",
+        "portion_amount": null,
+        "portion_unit": null,
+        "energy_kcal": null,
+        "energy_min_kcal": null,
+        "energy_max_kcal": null,
+        "confidence": "low",
+        "assumptions": [
+          "图片中展示的是工具（如万用表、钳子、螺丝刀）、电子元件、公文包和文件，没有可识别的食物。"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1073,
+        "output_tokens": 125,
+        "retries": 0,
+        "latency_ms": 1149,
+        "estimated_cost_usd": 4.369e-05
+      }
+    },
+    {
+      "id": "openverse-nonfood-007",
+      "category": "nonfood",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 1820,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [],
+      "estimate": {
+        "is_food": false,
+        "name": null,
+        "items": [],
+        "meal_type": "other",
+        "portion_amount": null,
+        "portion_unit": null,
+        "energy_kcal": null,
+        "energy_min_kcal": null,
+        "energy_max_kcal": null,
+        "confidence": "low",
+        "assumptions": [
+          "图片显示的是一盆室内观赏植物（疑似散尾葵或类似的棕榈科植物），并非食物。",
+          "没有可见的可食用部分、餐具或食物包装。"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1073,
+        "output_tokens": 146,
+        "retries": 0,
+        "latency_ms": 1810,
+        "estimated_cost_usd": 4.603e-05
+      }
+    },
+    {
+      "id": "openverse-nonfood-008",
+      "category": "nonfood",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 1235,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [],
+      "estimate": {
+        "is_food": false,
+        "name": null,
+        "items": [],
+        "meal_type": "other",
+        "portion_amount": null,
+        "portion_unit": null,
+        "energy_kcal": null,
+        "energy_min_kcal": null,
+        "energy_max_kcal": null,
+        "confidence": "low",
+        "assumptions": [
+          "图片显示的是自行车交通信号灯，不是食物。"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1035,
+        "output_tokens": 120,
+        "retries": 0,
+        "latency_ms": 1223,
+        "estimated_cost_usd": 4.208e-05
+      }
+    },
+    {
+      "id": "openverse-nonfood-009",
+      "category": "nonfood",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 1160,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [],
+      "estimate": {
+        "is_food": false,
+        "name": null,
+        "items": [],
+        "meal_type": "other",
+        "portion_amount": null,
+        "portion_unit": null,
+        "energy_kcal": null,
+        "energy_min_kcal": null,
+        "energy_max_kcal": null,
+        "confidence": "low",
+        "assumptions": [
+          "图片显示的是一个哑铃（健身器材），不是食物。"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1168,
+        "output_tokens": 121,
+        "retries": 0,
+        "latency_ms": 1147,
+        "estimated_cost_usd": 4.589e-05
+      }
+    },
+    {
+      "id": "openverse-nonfood-010",
+      "category": "nonfood",
+      "status_code": 200,
+      "status": "manual_required",
+      "elapsed_ms": 817,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [],
+      "estimate": {
+        "is_food": false,
+        "name": null,
+        "items": [],
+        "meal_type": "other",
+        "portion_amount": null,
+        "portion_unit": null,
+        "energy_kcal": null,
+        "energy_min_kcal": null,
+        "energy_max_kcal": null,
+        "confidence": "low",
+        "assumptions": [
+          "图片显示的是一把原声吉他，属于乐器，不是食物。"
+        ],
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 1282,
+        "output_tokens": 50,
+        "retries": 0,
+        "latency_ms": 805,
+        "estimated_cost_usd": 4.117e-05
+      }
+    }
+  ]
+}

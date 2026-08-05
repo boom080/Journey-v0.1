@@ -1,0 +1,702 @@
+[
+  {
+    "id": "intent-food-001",
+    "input": "早餐吃了燕麦粥 320 千卡",
+    "expected": [
+      "food"
+    ]
+  },
+  {
+    "id": "intent-food-002",
+    "input": "午餐吃鸡肉饭 520 大卡",
+    "expected": [
+      "food"
+    ]
+  },
+  {
+    "id": "intent-food-003",
+    "input": "晚餐喝了牛奶 180 kcal",
+    "expected": [
+      "food"
+    ]
+  },
+  {
+    "id": "intent-food-004",
+    "input": "加餐吃了一个苹果",
+    "expected": [
+      "food"
+    ]
+  },
+  {
+    "id": "intent-food-005",
+    "input": "夜宵吃了鸡蛋",
+    "expected": [
+      "food"
+    ]
+  },
+  {
+    "id": "intent-food-006",
+    "input": "今天吃了米饭",
+    "expected": [
+      "food"
+    ]
+  },
+  {
+    "id": "intent-food-007",
+    "input": "刚喝了一杯咖啡",
+    "expected": [
+      "food"
+    ]
+  },
+  {
+    "id": "intent-food-008",
+    "input": "午饭吃了牛肉面",
+    "expected": [
+      "food"
+    ]
+  },
+  {
+    "id": "intent-food-009",
+    "input": "早餐是面包和奶",
+    "expected": [
+      "food"
+    ]
+  },
+  {
+    "id": "intent-food-010",
+    "input": "晚餐吃水果沙拉",
+    "expected": [
+      "food"
+    ]
+  },
+  {
+    "id": "intent-food-011",
+    "input": "记录午餐番茄炒蛋",
+    "expected": [
+      "food"
+    ]
+  },
+  {
+    "id": "intent-food-012",
+    "input": "我吃了半碗米饭",
+    "expected": [
+      "food"
+    ]
+  },
+  {
+    "id": "intent-food-013",
+    "input": "下午加餐酸奶",
+    "expected": [
+      "food"
+    ]
+  },
+  {
+    "id": "intent-food-014",
+    "input": "晚上喝豆浆",
+    "expected": [
+      "food"
+    ]
+  },
+  {
+    "id": "intent-food-015",
+    "input": "早餐鸡蛋两枚",
+    "expected": [
+      "food"
+    ]
+  },
+  {
+    "id": "intent-food-016",
+    "input": "午餐一份面",
+    "expected": [
+      "food"
+    ]
+  },
+  {
+    "id": "intent-food-017",
+    "input": "晚餐吃了鱼",
+    "expected": [
+      "food"
+    ]
+  },
+  {
+    "id": "intent-food-018",
+    "input": "记录一杯奶茶",
+    "expected": [
+      "food"
+    ]
+  },
+  {
+    "id": "intent-food-019",
+    "input": "吃了一根香蕉",
+    "expected": [
+      "food"
+    ]
+  },
+  {
+    "id": "intent-food-020",
+    "input": "喝了蛋白奶昔",
+    "expected": [
+      "food"
+    ]
+  },
+  {
+    "id": "intent-food-021",
+    "input": "中午鸡胸肉 400 千卡",
+    "expected": [
+      "food"
+    ]
+  },
+  {
+    "id": "intent-food-022",
+    "input": "晚上吃蔬菜汤",
+    "expected": [
+      "food"
+    ]
+  },
+  {
+    "id": "intent-food-023",
+    "input": "加餐一小把坚果",
+    "expected": [
+      "food"
+    ]
+  },
+  {
+    "id": "intent-food-024",
+    "input": "早餐喝咖啡",
+    "expected": [
+      "food"
+    ]
+  },
+  {
+    "id": "intent-food-025",
+    "input": "午餐吃盖饭 600 千卡",
+    "expected": [
+      "food"
+    ]
+  },
+  {
+    "id": "intent-activity-001",
+    "input": "跑步 30 分钟",
+    "expected": [
+      "activity"
+    ]
+  },
+  {
+    "id": "intent-activity-002",
+    "input": "散步 20 分钟",
+    "expected": [
+      "activity"
+    ]
+  },
+  {
+    "id": "intent-activity-003",
+    "input": "游泳 45 分钟",
+    "expected": [
+      "activity"
+    ]
+  },
+  {
+    "id": "intent-activity-004",
+    "input": "骑车 60 分钟",
+    "expected": [
+      "activity"
+    ]
+  },
+  {
+    "id": "intent-activity-005",
+    "input": "瑜伽 25 分钟",
+    "expected": [
+      "activity"
+    ]
+  },
+  {
+    "id": "intent-activity-006",
+    "input": "力量训练 50 分钟",
+    "expected": [
+      "activity"
+    ]
+  },
+  {
+    "id": "intent-activity-007",
+    "input": "今天运动了半小时",
+    "expected": [
+      "activity"
+    ]
+  },
+  {
+    "id": "intent-activity-008",
+    "input": "完成跳绳 15 分钟",
+    "expected": [
+      "activity"
+    ]
+  },
+  {
+    "id": "intent-activity-009",
+    "input": "健身房训练 40 分钟",
+    "expected": [
+      "activity"
+    ]
+  },
+  {
+    "id": "intent-activity-010",
+    "input": "走路 6000 步",
+    "expected": [
+      "activity"
+    ]
+  },
+  {
+    "id": "intent-activity-011",
+    "input": "慢跑消耗 220 千卡",
+    "expected": [
+      "activity"
+    ]
+  },
+  {
+    "id": "intent-activity-012",
+    "input": "低强度散步",
+    "expected": [
+      "activity"
+    ]
+  },
+  {
+    "id": "intent-activity-013",
+    "input": "高强度冲刺 10 分钟",
+    "expected": [
+      "activity"
+    ]
+  },
+  {
+    "id": "intent-activity-014",
+    "input": "做了核心训练",
+    "expected": [
+      "activity"
+    ]
+  },
+  {
+    "id": "intent-activity-015",
+    "input": "完成了拉伸",
+    "expected": [
+      "activity"
+    ]
+  },
+  {
+    "id": "intent-activity-016",
+    "input": "骑车通勤 35 分钟",
+    "expected": [
+      "activity"
+    ]
+  },
+  {
+    "id": "intent-activity-017",
+    "input": "游泳消耗 300 千卡",
+    "expected": [
+      "activity"
+    ]
+  },
+  {
+    "id": "intent-activity-018",
+    "input": "跑了 5 公里",
+    "expected": [
+      "activity"
+    ]
+  },
+  {
+    "id": "intent-activity-019",
+    "input": "做瑜伽恢复",
+    "expected": [
+      "activity"
+    ]
+  },
+  {
+    "id": "intent-activity-020",
+    "input": "运动了 90 分钟",
+    "expected": [
+      "activity"
+    ]
+  },
+  {
+    "id": "intent-weight-001",
+    "input": "体重 65.5",
+    "expected": [
+      "weight"
+    ]
+  },
+  {
+    "id": "intent-weight-002",
+    "input": "体重是 72 kg",
+    "expected": [
+      "weight"
+    ]
+  },
+  {
+    "id": "intent-weight-003",
+    "input": "称重 58.2",
+    "expected": [
+      "weight"
+    ]
+  },
+  {
+    "id": "intent-weight-004",
+    "input": "称了 80.0",
+    "expected": [
+      "weight"
+    ]
+  },
+  {
+    "id": "intent-weight-005",
+    "input": "体重为 61",
+    "expected": [
+      "weight"
+    ]
+  },
+  {
+    "id": "intent-weight-006",
+    "input": "早晨体重 70.3",
+    "expected": [
+      "weight"
+    ]
+  },
+  {
+    "id": "intent-weight-007",
+    "input": "今天称重 66",
+    "expected": [
+      "weight"
+    ]
+  },
+  {
+    "id": "intent-weight-008",
+    "input": "称了 55.8 kg",
+    "expected": [
+      "weight"
+    ]
+  },
+  {
+    "id": "intent-weight-009",
+    "input": "体重 90",
+    "expected": [
+      "weight"
+    ]
+  },
+  {
+    "id": "intent-weight-010",
+    "input": "体重为 48.6",
+    "expected": [
+      "weight"
+    ]
+  },
+  {
+    "id": "intent-profile-001",
+    "input": "查看我的身高",
+    "expected": [
+      "profile"
+    ]
+  },
+  {
+    "id": "intent-profile-002",
+    "input": "我的体重是多少",
+    "expected": [
+      "profile"
+    ]
+  },
+  {
+    "id": "intent-profile-003",
+    "input": "显示我的目标",
+    "expected": [
+      "profile"
+    ]
+  },
+  {
+    "id": "intent-profile-004",
+    "input": "打开我的画像",
+    "expected": [
+      "profile"
+    ]
+  },
+  {
+    "id": "intent-profile-005",
+    "input": "查看个人资料",
+    "expected": [
+      "profile"
+    ]
+  },
+  {
+    "id": "intent-profile-006",
+    "input": "我的身高记录",
+    "expected": [
+      "profile"
+    ]
+  },
+  {
+    "id": "intent-profile-007",
+    "input": "告诉我我的目标",
+    "expected": [
+      "profile"
+    ]
+  },
+  {
+    "id": "intent-profile-008",
+    "input": "查询我的画像",
+    "expected": [
+      "profile"
+    ]
+  },
+  {
+    "id": "intent-profile-009",
+    "input": "读取个人资料",
+    "expected": [
+      "profile"
+    ]
+  },
+  {
+    "id": "intent-profile-010",
+    "input": "我的体重记录是多少",
+    "expected": [
+      "profile"
+    ]
+  },
+  {
+    "id": "intent-history-001",
+    "input": "查看历史",
+    "expected": [
+      "history"
+    ]
+  },
+  {
+    "id": "intent-history-002",
+    "input": "最近记录有哪些",
+    "expected": [
+      "history"
+    ]
+  },
+  {
+    "id": "intent-history-003",
+    "input": "看看过去几天",
+    "expected": [
+      "history"
+    ]
+  },
+  {
+    "id": "intent-history-004",
+    "input": "打开 Journey",
+    "expected": [
+      "history"
+    ]
+  },
+  {
+    "id": "intent-history-005",
+    "input": "journey",
+    "expected": [
+      "history"
+    ]
+  },
+  {
+    "id": "intent-history-006",
+    "input": "饮食趋势怎么样",
+    "expected": [
+      "history"
+    ]
+  },
+  {
+    "id": "intent-history-007",
+    "input": "查询运动历史",
+    "expected": [
+      "history"
+    ]
+  },
+  {
+    "id": "intent-history-008",
+    "input": "最近记录",
+    "expected": [
+      "history"
+    ]
+  },
+  {
+    "id": "intent-history-009",
+    "input": "过去几天的数据",
+    "expected": [
+      "history"
+    ]
+  },
+  {
+    "id": "intent-history-010",
+    "input": "Journey 历史",
+    "expected": [
+      "history"
+    ]
+  },
+  {
+    "id": "intent-knowledge-001",
+    "input": "蛋白质为什么重要？",
+    "expected": [
+      "knowledge"
+    ]
+  },
+  {
+    "id": "intent-knowledge-002",
+    "input": "如何保持营养均衡？",
+    "expected": [
+      "knowledge"
+    ]
+  },
+  {
+    "id": "intent-knowledge-003",
+    "input": "补水多少合适？",
+    "expected": [
+      "knowledge"
+    ]
+  },
+  {
+    "id": "intent-knowledge-004",
+    "input": "睡眠如何影响恢复？",
+    "expected": [
+      "knowledge"
+    ]
+  },
+  {
+    "id": "intent-knowledge-005",
+    "input": "健康减脂要注意什么？",
+    "expected": [
+      "knowledge"
+    ]
+  },
+  {
+    "id": "intent-knowledge-006",
+    "input": "运动恢复怎么安排？",
+    "expected": [
+      "knowledge"
+    ]
+  },
+  {
+    "id": "intent-knowledge-007",
+    "input": "热量是什么？",
+    "expected": [
+      "knowledge"
+    ]
+  },
+  {
+    "id": "intent-knowledge-008",
+    "input": "为什么要喝水？",
+    "expected": [
+      "knowledge"
+    ]
+  },
+  {
+    "id": "intent-knowledge-009",
+    "input": "训练后如何恢复？",
+    "expected": [
+      "knowledge"
+    ]
+  },
+  {
+    "id": "intent-knowledge-010",
+    "input": "营养知识咨询？",
+    "expected": [
+      "knowledge"
+    ]
+  },
+  {
+    "id": "intent-recommendation-001",
+    "input": "根据今天记录给我建议",
+    "expected": [
+      "recommendation"
+    ]
+  },
+  {
+    "id": "intent-recommendation-002",
+    "input": "推荐今天怎么吃",
+    "expected": [
+      "recommendation"
+    ]
+  },
+  {
+    "id": "intent-recommendation-003",
+    "input": "今天怎么安排",
+    "expected": [
+      "recommendation"
+    ]
+  },
+  {
+    "id": "intent-recommendation-004",
+    "input": "给我一个恢复建议",
+    "expected": [
+      "recommendation"
+    ]
+  },
+  {
+    "id": "intent-recommendation-005",
+    "input": "按目标推荐计划",
+    "expected": [
+      "recommendation"
+    ]
+  },
+  {
+    "id": "intent-weekly_summary-001",
+    "input": "生成周总结",
+    "expected": [
+      "weekly_summary"
+    ]
+  },
+  {
+    "id": "intent-weekly_summary-002",
+    "input": "请做本周总结",
+    "expected": [
+      "weekly_summary"
+    ]
+  },
+  {
+    "id": "intent-weekly_summary-003",
+    "input": "总结这一周",
+    "expected": [
+      "weekly_summary"
+    ]
+  },
+  {
+    "id": "intent-weekly_summary-004",
+    "input": "看看过去一周",
+    "expected": [
+      "weekly_summary"
+    ]
+  },
+  {
+    "id": "intent-weekly_summary-005",
+    "input": "本周总结一下",
+    "expected": [
+      "weekly_summary"
+    ]
+  },
+  {
+    "id": "intent-clarify-001",
+    "input": "帮我处理一下",
+    "expected": [
+      "clarify"
+    ]
+  },
+  {
+    "id": "intent-clarify-002",
+    "input": "记一下",
+    "expected": [
+      "clarify"
+    ]
+  },
+  {
+    "id": "intent-clarify-003",
+    "input": "看看这个",
+    "expected": [
+      "clarify"
+    ]
+  },
+  {
+    "id": "intent-clarify-004",
+    "input": "我想问问",
+    "expected": [
+      "clarify"
+    ]
+  },
+  {
+    "id": "intent-clarify-005",
+    "input": "下一步怎么办",
+    "expected": [
+      "clarify"
+    ]
+  }
+]

@@ -1,0 +1,162 @@
+[
+  {
+    "id": "mixed-1-01",
+    "input": "午餐吃鸡肉饭 520 千卡，然后跑步 30 分钟",
+    "expected": [
+      "food",
+      "activity"
+    ]
+  },
+  {
+    "id": "mixed-1-02",
+    "input": "体重 65.5，然后早餐吃燕麦粥 320 千卡",
+    "expected": [
+      "weight",
+      "food"
+    ]
+  },
+  {
+    "id": "mixed-1-03",
+    "input": "散步 20 分钟，然后查看最近记录",
+    "expected": [
+      "activity",
+      "history"
+    ]
+  },
+  {
+    "id": "mixed-1-04",
+    "input": "查看我的目标，然后给我建议",
+    "expected": [
+      "profile",
+      "recommendation"
+    ]
+  },
+  {
+    "id": "mixed-1-05",
+    "input": "睡眠如何影响恢复？然后生成周总结",
+    "expected": [
+      "knowledge",
+      "weekly_summary"
+    ]
+  },
+  {
+    "id": "mixed-2-01",
+    "input": "午餐吃鸡肉饭 520 千卡，然后跑步 30 分钟。",
+    "expected": [
+      "food",
+      "activity"
+    ]
+  },
+  {
+    "id": "mixed-2-02",
+    "input": "体重 65.5，然后早餐吃燕麦粥 320 千卡。",
+    "expected": [
+      "weight",
+      "food"
+    ]
+  },
+  {
+    "id": "mixed-2-03",
+    "input": "散步 20 分钟，然后查看最近记录。",
+    "expected": [
+      "activity",
+      "history"
+    ]
+  },
+  {
+    "id": "mixed-2-04",
+    "input": "查看我的目标，然后给我建议。",
+    "expected": [
+      "profile",
+      "recommendation"
+    ]
+  },
+  {
+    "id": "mixed-2-05",
+    "input": "睡眠如何影响恢复？然后生成周总结。",
+    "expected": [
+      "knowledge",
+      "weekly_summary"
+    ]
+  },
+  {
+    "id": "mixed-3-01",
+    "input": "午餐吃鸡肉饭 520 千卡，然后跑步 30 分钟。。",
+    "expected": [
+      "food",
+      "activity"
+    ]
+  },
+  {
+    "id": "mixed-3-02",
+    "input": "体重 65.5，然后早餐吃燕麦粥 320 千卡。。",
+    "expected": [
+      "weight",
+      "food"
+    ]
+  },
+  {
+    "id": "mixed-3-03",
+    "input": "散步 20 分钟，然后查看最近记录。。",
+    "expected": [
+      "activity",
+      "history"
+    ]
+  },
+  {
+    "id": "mixed-3-04",
+    "input": "查看我的目标，然后给我建议。。",
+    "expected": [
+      "profile",
+      "recommendation"
+    ]
+  },
+  {
+    "id": "mixed-3-05",
+    "input": "睡眠如何影响恢复？然后生成周总结。。",
+    "expected": [
+      "knowledge",
+      "weekly_summary"
+    ]
+  },
+  {
+    "id": "mixed-4-01",
+    "input": "午餐吃鸡肉饭 520 千卡，然后跑步 30 分钟。。。",
+    "expected": [
+      "food",
+      "activity"
+    ]
+  },
+  {
+    "id": "mixed-4-02",
+    "input": "体重 65.5，然后早餐吃燕麦粥 320 千卡。。。",
+    "expected": [
+      "weight",
+      "food"
+    ]
+  },
+  {
+    "id": "mixed-4-03",
+    "input": "散步 20 分钟，然后查看最近记录。。。",
+    "expected": [
+      "activity",
+      "history"
+    ]
+  },
+  {
+    "id": "mixed-4-04",
+    "input": "查看我的目标，然后给我建议。。。",
+    "expected": [
+      "profile",
+      "recommendation"
+    ]
+  },
+  {
+    "id": "mixed-4-05",
+    "input": "睡眠如何影响恢复？然后生成周总结。。。",
+    "expected": [
+      "knowledge",
+      "weekly_summary"
+    ]
+  }
+]

@@ -1,0 +1,13 @@
+{
+  "status": "completed",
+  "completed_at": "2026-07-31T02:01:13.643580+00:00",
+  "dataset_version": "journey-food-image-recognition-holdout-v2",
+  "manifest_sha256": "19afbaa96480287963aa8ee0c809f4ff88714f28764ed5b238241a33a547ffac",
+  "report_file": "STAGE9_QWEN_RECOGNITION_V2.json",
+  "report_sha256": "e455f44ef12a547df509c50864926e3c1c35dd49fbf05b976ca218acab515afe",
+  "provider_calls": 60,
+  "model": "qwen3.7-flash-2026-07-15",
+  "prompt_version": "journey-food-image-recognition-eval-1.0.0",
+  "schema_version": "journey-food-image-recognition-schema-1",
+  "gate_passed": false
+}

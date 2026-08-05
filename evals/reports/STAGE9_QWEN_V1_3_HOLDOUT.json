@@ -1,0 +1,1870 @@
+{
+  "run_label": "stage9-qwen-v1.3-sealed-holdout",
+  "generated_at": "2026-07-29T02:03:57.877227+00:00",
+  "dataset_version": "journey-food-image-holdout-v1",
+  "dataset_samples": 30,
+  "provider": "qwen",
+  "model": "qwen3.7-flash",
+  "api_base_region": "cn-beijing",
+  "prompt_version": "journey-food-image-1.3.0",
+  "schema_version": "journey-food-image-schema-3",
+  "metrics": {
+    "schema_valid_rate": {
+      "value": 1.0,
+      "threshold": 1.0,
+      "comparison": ">=",
+      "passed": true,
+      "numerator": 30,
+      "denominator": 30
+    },
+    "needs_user_correction_rate": {
+      "value": 1.0,
+      "threshold": 1.0,
+      "comparison": ">=",
+      "passed": true,
+      "numerator": 30,
+      "denominator": 30
+    },
+    "api_latency_p95_ms": {
+      "value": 3473.0,
+      "threshold": 8000,
+      "comparison": "<=",
+      "passed": true,
+      "numerator": null,
+      "denominator": null
+    },
+    "max_estimated_cost_usd": {
+      "value": 7e-05,
+      "threshold": 0.01,
+      "comparison": "<=",
+      "passed": true,
+      "numerator": null,
+      "denominator": null
+    },
+    "unconfirmed_auto_write_count": {
+      "value": 0.0,
+      "threshold": 0,
+      "comparison": "<=",
+      "passed": true,
+      "numerator": null,
+      "denominator": null
+    },
+    "privacy_marker_count": {
+      "value": 0.0,
+      "threshold": 0,
+      "comparison": "<=",
+      "passed": true,
+      "numerator": null,
+      "denominator": null
+    },
+    "provider_fallback_count": {
+      "value": 0.0,
+      "threshold": 0,
+      "comparison": "<=",
+      "passed": true,
+      "numerator": null,
+      "denominator": null
+    },
+    "top3_name_hit_rate": {
+      "value": 0.766667,
+      "threshold": 0.85,
+      "comparison": ">=",
+      "passed": false,
+      "numerator": 23,
+      "denominator": 30
+    },
+    "single_food_portion_median_relative_error": {
+      "value": 0.363636,
+      "threshold": 0.3,
+      "comparison": "<=",
+      "passed": false,
+      "numerator": 14,
+      "denominator": 15
+    },
+    "calorie_interval_coverage": {
+      "value": 0.9,
+      "threshold": 0.8,
+      "comparison": ">=",
+      "passed": true,
+      "numerator": 27,
+      "denominator": 30
+    },
+    "scale_reference_usage_accuracy": {
+      "value": 1.0,
+      "threshold": 0.95,
+      "comparison": ">=",
+      "passed": true,
+      "numerator": 30,
+      "denominator": 30
+    }
+  },
+  "gate_passed": false,
+  "summary": {
+    "input_tokens": 19620,
+    "output_tokens": 9609,
+    "estimated_cost_usd": 0.00161268,
+    "latency_median_ms": 2558.0,
+    "portion_unscorable_ids": [
+      "holdout-single-food-001"
+    ],
+    "agent_run_count": 30,
+    "tool_trace_count": 30
+  },
+  "results": [
+    {
+      "id": "holdout-single-food-001",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2464,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "黑橄榄",
+        "Black olives"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "橄榄",
+        "canonical_name_en": "Olives",
+        "items": [
+          {
+            "name": "黑橄榄",
+            "canonical_name_en": "Black olives",
+            "portion_amount": 10.0,
+            "portion_unit": "pieces",
+            "energy_kcal": 45.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 10.0,
+        "portion_unit": "pieces",
+        "energy_kcal": 45.0,
+        "energy_min_kcal": 11.25,
+        "energy_max_kcal": 90.0,
+        "confidence": "low",
+        "assumptions": [
+          "图中可见约10颗深色椭圆形果实，根据形状和光泽判断为腌制黑橄榄",
+          "单颗橄榄按中等大小（约8-10g）估算，总重约80-100g",
+          "能量值基于去核黑橄榄平均热量（约115kcal/100g）计算，未包含额外油脂",
+          "Provider 输出已归一化为 Journey 安全候选，仍需用户校正"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 654,
+        "output_tokens": 251,
+        "retries": 0,
+        "latency_ms": 2438,
+        "estimated_cost_usd": 4.606e-05
+      }
+    },
+    {
+      "id": "holdout-single-food-002",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2154,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "哈密瓜",
+        "Cantaloupe"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "哈密瓜块",
+        "canonical_name_en": "Cantaloupe chunks",
+        "items": [
+          {
+            "name": "哈密瓜",
+            "canonical_name_en": "Cantaloupe",
+            "portion_amount": 150.0,
+            "portion_unit": "g",
+            "energy_kcal": 75.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 150.0,
+        "portion_unit": "g",
+        "energy_kcal": 75.0,
+        "energy_min_kcal": 18.75,
+        "energy_max_kcal": 150.0,
+        "confidence": "medium",
+        "assumptions": [
+          "根据盘中果块数量（约12-14块）及常见切块大小估算总重。",
+          "假设果肉密度与水分含量符合普通甜瓜标准。",
+          "未包含不可见部分（如盘底或边缘遮挡）的重量。",
+          "Provider 输出已归一化为 Journey 安全候选，仍需用户校正"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 654,
+        "output_tokens": 236,
+        "retries": 0,
+        "latency_ms": 2137,
+        "estimated_cost_usd": 4.439e-05
+      }
+    },
+    {
+      "id": "holdout-single-food-003",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2329,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "切片香肠",
+        "Sliced Sausage"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "切片香肠",
+        "canonical_name_en": "Sliced Sausage",
+        "items": [
+          {
+            "name": "切片香肠",
+            "canonical_name_en": "Sliced Sausage",
+            "portion_amount": 120.0,
+            "portion_unit": "g",
+            "energy_kcal": 280.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 120.0,
+        "portion_unit": "g",
+        "energy_kcal": 280.0,
+        "energy_min_kcal": 70.0,
+        "energy_max_kcal": 560.0,
+        "confidence": "low",
+        "assumptions": [
+          "图中可见约7-8片圆形肉制品，推测为常见猪肉或混合肉香肠切片。",
+          "单片厚度估计约5-6mm，直径约3-4cm，基于纸碗大小进行保守体积估算。",
+          "未声明具体品牌或脂肪含量，按普通加工香肠平均热量密度（约230kcal/100g）推算总量。",
+          "Provider 输出已归一化为 Journey 安全候选，仍需用户校正"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 654,
+        "output_tokens": 305,
+        "retries": 0,
+        "latency_ms": 2312,
+        "estimated_cost_usd": 5.206e-05
+      }
+    },
+    {
+      "id": "holdout-single-food-004",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2043,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "杏仁",
+        "Almonds"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "杏仁",
+        "canonical_name_en": "Almonds",
+        "items": [
+          {
+            "name": "杏仁",
+            "canonical_name_en": "Almonds",
+            "portion_amount": 45.0,
+            "portion_unit": "g",
+            "energy_kcal": 263.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 45.0,
+        "portion_unit": "g",
+        "energy_kcal": 263.0,
+        "energy_min_kcal": 65.75,
+        "energy_max_kcal": 526.0,
+        "confidence": "medium",
+        "assumptions": [
+          "基于纸杯直径（通常约9-10cm）及杏仁堆积密度估算总量",
+          "未声明具体数量，按可见堆叠体积保守估计约30-40颗",
+          "假设杏仁为普通生或烘烤原味杏仁，无额外涂层",
+          "Provider 输出已归一化为 Journey 安全候选，仍需用户校正"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 654,
+        "output_tokens": 231,
+        "retries": 0,
+        "latency_ms": 2026,
+        "estimated_cost_usd": 4.383e-05
+      }
+    },
+    {
+      "id": "holdout-single-food-005",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 1990,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "苹果",
+        "Apple"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "苹果",
+        "canonical_name_en": "Apple",
+        "items": [
+          {
+            "name": "苹果",
+            "canonical_name_en": "Apple",
+            "portion_amount": 180.0,
+            "portion_unit": "g",
+            "energy_kcal": 95.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 180.0,
+        "portion_unit": "g",
+        "energy_kcal": 95.0,
+        "energy_min_kcal": 23.75,
+        "energy_max_kcal": 190.0,
+        "confidence": "medium",
+        "assumptions": [
+          "基于常见中等大小苹果的估算，未提供具体重量参照。",
+          "假设该苹果为可食用部分（去核后）约150-180克。",
+          "能量值基于每100克苹果约53千卡的平均热量计算。",
+          "Provider 输出已归一化为 Journey 安全候选，仍需用户校正"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 654,
+        "output_tokens": 241,
+        "retries": 0,
+        "latency_ms": 1974,
+        "estimated_cost_usd": 4.494e-05
+      }
+    },
+    {
+      "id": "holdout-single-food-006",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 3328,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "圣女果",
+        "Cherry Tomatoes"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "圣女果",
+        "canonical_name_en": "Cherry Tomatoes",
+        "items": [
+          {
+            "name": "圣女果",
+            "canonical_name_en": "Cherry Tomatoes",
+            "portion_amount": 150.0,
+            "portion_unit": "g",
+            "energy_kcal": 27.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 150.0,
+        "portion_unit": "g",
+        "energy_kcal": 27.0,
+        "energy_min_kcal": 6.75,
+        "energy_max_kcal": 54.0,
+        "confidence": "medium",
+        "assumptions": [
+          "图中可见约11-12颗椭圆形红色果实，判断为圣女果（罗马番茄）。",
+          "单颗圣女果平均重量按12-14g估算，总数乘以平均值得出总重。",
+          "未提供具体尺寸参照物，份量基于常见同类物体视觉比例进行保守估计。",
+          "Provider 输出已归一化为 Journey 安全候选，仍需用户校正"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 654,
+        "output_tokens": 281,
+        "retries": 0,
+        "latency_ms": 3309,
+        "estimated_cost_usd": 4.939e-05
+      }
+    },
+    {
+      "id": "holdout-single-food-007",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2455,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "苹果",
+        "Apple"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "苹果",
+        "canonical_name_en": "Apple",
+        "items": [
+          {
+            "name": "苹果",
+            "canonical_name_en": "Apple",
+            "portion_amount": 180.0,
+            "portion_unit": "g",
+            "energy_kcal": 95.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 180.0,
+        "portion_unit": "g",
+        "energy_kcal": 95.0,
+        "energy_min_kcal": 23.75,
+        "energy_max_kcal": 190.0,
+        "confidence": "medium",
+        "assumptions": [
+          "基于常见中等大小苹果（去核可食部约180g）的保守估计。",
+          "未提供具体品种信息，按通用红苹果热量计算。",
+          "盘子仅作为容器，无其他可见食物。",
+          "Provider 输出已归一化为 Journey 安全候选，仍需用户校正"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 654,
+        "output_tokens": 221,
+        "retries": 0,
+        "latency_ms": 2439,
+        "estimated_cost_usd": 4.272e-05
+      }
+    },
+    {
+      "id": "holdout-single-food-008",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2143,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "杏仁",
+        "Almonds"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "杏仁",
+        "canonical_name_en": "Almonds",
+        "items": [
+          {
+            "name": "杏仁",
+            "canonical_name_en": "Almonds",
+            "portion_amount": 20.0,
+            "portion_unit": "g",
+            "energy_kcal": 119.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 20.0,
+        "portion_unit": "g",
+        "energy_kcal": 119.0,
+        "energy_min_kcal": 29.75,
+        "energy_max_kcal": 238.0,
+        "confidence": "medium",
+        "assumptions": [
+          "图中可见约16-18颗带皮杏仁，按单颗平均1.2g估算总重约20g。",
+          "未声明具体品种，按常规巴旦木（甜杏仁）热量计算。",
+          "无尺度参照物，份量基于视觉计数与标准坚果大小进行保守宽估计。",
+          "Provider 输出已归一化为 Journey 安全候选，仍需用户校正"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 654,
+        "output_tokens": 243,
+        "retries": 0,
+        "latency_ms": 2127,
+        "estimated_cost_usd": 4.517e-05
+      }
+    },
+    {
+      "id": "holdout-single-food-009",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2035,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "西兰花",
+        "Broccoli"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "西兰花",
+        "canonical_name_en": "Broccoli",
+        "items": [
+          {
+            "name": "西兰花",
+            "canonical_name_en": "Broccoli",
+            "portion_amount": 85.0,
+            "portion_unit": "g",
+            "energy_kcal": 27.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 85.0,
+        "portion_unit": "g",
+        "energy_kcal": 27.0,
+        "energy_min_kcal": 6.75,
+        "energy_max_kcal": 54.0,
+        "confidence": "medium",
+        "assumptions": [
+          "基于常见西兰花单朵大小（约15-20g）与图中可见数量（约4-5朵）进行估算。",
+          "假设西兰花为水煮或清蒸状态，未添加油脂或酱料。",
+          "盘子尺寸作为粗略参考，但无精确标准参照物，份量估计较宽泛。",
+          "Provider 输出已归一化为 Journey 安全候选，仍需用户校正"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 654,
+        "output_tokens": 244,
+        "retries": 0,
+        "latency_ms": 2019,
+        "estimated_cost_usd": 4.528e-05
+      }
+    },
+    {
+      "id": "holdout-single-food-010",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2055,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "鸡蛋",
+        "Eggs"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "炒蛋",
+        "canonical_name_en": "Scrambled Eggs",
+        "items": [
+          {
+            "name": "鸡蛋",
+            "canonical_name_en": "Eggs",
+            "portion_amount": 2.0,
+            "portion_unit": "large",
+            "energy_kcal": 140.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 150.0,
+        "portion_unit": "g",
+        "energy_kcal": 160.0,
+        "energy_min_kcal": 40.0,
+        "energy_max_kcal": 320.0,
+        "confidence": "low",
+        "assumptions": [
+          "根据盘子大小和食物覆盖面积估算总重约150g，可能偏少。",
+          "假设为普通油炒蛋，未明确识别出米饭或其他主食混合其中。",
+          "无具体尺度参照物（如筷子、标准碗），份量估计基于常见餐盘比例推断。",
+          "Provider 输出已归一化为 Journey 安全候选，仍需用户校正"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 654,
+        "output_tokens": 242,
+        "retries": 0,
+        "latency_ms": 2037,
+        "estimated_cost_usd": 4.506e-05
+      }
+    },
+    {
+      "id": "holdout-single-food-011",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2716,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "芝士披萨块",
+        "Cheese pizza piece"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "披萨",
+        "canonical_name_en": "Pizza slice",
+        "items": [
+          {
+            "name": "芝士披萨块",
+            "canonical_name_en": "Cheese pizza piece",
+            "portion_amount": 85.0,
+            "portion_unit": "g",
+            "energy_kcal": 230.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 85.0,
+        "portion_unit": "g",
+        "energy_kcal": 230.0,
+        "energy_min_kcal": 57.5,
+        "energy_max_kcal": 460.0,
+        "confidence": "low",
+        "assumptions": [
+          "基于标准方形餐盘尺寸（约20-25cm）估算披萨块大小约为85克。",
+          "假设为常规厚底或薄底芝士披萨，未识别到明显肉类或蔬菜配料。",
+          "盘子边缘及左侧碎屑未计入总重量，仅计算盘中主体食物。",
+          "Provider 输出已归一化为 Journey 安全候选，仍需用户校正"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 654,
+        "output_tokens": 282,
+        "retries": 0,
+        "latency_ms": 2701,
+        "estimated_cost_usd": 4.95e-05
+      }
+    },
+    {
+      "id": "holdout-single-food-012",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 1980,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "巧克力与香草软冰淇淋",
+        "Chocolate and Vanilla Soft Serve"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "双色软冰淇淋",
+        "canonical_name_en": "Swirl Soft Serve Ice Cream",
+        "items": [
+          {
+            "name": "巧克力与香草软冰淇淋",
+            "canonical_name_en": "Chocolate and Vanilla Soft Serve",
+            "portion_amount": 150.0,
+            "portion_unit": "g",
+            "energy_kcal": 210.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 150.0,
+        "portion_unit": "g",
+        "energy_kcal": 210.0,
+        "energy_min_kcal": 52.5,
+        "energy_max_kcal": 420.0,
+        "confidence": "low",
+        "assumptions": [
+          "基于标准纸杯容量（约150-200ml）及软冰淇淋常见密度进行保守估算",
+          "假设为标准的巧克力与牛奶/香草双拼口味，热量取加权平均值",
+          "未识别到明确的包装标签或标准餐具作为精确尺度参照",
+          "Provider 输出已归一化为 Journey 安全候选，仍需用户校正"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 654,
+        "output_tokens": 242,
+        "retries": 0,
+        "latency_ms": 1968,
+        "estimated_cost_usd": 4.506e-05
+      }
+    },
+    {
+      "id": "holdout-single-food-013",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2272,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "芝士披萨",
+        "Cheese Pizza"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "芝士披萨块",
+        "canonical_name_en": "Cheese Pizza Slices",
+        "items": [
+          {
+            "name": "芝士披萨",
+            "canonical_name_en": "Cheese Pizza",
+            "portion_amount": 280.0,
+            "portion_unit": "g",
+            "energy_kcal": 672.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 280.0,
+        "portion_unit": "g",
+        "energy_kcal": 672.0,
+        "energy_min_kcal": 168.0,
+        "energy_max_kcal": 1344.0,
+        "confidence": "low",
+        "assumptions": [
+          "图中可见约5-6块不规则切分的披萨，基于标准切片大小估算总重。",
+          "假设主要为奶酪和面饼，未识别明显肉类或蔬菜配料。",
+          "无尺度参照物，份量估计较为保守且宽泛。",
+          "Provider 输出已归一化为 Journey 安全候选，仍需用户校正"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 654,
+        "output_tokens": 261,
+        "retries": 0,
+        "latency_ms": 2260,
+        "estimated_cost_usd": 4.717e-05
+      }
+    },
+    {
+      "id": "holdout-single-food-014",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2848,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "烘焙食品残渣（疑似巧克力蛋糕或饼干条）",
+        "Baked food residue (chocolate cake/biscuit strip)",
+        "微小白色碎屑（疑似奶酪或面包屑）",
+        "Small white crumb (cheese or bread crumb)"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "盘中残留食物",
+        "canonical_name_en": "Food residue on plate",
+        "items": [
+          {
+            "name": "烘焙食品残渣（疑似巧克力蛋糕或饼干条）",
+            "canonical_name_en": "Baked food residue (chocolate cake/biscuit strip)",
+            "portion_amount": 15.0,
+            "portion_unit": "g",
+            "energy_kcal": 60.0
+          },
+          {
+            "name": "微小白色碎屑（疑似奶酪或面包屑）",
+            "canonical_name_en": "Small white crumb (cheese or bread crumb)",
+            "portion_amount": 1.0,
+            "portion_unit": "g",
+            "energy_kcal": 3.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 16.0,
+        "portion_unit": "g",
+        "energy_kcal": 63.0,
+        "energy_min_kcal": 15.75,
+        "energy_max_kcal": 126.0,
+        "confidence": "low",
+        "assumptions": [
+          "深褐色长条状物体判断为高碳水高脂的烘焙类残渣，具体成分无法确认。",
+          "份量基于盘子大小进行极保守的视觉估算，实际重量可能极低。",
+          "白色碎屑体积极小，热量贡献可忽略不计。",
+          "Provider 输出已归一化为 Journey 安全候选，仍需用户校正"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 654,
+        "output_tokens": 379,
+        "retries": 0,
+        "latency_ms": 2838,
+        "estimated_cost_usd": 6.028e-05
+      }
+    },
+    {
+      "id": "holdout-single-food-015",
+      "category": "single_food",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2244,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "生菠菜",
+        "Raw Spinach"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "生菠菜",
+        "canonical_name_en": "Raw Spinach",
+        "items": [
+          {
+            "name": "生菠菜",
+            "canonical_name_en": "Raw Spinach",
+            "portion_amount": 120.0,
+            "portion_unit": "g",
+            "energy_kcal": 17.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 120.0,
+        "portion_unit": "g",
+        "energy_kcal": 17.0,
+        "energy_min_kcal": 4.25,
+        "energy_max_kcal": 34.0,
+        "confidence": "medium",
+        "assumptions": [
+          "基于常见沙拉碗容量及生菠菜低密度特性估算份量",
+          "未清洗或轻微清洗，按标准可食部计算",
+          "无可见高热量配料（如油、奶酪）",
+          "Provider 输出已归一化为 Journey 安全候选，仍需用户校正"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 654,
+        "output_tokens": 212,
+        "retries": 0,
+        "latency_ms": 2229,
+        "estimated_cost_usd": 4.172e-05
+      }
+    },
+    {
+      "id": "holdout-mixed-meal-001",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2773,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "煮抱子甘蓝",
+        "Boiled Brussels Sprouts",
+        "生芹菜段",
+        "Raw Celery Sticks",
+        "黑橄榄",
+        "Black Olives"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "混合冷盘（抱子甘蓝、芹菜、橄榄）",
+        "canonical_name_en": "Mixed Cold Platter (Brussels Sprouts, Celery, Olives)",
+        "items": [
+          {
+            "name": "煮抱子甘蓝",
+            "canonical_name_en": "Boiled Brussels Sprouts",
+            "portion_amount": 120.0,
+            "portion_unit": "g",
+            "energy_kcal": 35.0
+          },
+          {
+            "name": "生芹菜段",
+            "canonical_name_en": "Raw Celery Sticks",
+            "portion_amount": 60.0,
+            "portion_unit": "g",
+            "energy_kcal": 9.0
+          },
+          {
+            "name": "黑橄榄",
+            "canonical_name_en": "Black Olives",
+            "portion_amount": 45.0,
+            "portion_unit": "g",
+            "energy_kcal": 60.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 225.0,
+        "portion_unit": "g",
+        "energy_kcal": 104.0,
+        "energy_min_kcal": 26.0,
+        "energy_max_kcal": 208.0,
+        "confidence": "medium",
+        "assumptions": [
+          "抱子甘蓝看似水煮或蒸制，未添加明显油脂酱汁",
+          "黑橄榄按含油腌制估算热量，干橄榄热量会更高",
+          "芹菜为生的，未拌入油醋汁",
+          "Provider 输出已归一化为 Journey 安全候选，仍需用户校正"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 654,
+        "output_tokens": 367,
+        "retries": 0,
+        "latency_ms": 2755,
+        "estimated_cost_usd": 5.894e-05
+      }
+    },
+    {
+      "id": "holdout-mixed-meal-002",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2752,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "苹果",
+        "Apple",
+        "杏仁",
+        "Almonds",
+        "花椰菜",
+        "Cauliflower"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "混合零食拼盘",
+        "canonical_name_en": "Mixed snack platter (apple, almonds, cauliflower)",
+        "items": [
+          {
+            "name": "苹果",
+            "canonical_name_en": "Apple",
+            "portion_amount": 180.0,
+            "portion_unit": "g",
+            "energy_kcal": 95.0
+          },
+          {
+            "name": "杏仁",
+            "canonical_name_en": "Almonds",
+            "portion_amount": 40.0,
+            "portion_unit": "g",
+            "energy_kcal": 233.0
+          },
+          {
+            "name": "花椰菜",
+            "canonical_name_en": "Cauliflower",
+            "portion_amount": 100.0,
+            "portion_unit": "g",
+            "energy_kcal": 25.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 320.0,
+        "portion_unit": "g",
+        "energy_kcal": 353.0,
+        "energy_min_kcal": 88.25,
+        "energy_max_kcal": 706.0,
+        "confidence": "medium",
+        "assumptions": [
+          "杏仁数量目测约30-40颗，按常规大小估算总重约40g。",
+          "花椰菜为生的小朵，未烹饪，水分含量高，热量较低。",
+          "苹果为标准中等大小，去核后可食部约180g。",
+          "Provider 输出已归一化为 Journey 安全候选，仍需用户校正"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 654,
+        "output_tokens": 372,
+        "retries": 0,
+        "latency_ms": 2733,
+        "estimated_cost_usd": 5.95e-05
+      }
+    },
+    {
+      "id": "holdout-mixed-meal-003",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 3373,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "菠菜胡萝卜沙拉",
+        "Spinach and carrot salad",
+        "烤胡萝卜",
+        "Roasted carrots",
+        "青苹果",
+        "Green apple"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "蔬菜沙拉配烤胡萝卜和青苹果",
+        "canonical_name_en": "Vegetable salad with roasted carrots and green apple",
+        "items": [
+          {
+            "name": "菠菜胡萝卜沙拉",
+            "canonical_name_en": "Spinach and carrot salad",
+            "portion_amount": 150.0,
+            "portion_unit": "g",
+            "energy_kcal": 45.0
+          },
+          {
+            "name": "烤胡萝卜",
+            "canonical_name_en": "Roasted carrots",
+            "portion_amount": 120.0,
+            "portion_unit": "g",
+            "energy_kcal": 65.0
+          },
+          {
+            "name": "青苹果",
+            "canonical_name_en": "Green apple",
+            "portion_amount": 150.0,
+            "portion_unit": "g",
+            "energy_kcal": 78.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 420.0,
+        "portion_unit": "g",
+        "energy_kcal": 188.0,
+        "energy_min_kcal": 47.0,
+        "energy_max_kcal": 376.0,
+        "confidence": "medium",
+        "assumptions": [
+          "假设青苹果可食部分约占整体的80%",
+          "假设胡萝卜为带油烤制，估算热量包含少量油脂",
+          "沙拉叶类未添加高热量酱料，按清淡处理",
+          "Provider 输出已归一化为 Journey 安全候选，仍需用户校正"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 654,
+        "output_tokens": 433,
+        "retries": 0,
+        "latency_ms": 3354,
+        "estimated_cost_usd": 6.628e-05
+      }
+    },
+    {
+      "id": "holdout-mixed-meal-004",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2146,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "西兰花",
+        "Broccoli",
+        "梨",
+        "Pear",
+        "橘子",
+        "Mandarin Orange"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "西兰花、梨和橘子",
+        "canonical_name_en": "Broccoli, Pear, and Mandarin Orange",
+        "items": [
+          {
+            "name": "西兰花",
+            "canonical_name_en": "Broccoli",
+            "portion_amount": 80.0,
+            "portion_unit": "g",
+            "energy_kcal": 27.0
+          },
+          {
+            "name": "梨",
+            "canonical_name_en": "Pear",
+            "portion_amount": 150.0,
+            "portion_unit": "g",
+            "energy_kcal": 81.0
+          },
+          {
+            "name": "橘子",
+            "canonical_name_en": "Mandarin Orange",
+            "portion_amount": 100.0,
+            "portion_unit": "g",
+            "energy_kcal": 47.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 330.0,
+        "portion_unit": "g",
+        "energy_kcal": 155.0,
+        "energy_min_kcal": 38.75,
+        "energy_max_kcal": 310.0,
+        "confidence": "medium",
+        "assumptions": [
+          "西兰花按常规单朵大小估算总重约80克",
+          "梨按常见中等大小（可食部）估算约150克",
+          "橘子按常见小果规格估算连皮重约100克，实际可食部可能略低",
+          "Provider 输出已归一化为 Journey 安全候选，仍需用户校正"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 654,
+        "output_tokens": 340,
+        "retries": 0,
+        "latency_ms": 2130,
+        "estimated_cost_usd": 5.594e-05
+      }
+    },
+    {
+      "id": "holdout-mixed-meal-005",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 3583,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "芝士披萨",
+        "Cheese pizza slice",
+        "炸素肉条/植物蛋白条",
+        "Fried veggie protein strips",
+        "混合蒸煮蔬菜（西兰花、花椰菜、羽衣甘蓝）",
+        "Steamed mixed vegetables (broccoli, cauliflower, kale)"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "混合餐盘（披萨、蔬菜、素肉条）",
+        "canonical_name_en": "Mixed plate with pizza, vegetables, and veggie strips",
+        "items": [
+          {
+            "name": "芝士披萨",
+            "canonical_name_en": "Cheese pizza slice",
+            "portion_amount": 150.0,
+            "portion_unit": "g",
+            "energy_kcal": 380.0
+          },
+          {
+            "name": "炸素肉条/植物蛋白条",
+            "canonical_name_en": "Fried veggie protein strips",
+            "portion_amount": 80.0,
+            "portion_unit": "g",
+            "energy_kcal": 200.0
+          },
+          {
+            "name": "混合蒸煮蔬菜（西兰花、花椰菜、羽衣甘蓝）",
+            "canonical_name_en": "Steamed mixed vegetables (broccoli, cauliflower, kale)",
+            "portion_amount": 120.0,
+            "portion_unit": "g",
+            "energy_kcal": 40.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 350.0,
+        "portion_unit": "g",
+        "energy_kcal": 620.0,
+        "energy_min_kcal": 155.0,
+        "energy_max_kcal": 1240.0,
+        "confidence": "medium",
+        "assumptions": [
+          "素肉条外观类似加工食品，按油炸或煎制的高热量估算。",
+          "蔬菜看似蒸煮但可能含少量油脂或酱料，能量已做宽幅调整。",
+          "披萨为厚底或方切片，按标准芝士披萨密度估算，未计入额外配料。",
+          "Provider 输出已归一化为 Journey 安全候选，仍需用户校正"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 654,
+        "output_tokens": 461,
+        "retries": 0,
+        "latency_ms": 3563,
+        "estimated_cost_usd": 6.939e-05
+      }
+    },
+    {
+      "id": "holdout-mixed-meal-006",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2958,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "酥皮点心（含果酱或肉馅）",
+        "Filled pastry slice",
+        "煮玉米段",
+        "Boiled corn segment"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "酥皮点心与玉米段",
+        "canonical_name_en": "Pastry slice and corn on the cob segment",
+        "items": [
+          {
+            "name": "酥皮点心（含果酱或肉馅）",
+            "canonical_name_en": "Filled pastry slice",
+            "portion_amount": 60.0,
+            "portion_unit": "g",
+            "energy_kcal": 220.0
+          },
+          {
+            "name": "煮玉米段",
+            "canonical_name_en": "Boiled corn segment",
+            "portion_amount": 80.0,
+            "portion_unit": "g",
+            "energy_kcal": 75.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 140.0,
+        "portion_unit": "g",
+        "energy_kcal": 295.0,
+        "energy_min_kcal": 73.75,
+        "energy_max_kcal": 590.0,
+        "confidence": "low",
+        "assumptions": [
+          "点心内部馅料成分不明（果酱、豆沙或肉类），热量估算基于中等油糖含量假设。",
+          "玉米段重量包含不可食用芯部，可食部分实际可能略少。",
+          "无具体尺寸参照物，份量基于标准餐盘比例进行保守目测推断。",
+          "Provider 输出已归一化为 Journey 安全候选，仍需用户校正"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 654,
+        "output_tokens": 359,
+        "retries": 0,
+        "latency_ms": 2943,
+        "estimated_cost_usd": 5.806e-05
+      }
+    },
+    {
+      "id": "holdout-mixed-meal-007",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2860,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "奇亚籽布丁",
+        "Chia Seed Pudding",
+        "黑莓",
+        "Blackberries"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "奇亚籽布丁配黑莓",
+        "canonical_name_en": "Chia Seed Pudding with Blackberries",
+        "items": [
+          {
+            "name": "奇亚籽布丁",
+            "canonical_name_en": "Chia Seed Pudding",
+            "portion_amount": 80.0,
+            "portion_unit": "g",
+            "energy_kcal": 120.0
+          },
+          {
+            "name": "黑莓",
+            "canonical_name_en": "Blackberries",
+            "portion_amount": 30.0,
+            "portion_unit": "g",
+            "energy_kcal": 16.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 110.0,
+        "portion_unit": "g",
+        "energy_kcal": 136.0,
+        "energy_min_kcal": 34.0,
+        "energy_max_kcal": 272.0,
+        "confidence": "low",
+        "assumptions": [
+          "食物呈现为灰白色糊状，推测为吸水膨胀的奇亚籽或类似种子制成的布丁/糊状物。",
+          "黑色团块特征符合黑莓外观，作为点缀或配料。",
+          "由于缺乏标准参照物且食物堆叠不规则，份量基于视觉体积进行保守宽估计。",
+          "Provider 输出已归一化为 Journey 安全候选，仍需用户校正"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 654,
+        "output_tokens": 353,
+        "retries": 0,
+        "latency_ms": 2846,
+        "estimated_cost_usd": 5.739e-05
+      }
+    },
+    {
+      "id": "holdout-mixed-meal-008",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2520,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "油炸块状食物（疑似红薯或豆腐）",
+        "Fried sweet potato or tofu",
+        "奶油酱汁",
+        "Creamy sauce",
+        "荞麦饭或碎谷物",
+        "Buckwheat or grain mix"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "酱汁炸物配谷物",
+        "canonical_name_en": "Fried food with sauce and grains",
+        "items": [
+          {
+            "name": "油炸块状食物（疑似红薯或豆腐）",
+            "canonical_name_en": "Fried sweet potato or tofu",
+            "portion_amount": 120.0,
+            "portion_unit": "g",
+            "energy_kcal": 280.0
+          },
+          {
+            "name": "奶油酱汁",
+            "canonical_name_en": "Creamy sauce",
+            "portion_amount": 30.0,
+            "portion_unit": "g",
+            "energy_kcal": 90.0
+          },
+          {
+            "name": "荞麦饭或碎谷物",
+            "canonical_name_en": "Buckwheat or grain mix",
+            "portion_amount": 40.0,
+            "portion_unit": "g",
+            "energy_kcal": 130.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 190.0,
+        "portion_unit": "g",
+        "energy_kcal": 500.0,
+        "energy_min_kcal": 125.0,
+        "energy_max_kcal": 1000.0,
+        "confidence": "low",
+        "assumptions": [
+          "油炸物基底无法确认为红薯或豆腐，按高热量油炸淀粉类估算",
+          "酱汁成分不明，按含乳脂或油脂的浓稠酱汁估算热量",
+          "底部铺底谷物量较少，仅作为配菜估算",
+          "Provider 输出已归一化为 Journey 安全候选，仍需用户校正"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 654,
+        "output_tokens": 347,
+        "retries": 0,
+        "latency_ms": 2508,
+        "estimated_cost_usd": 5.672e-05
+      }
+    },
+    {
+      "id": "holdout-mixed-meal-009",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2621,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "意大利辣香肠披萨片",
+        "Pepperoni pizza slice",
+        "水煮西兰花",
+        "Boiled broccoli"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "披萨配西兰花",
+        "canonical_name_en": "Pizza slice with broccoli",
+        "items": [
+          {
+            "name": "意大利辣香肠披萨片",
+            "canonical_name_en": "Pepperoni pizza slice",
+            "portion_amount": 100.0,
+            "portion_unit": "g",
+            "energy_kcal": 280.0
+          },
+          {
+            "name": "水煮西兰花",
+            "canonical_name_en": "Boiled broccoli",
+            "portion_amount": 80.0,
+            "portion_unit": "g",
+            "energy_kcal": 25.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 180.0,
+        "portion_unit": "g",
+        "energy_kcal": 305.0,
+        "energy_min_kcal": 76.25,
+        "energy_max_kcal": 610.0,
+        "confidence": "medium",
+        "assumptions": [
+          "披萨片按标准切片估算约100g，含饼底、酱料、芝士及香肠。",
+          "西兰花按可见分量估算约80g，假设未加高热量酱汁。",
+          "总能量为两项之和，实际数值因食材厚度与油脂含量可能有偏差。",
+          "Provider 输出已归一化为 Journey 安全候选，仍需用户校正"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 654,
+        "output_tokens": 347,
+        "retries": 0,
+        "latency_ms": 2602,
+        "estimated_cost_usd": 5.672e-05
+      }
+    },
+    {
+      "id": "holdout-mixed-meal-010",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2730,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "番茄芝士披萨片",
+        "Tomato cheese pizza slice",
+        "炒青菜（叶菜类）",
+        "Stir-fried leafy greens"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "披萨与炒青菜",
+        "canonical_name_en": "Pizza slice with stir-fried greens",
+        "items": [
+          {
+            "name": "番茄芝士披萨片",
+            "canonical_name_en": "Tomato cheese pizza slice",
+            "portion_amount": 100.0,
+            "portion_unit": "g",
+            "energy_kcal": 260.0
+          },
+          {
+            "name": "炒青菜（叶菜类）",
+            "canonical_name_en": "Stir-fried leafy greens",
+            "portion_amount": 120.0,
+            "portion_unit": "g",
+            "energy_kcal": 45.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 220.0,
+        "portion_unit": "g",
+        "energy_kcal": 305.0,
+        "energy_min_kcal": 76.25,
+        "energy_max_kcal": 610.0,
+        "confidence": "medium",
+        "assumptions": [
+          "披萨按标准切片约100g估算，含面饼、芝士及少量蔬菜配料。",
+          "青菜按熟重估算，假设烹饪用油较少，热量主要来自蔬菜本身。",
+          "无其他可见食物或酱料被计入总量。",
+          "Provider 输出已归一化为 Journey 安全候选，仍需用户校正"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 654,
+        "output_tokens": 373,
+        "retries": 0,
+        "latency_ms": 2715,
+        "estimated_cost_usd": 5.961e-05
+      }
+    },
+    {
+      "id": "holdout-mixed-meal-011",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 3342,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "西瓜块",
+        "Watermelon chunks",
+        "全麦面包片",
+        "Whole wheat bread slice"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "西瓜与全麦面包",
+        "canonical_name_en": "Watermelon and Whole Wheat Bread",
+        "items": [
+          {
+            "name": "西瓜块",
+            "canonical_name_en": "Watermelon chunks",
+            "portion_amount": 150.0,
+            "portion_unit": "g",
+            "energy_kcal": 75.0
+          },
+          {
+            "name": "全麦面包片",
+            "canonical_name_en": "Whole wheat bread slice",
+            "portion_amount": 30.0,
+            "portion_unit": "g",
+            "energy_kcal": 80.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 180.0,
+        "portion_unit": "g",
+        "energy_kcal": 155.0,
+        "energy_min_kcal": 38.75,
+        "energy_max_kcal": 310.0,
+        "confidence": "medium",
+        "assumptions": [
+          "面包片被切去一部分，按可见剩余部分估算为约30克。",
+          "西瓜块未去皮称重，按常见可食部密度估算重量。",
+          "无标准参照物（如硬币、餐具），尺寸基于盘子比例推测。",
+          "Provider 输出已归一化为 Journey 安全候选，仍需用户校正"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 654,
+        "output_tokens": 358,
+        "retries": 0,
+        "latency_ms": 3326,
+        "estimated_cost_usd": 5.794e-05
+      }
+    },
+    {
+      "id": "holdout-mixed-meal-012",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2596,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "炒蛋",
+        "Scrambled Eggs",
+        "白色凝乳或软奶酪",
+        "White Curd or Soft Cheese"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "炒蛋与白色凝乳/奶酪",
+        "canonical_name_en": "Scrambled Eggs and White Curd/Cheese",
+        "items": [
+          {
+            "name": "炒蛋",
+            "canonical_name_en": "Scrambled Eggs",
+            "portion_amount": 60.0,
+            "portion_unit": "g",
+            "energy_kcal": 95.0
+          },
+          {
+            "name": "白色凝乳或软奶酪",
+            "canonical_name_en": "White Curd or Soft Cheese",
+            "portion_amount": 120.0,
+            "portion_unit": "g",
+            "energy_kcal": 140.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 180.0,
+        "portion_unit": "g",
+        "energy_kcal": 235.0,
+        "energy_min_kcal": 58.75,
+        "energy_max_kcal": 470.0,
+        "confidence": "low",
+        "assumptions": [
+          "白色块状物识别为低脂凝乳或白奶酪，若为高脂奶酪热量会显著升高。",
+          "炒蛋部分可能含有烹饪油，热量估算基于标准油量。",
+          "份量基于盘子大小进行视觉比例估算，未使用精确参照物。",
+          "Provider 输出已归一化为 Journey 安全候选，仍需用户校正"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 654,
+        "output_tokens": 379,
+        "retries": 0,
+        "latency_ms": 2581,
+        "estimated_cost_usd": 6.028e-05
+      }
+    },
+    {
+      "id": "holdout-mixed-meal-013",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 3473,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "混合沙拉基底（樱桃番茄、紫洋葱、青椒）",
+        "Cherry tomatoes, red onion, green pepper",
+        "奶油调味酱（疑似鹰嘴豆泥或酸奶油基酱料）",
+        "Creamy dressing (hummus or sour cream-based)",
+        "硬质奶酪薄片（疑似帕玛森或类似干酪）",
+        "Hard cheese shavings (e.g., Parmesan)"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "混合沙拉配奶油酱和奶酪片",
+        "canonical_name_en": "Mixed salad with creamy dressing and cheese shavings",
+        "items": [
+          {
+            "name": "混合沙拉基底（樱桃番茄、紫洋葱、青椒）",
+            "canonical_name_en": "Cherry tomatoes, red onion, green pepper",
+            "portion_amount": 250.0,
+            "portion_unit": "g",
+            "energy_kcal": 85.0
+          },
+          {
+            "name": "奶油调味酱（疑似鹰嘴豆泥或酸奶油基酱料）",
+            "canonical_name_en": "Creamy dressing (hummus or sour cream-based)",
+            "portion_amount": 120.0,
+            "portion_unit": "g",
+            "energy_kcal": 180.0
+          },
+          {
+            "name": "硬质奶酪薄片（疑似帕玛森或类似干酪）",
+            "canonical_name_en": "Hard cheese shavings (e.g., Parmesan)",
+            "portion_amount": 30.0,
+            "portion_unit": "g",
+            "energy_kcal": 110.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 400.0,
+        "portion_unit": "g",
+        "energy_kcal": 375.0,
+        "energy_min_kcal": 93.75,
+        "energy_max_kcal": 750.0,
+        "confidence": "medium",
+        "assumptions": [
+          "酱料成分未明确，按中等热量密度估算；若含高脂乳品或油则上限可能更高。",
+          "奶酪为薄脆片状，非碎屑，按常见硬质奶酪热量推算。",
+          "蔬菜部分包含可见完整番茄与切片洋葱，未计入不可见液体或油醋汁。",
+          "Provider 输出已归一化为 Journey 安全候选，仍需用户校正"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 654,
+        "output_tokens": 442,
+        "retries": 0,
+        "latency_ms": 3457,
+        "estimated_cost_usd": 6.728e-05
+      }
+    },
+    {
+      "id": "holdout-mixed-meal-014",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 3147,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "菠菜与西兰花",
+        "Spinach and broccoli",
+        "黑橄榄",
+        "Black olives",
+        "帕玛森芝士片与牛油果",
+        "Parmesan shavings and avocado"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "混合蔬菜沙拉",
+        "canonical_name_en": "Mixed vegetable salad with avocado and cheese shavings",
+        "items": [
+          {
+            "name": "菠菜与西兰花",
+            "canonical_name_en": "Spinach and broccoli",
+            "portion_amount": 250.0,
+            "portion_unit": "g",
+            "energy_kcal": 75.0
+          },
+          {
+            "name": "黑橄榄",
+            "canonical_name_en": "Black olives",
+            "portion_amount": 40.0,
+            "portion_unit": "g",
+            "energy_kcal": 68.0
+          },
+          {
+            "name": "帕玛森芝士片与牛油果",
+            "canonical_name_en": "Parmesan shavings and avocado",
+            "portion_amount": 60.0,
+            "portion_unit": "g",
+            "energy_kcal": 130.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 350.0,
+        "portion_unit": "g",
+        "energy_kcal": 273.0,
+        "energy_min_kcal": 68.25,
+        "energy_max_kcal": 546.0,
+        "confidence": "medium",
+        "assumptions": [
+          "基于标准深碗直径（约20-22cm）及常见食材堆叠密度估算总重。",
+          "芝士片按薄切干酪估算，牛油果按半颗可见量估算，未计入潜在油醋汁重量。",
+          "黑橄榄去核后净重估算，实际带核重量可能略高。",
+          "Provider 输出已归一化为 Journey 安全候选，仍需用户校正"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 654,
+        "output_tokens": 469,
+        "retries": 0,
+        "latency_ms": 3131,
+        "estimated_cost_usd": 7.028e-05
+      }
+    },
+    {
+      "id": "holdout-mixed-meal-015",
+      "category": "mixed_meal",
+      "status_code": 200,
+      "status": "candidate",
+      "elapsed_ms": 2368,
+      "schema_valid": true,
+      "fallback_used": false,
+      "predicted_names": [
+        "胡萝卜丝",
+        "Shredded Carrot",
+        "紫洋葱丝",
+        "Sliced Red Onion",
+        "青红椒块",
+        "Green and Red Bell Pepper"
+      ],
+      "estimate": {
+        "is_food": true,
+        "name": "蔬菜沙拉",
+        "canonical_name_en": "Vegetable Salad",
+        "items": [
+          {
+            "name": "胡萝卜丝",
+            "canonical_name_en": "Shredded Carrot",
+            "portion_amount": 60.0,
+            "portion_unit": "g",
+            "energy_kcal": 25.0
+          },
+          {
+            "name": "紫洋葱丝",
+            "canonical_name_en": "Sliced Red Onion",
+            "portion_amount": 50.0,
+            "portion_unit": "g",
+            "energy_kcal": 20.0
+          },
+          {
+            "name": "青红椒块",
+            "canonical_name_en": "Green and Red Bell Pepper",
+            "portion_amount": 30.0,
+            "portion_unit": "g",
+            "energy_kcal": 10.0
+          }
+        ],
+        "meal_type": "other",
+        "portion_amount": 140.0,
+        "portion_unit": "g",
+        "energy_kcal": 55.0,
+        "energy_min_kcal": 13.75,
+        "energy_max_kcal": 110.0,
+        "confidence": "low",
+        "assumptions": [
+          "未添加油、酱料或调味汁，仅计算可见蔬菜本身的热量。",
+          "份量基于不锈钢碗的视觉比例进行保守估算，无标准餐具参照。",
+          "蔬菜切分较细且堆叠，实际体积可能因压实程度不同而有差异。",
+          "Provider 输出已归一化为 Journey 安全候选，仍需用户校正"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "provider": "qwen",
+        "model": "qwen3.7-flash",
+        "input_tokens": 654,
+        "output_tokens": 338,
+        "retries": 0,
+        "latency_ms": 2353,
+        "estimated_cost_usd": 5.572e-05
+      }
+    }
+  ]
+}

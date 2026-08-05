@@ -1,0 +1,2801 @@
+{
+  "run_label": "stage9-qwen-recognition-v2",
+  "generated_at": "2026-07-31T02:01:13.637443+00:00",
+  "dataset_version": "journey-food-image-recognition-holdout-v2",
+  "dataset_samples": 60,
+  "provider": "qwen",
+  "configured_model": "qwen3.7-flash",
+  "model": "qwen3.7-flash-2026-07-15",
+  "api_base_region": "cn-beijing",
+  "adapter_scope": "isolated_recognition_evaluation_only_public_api_unchanged",
+  "manifest_sha256": "19afbaa96480287963aa8ee0c809f4ff88714f28764ed5b238241a33a547ffac",
+  "prompt_version": "journey-food-image-recognition-eval-1.0.0",
+  "prompt_sha256": "5bacb235345bfab1a115ec15c89d122ee37703c2e5598783f28a2353e72ee8a5",
+  "schema_version": "journey-food-image-recognition-schema-1",
+  "schema_sha256": "0bc5eae1c737921dcfe613eeedd31080c6ae4887a83c60a86c3414d1eb31e20b",
+  "max_estimated_cost_usd": 0.02,
+  "score_version": "journey-food-image-recognition-score-1.0.0",
+  "sealed_holdout_prompt_tuning_allowed": false,
+  "automatic_database_writes": 0,
+  "metrics": {
+    "schema_valid_rate": {
+      "value": 0.983333,
+      "threshold": 1.0,
+      "comparison": ">=",
+      "passed": false,
+      "numerator": 59,
+      "denominator": 60
+    },
+    "needs_user_correction_rate": {
+      "value": 0.983333,
+      "threshold": 1.0,
+      "comparison": ">=",
+      "passed": false,
+      "numerator": 59,
+      "denominator": 60
+    },
+    "forbidden_estimate_free_rate": {
+      "value": 0.983333,
+      "threshold": 1.0,
+      "comparison": ">=",
+      "passed": false,
+      "numerator": 59,
+      "denominator": 60
+    },
+    "overall_food_top3_name_hit_rate": {
+      "value": 0.672727,
+      "threshold": 0.85,
+      "comparison": ">=",
+      "passed": false,
+      "numerator": 37,
+      "denominator": 55
+    },
+    "chinese_home_meal_top3_name_hit_rate": {
+      "value": 0.6,
+      "threshold": 0.8,
+      "comparison": ">=",
+      "passed": false,
+      "numerator": 12,
+      "denominator": 20
+    },
+    "nonfood_abstention_rate": {
+      "value": 1.0,
+      "threshold": 0.95,
+      "comparison": ">=",
+      "passed": true,
+      "numerator": 5,
+      "denominator": 5
+    },
+    "provider_fallback_count": {
+      "value": 1.0,
+      "threshold": 0,
+      "comparison": "<=",
+      "passed": false,
+      "numerator": null,
+      "denominator": null
+    },
+    "latency_p95_ms": {
+      "value": 3416.0,
+      "threshold": 8000,
+      "comparison": "<=",
+      "passed": true,
+      "numerator": null,
+      "denominator": null
+    },
+    "usage_capture_rate": {
+      "value": 1.0,
+      "threshold": 1.0,
+      "comparison": ">=",
+      "passed": true,
+      "numerator": 60,
+      "denominator": 60
+    },
+    "total_estimated_cost_usd": {
+      "value": 0.002404,
+      "threshold": 0.02,
+      "comparison": "<=",
+      "passed": true,
+      "numerator": null,
+      "denominator": null
+    },
+    "unconfirmed_auto_write_count": {
+      "value": 0.0,
+      "threshold": 0,
+      "comparison": "<=",
+      "passed": true,
+      "numerator": null,
+      "denominator": null
+    }
+  },
+  "gate_passed": false,
+  "summary": {
+    "input_tokens": 57876,
+    "output_tokens": 7170,
+    "estimated_cost_usd_recorded": 0.00240432,
+    "estimated_cost_usd_complete": true,
+    "usage_missing_calls": 0,
+    "latency_median_ms": 2265.0,
+    "provider_calls": 60,
+    "valid_predictions": 59,
+    "fallback_count": 1
+  },
+  "results": [
+    {
+      "id": "recognition-chinese-home-meal-001",
+      "cohort": "chinese_home_meal",
+      "gold_names": [
+        {
+          "aliases": [
+            "麻婆豆腐"
+          ],
+          "canonical_en": "mapo tofu"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 3416,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "麻婆豆腐",
+            "name_en": "Mapo Tofu",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "肉末烧豆腐",
+            "name_en": "Minced Meat Braised Tofu",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "家常豆腐",
+            "name_en": "Home-style Tofu",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 1565,
+        "output_tokens": 139,
+        "estimated_cost_usd": 5.892e-05
+      }
+    },
+    {
+      "id": "recognition-chinese-home-meal-002",
+      "cohort": "chinese_home_meal",
+      "gold_names": [
+        {
+          "aliases": [
+            "番茄炒蛋",
+            "西红柿炒鸡蛋"
+          ],
+          "canonical_en": "tomato scrambled eggs"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2269,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "生肉片",
+            "name_en": "Raw meat slices",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "腌制肉类",
+            "name_en": "Marinated meat",
+            "confidence": "low"
+          },
+          {
+            "name_zh": "切块生肉",
+            "name_en": "Cut raw meat",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 515,
+        "output_tokens": 130,
+        "estimated_cost_usd": 2.875e-05
+      }
+    },
+    {
+      "id": "recognition-chinese-home-meal-003",
+      "cohort": "chinese_home_meal",
+      "gold_names": [
+        {
+          "aliases": [
+            "宫保鸡丁"
+          ],
+          "canonical_en": "kung pao chicken"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2174,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "宫保鸡丁",
+            "name_en": "Kung Pao Chicken",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "白米饭",
+            "name_en": "Steamed White Rice",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "炒鸡丁配花生",
+            "name_en": "Stir-fried Chicken Dices with Peanuts",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 815,
+        "output_tokens": 142,
+        "estimated_cost_usd": 3.842e-05
+      }
+    },
+    {
+      "id": "recognition-chinese-home-meal-004",
+      "cohort": "chinese_home_meal",
+      "gold_names": [
+        {
+          "aliases": [
+            "蛋炒饭"
+          ],
+          "canonical_en": "egg fried rice"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2177,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "蛋炒饭",
+            "name_en": "Fried Rice with Egg",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "蔬菜炒饭",
+            "name_en": "Vegetable Fried Rice",
+            "confidence": "low"
+          },
+          {
+            "name_zh": "炒米饭",
+            "name_en": "Chow Fun / Stir-fried Rice",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 875,
+        "output_tokens": 124,
+        "estimated_cost_usd": 3.808e-05
+      }
+    },
+    {
+      "id": "recognition-chinese-home-meal-005",
+      "cohort": "chinese_home_meal",
+      "gold_names": [
+        {
+          "aliases": [
+            "饺子"
+          ],
+          "canonical_en": "jiaozi"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2129,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "水饺",
+            "name_en": "Boiled Dumplings",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "馄饨",
+            "name_en": "Wontons",
+            "confidence": "low"
+          },
+          {
+            "name_zh": "蒸饺",
+            "name_en": "Steamed Dumplings",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 875,
+        "output_tokens": 116,
+        "estimated_cost_usd": 3.719e-05
+      }
+    },
+    {
+      "id": "recognition-chinese-home-meal-006",
+      "cohort": "chinese_home_meal",
+      "gold_names": [
+        {
+          "aliases": [
+            "包子"
+          ],
+          "canonical_en": "baozi"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1966,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "小笼包",
+            "name_en": "Xiaolongbao",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "汤包",
+            "name_en": "Soup Dumplings",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "蒸包",
+            "name_en": "Steamed Buns",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 875,
+        "output_tokens": 130,
+        "estimated_cost_usd": 3.875e-05
+      }
+    },
+    {
+      "id": "recognition-chinese-home-meal-007",
+      "cohort": "chinese_home_meal",
+      "gold_names": [
+        {
+          "aliases": [
+            "粥",
+            "白粥"
+          ],
+          "canonical_en": "rice congee"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2271,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "肉松粥",
+            "name_en": "Meat Floss Congee",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "白粥配肉松和榨菜",
+            "name_en": "Plain Congee with Meat Floss and Pickled Mustard",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "中式米粥",
+            "name_en": "Chinese Rice Porridge",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 1115,
+        "output_tokens": 136,
+        "estimated_cost_usd": 4.608e-05
+      }
+    },
+    {
+      "id": "recognition-chinese-home-meal-008",
+      "cohort": "chinese_home_meal",
+      "gold_names": [
+        {
+          "aliases": [
+            "馄饨汤"
+          ],
+          "canonical_en": "wonton soup"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2077,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "馄饨汤",
+            "name_en": "Wonton Soup",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "云吞面",
+            "name_en": "Wonton Noodle Soup",
+            "confidence": "low"
+          },
+          {
+            "name_zh": "饺子汤",
+            "name_en": "Dumpling Soup",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 875,
+        "output_tokens": 131,
+        "estimated_cost_usd": 3.886e-05
+      }
+    },
+    {
+      "id": "recognition-chinese-home-meal-009",
+      "cohort": "chinese_home_meal",
+      "gold_names": [
+        {
+          "aliases": [
+            "酸辣汤"
+          ],
+          "canonical_en": "hot and sour soup"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2169,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "酸辣汤",
+            "name_en": "Hot and Sour Soup",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "素羹",
+            "name_en": "Vegetarian Thick Soup",
+            "confidence": "low"
+          },
+          {
+            "name_zh": "菌菇汤",
+            "name_en": "Mushroom Soup",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 815,
+        "output_tokens": 132,
+        "estimated_cost_usd": 3.731e-05
+      }
+    },
+    {
+      "id": "recognition-chinese-home-meal-010",
+      "cohort": "chinese_home_meal",
+      "gold_names": [
+        {
+          "aliases": [
+            "清蒸鱼"
+          ],
+          "canonical_en": "steamed fish"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1948,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "剁椒鱼头",
+            "name_en": "Chopped Chili Fish Head",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "红烧鱼头",
+            "name_en": "Braised Fish Head",
+            "confidence": "low"
+          },
+          {
+            "name_zh": "泡椒鱼头",
+            "name_en": "Pickled Pepper Fish Head",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 875,
+        "output_tokens": 125,
+        "estimated_cost_usd": 3.819e-05
+      }
+    },
+    {
+      "id": "recognition-chinese-home-meal-011",
+      "cohort": "chinese_home_meal",
+      "gold_names": [
+        {
+          "aliases": [
+            "红烧肉"
+          ],
+          "canonical_en": "red braised pork"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2241,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "红烧肉",
+            "name_en": "Braised Pork Belly",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "坛肉",
+            "name_en": "Jar Braised Meat",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "百叶结红烧肉",
+            "name_en": "Braised Pork with Tofu Knots",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 875,
+        "output_tokens": 126,
+        "estimated_cost_usd": 3.831e-05
+      }
+    },
+    {
+      "id": "recognition-chinese-home-meal-012",
+      "cohort": "chinese_home_meal",
+      "gold_names": [
+        {
+          "aliases": [
+            "葱油饼"
+          ],
+          "canonical_en": "scallion pancake"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2246,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "馅饼",
+            "name_en": "Filled Pancake",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "肉饼",
+            "name_en": "Meat Pancake",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "煎包",
+            "name_en": "Pan-fried Bun",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 875,
+        "output_tokens": 129,
+        "estimated_cost_usd": 3.864e-05
+      }
+    },
+    {
+      "id": "recognition-chinese-home-meal-013",
+      "cohort": "chinese_home_meal",
+      "gold_names": [
+        {
+          "aliases": [
+            "炒面"
+          ],
+          "canonical_en": "chow mein"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2761,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "炒面",
+            "name_en": "Fried Noodles",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "番茄鸡蛋炒面",
+            "name_en": "Tomato and Egg Fried Noodles",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "炒米粉",
+            "name_en": "Fried Rice Noodles",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 1095,
+        "output_tokens": 124,
+        "estimated_cost_usd": 4.419e-05
+      }
+    },
+    {
+      "id": "recognition-chinese-home-meal-014",
+      "cohort": "chinese_home_meal",
+      "gold_names": [
+        {
+          "aliases": [
+            "茄子"
+          ],
+          "canonical_en": "Chinese eggplant"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2663,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "鱼香茄子盖饭",
+            "name_en": "Fish-flavored Eggplant Rice Bowl",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "肉末烧茄子盖饭",
+            "name_en": "Braised Eggplant with Minced Pork Rice Bowl",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "地三鲜盖饭",
+            "name_en": "Di San Xian (Eggplant, Potato, Pepper) Rice Bowl",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 875,
+        "output_tokens": 160,
+        "estimated_cost_usd": 4.208e-05
+      }
+    },
+    {
+      "id": "recognition-chinese-home-meal-015",
+      "cohort": "chinese_home_meal",
+      "gold_names": [
+        {
+          "aliases": [
+            "糖醋里脊",
+            "咕咾肉"
+          ],
+          "canonical_en": "sweet and sour pork"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2758,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "糖醋肉配炒饭",
+            "name_en": "Sweet and Sour Pork with Fried Rice",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "左宗棠鸡配蛋炒饭",
+            "name_en": "Leftover Chicken with Egg Fried Rice",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "红烧肉丸配炒饭",
+            "name_en": "Braised Meatballs with Fried Rice",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 875,
+        "output_tokens": 150,
+        "estimated_cost_usd": 4.097e-05
+      }
+    },
+    {
+      "id": "recognition-chinese-home-meal-016",
+      "cohort": "chinese_home_meal",
+      "gold_names": [
+        {
+          "aliases": [
+            "回锅肉"
+          ],
+          "canonical_en": "twice cooked pork"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2269,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "炒肉片卷心菜",
+            "name_en": "Stir-fried Pork with Cabbage",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "酱爆肉片",
+            "name_en": "Sauced Stir-fried Pork Slices",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "家常小炒",
+            "name_en": "Home-style Stir-fry",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 1025,
+        "output_tokens": 147,
+        "estimated_cost_usd": 4.481e-05
+      }
+    },
+    {
+      "id": "recognition-chinese-home-meal-017",
+      "cohort": "chinese_home_meal",
+      "gold_names": [
+        {
+          "aliases": [
+            "红烧豆腐"
+          ],
+          "canonical_en": "braised tofu"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2451,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "烧杂烩",
+            "name_en": "Braised Mixed Tofu and Vegetables",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "红烧日本豆腐",
+            "name_en": "Braised Japanese Tofu with Vegetables",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "家常烧素什锦",
+            "name_en": "Home-style Braised Mixed Vegetables and Tofu",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 1415,
+        "output_tokens": 153,
+        "estimated_cost_usd": 5.631e-05
+      }
+    },
+    {
+      "id": "recognition-chinese-home-meal-018",
+      "cohort": "chinese_home_meal",
+      "gold_names": [
+        {
+          "aliases": [
+            "炒青菜"
+          ],
+          "canonical_en": "stir-fried greens"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2142,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "炒空心菜",
+            "name_en": "Stir-fried Water Spinach",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "清炒通菜",
+            "name_en": "Stir-fried Morning Glory",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "蒜蓉空心菜",
+            "name_en": "Garlic Water Spinach",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 875,
+        "output_tokens": 141,
+        "estimated_cost_usd": 3.997e-05
+      }
+    },
+    {
+      "id": "recognition-chinese-home-meal-019",
+      "cohort": "chinese_home_meal",
+      "gold_names": [
+        {
+          "aliases": [
+            "叉烧饭"
+          ],
+          "canonical_en": "char siu rice"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2592,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "烧腊饭",
+            "name_en": "BBQ Pork Rice",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "烧肉叉烧饭",
+            "name_en": "Crispy Pork and Char Siu Rice",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "烧味拼盘饭",
+            "name_en": "Assorted Roast Meat Rice",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 1415,
+        "output_tokens": 132,
+        "estimated_cost_usd": 5.397e-05
+      }
+    },
+    {
+      "id": "recognition-chinese-home-meal-020",
+      "cohort": "chinese_home_meal",
+      "gold_names": [
+        {
+          "aliases": [
+            "牛肉面"
+          ],
+          "canonical_en": "beef noodle soup"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1932,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "牛肉面",
+            "name_en": "Beef Noodle Soup",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "兰州拉面",
+            "name_en": "Lanzhou Lamian",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "清汤牛肉面",
+            "name_en": "Clear Broth Beef Noodles",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 815,
+        "output_tokens": 136,
+        "estimated_cost_usd": 3.775e-05
+      }
+    },
+    {
+      "id": "recognition-single-food-001",
+      "cohort": "single_food",
+      "gold_names": [
+        {
+          "aliases": [
+            "苹果"
+          ],
+          "canonical_en": "apple"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1575,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "红苹果",
+            "name_en": "Red Apple",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "苹果",
+            "name_en": "Apple",
+            "confidence": "medium"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 323,
+        "output_tokens": 94,
+        "estimated_cost_usd": 1.942e-05
+      }
+    },
+    {
+      "id": "recognition-single-food-002",
+      "cohort": "single_food",
+      "gold_names": [
+        {
+          "aliases": [
+            "香蕉"
+          ],
+          "canonical_en": "banana"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2963,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "香蕉",
+            "name_en": "Banana",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "熟香蕉",
+            "name_en": "Ripe Banana",
+            "confidence": "low"
+          },
+          {
+            "name_zh": "黄香蕉",
+            "name_en": "Yellow Banana",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 1415,
+        "output_tokens": 124,
+        "estimated_cost_usd": 5.308e-05
+      }
+    },
+    {
+      "id": "recognition-single-food-003",
+      "cohort": "single_food",
+      "gold_names": [
+        {
+          "aliases": [
+            "橙子"
+          ],
+          "canonical_en": "orange"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1867,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "橘子",
+            "name_en": "Mandarin Orange",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "橙子",
+            "name_en": "Orange",
+            "confidence": "low"
+          },
+          {
+            "name_zh": "柑橘",
+            "name_en": "Citrus Fruit",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 815,
+        "output_tokens": 123,
+        "estimated_cost_usd": 3.631e-05
+      }
+    },
+    {
+      "id": "recognition-single-food-004",
+      "cohort": "single_food",
+      "gold_names": [
+        {
+          "aliases": [
+            "葡萄"
+          ],
+          "canonical_en": "grapes"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 3285,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "葡萄",
+            "name_en": "Grapes",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "混色葡萄",
+            "name_en": "Mixed Color Grapes",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "提子",
+            "name_en": "Table Grapes",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 725,
+        "output_tokens": 116,
+        "estimated_cost_usd": 3.303e-05
+      }
+    },
+    {
+      "id": "recognition-single-food-005",
+      "cohort": "single_food",
+      "gold_names": [
+        {
+          "aliases": [
+            "西兰花"
+          ],
+          "canonical_en": "broccoli"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2093,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "西兰花",
+            "name_en": "Broccoli",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "青花菜",
+            "name_en": "Green Cauliflower",
+            "confidence": "low"
+          },
+          {
+            "name_zh": "西蓝花",
+            "name_en": "Broccolini",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 1415,
+        "output_tokens": 115,
+        "estimated_cost_usd": 5.208e-05
+      }
+    },
+    {
+      "id": "recognition-single-food-006",
+      "cohort": "single_food",
+      "gold_names": [
+        {
+          "aliases": [
+            "番茄",
+            "西红柿"
+          ],
+          "canonical_en": "tomato"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2496,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "番茄",
+            "name_en": "Tomato",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "西红柿",
+            "name_en": "Tomato (Chinese)",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "红番茄",
+            "name_en": "Red Tomato",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 1115,
+        "output_tokens": 112,
+        "estimated_cost_usd": 4.342e-05
+      }
+    },
+    {
+      "id": "recognition-single-food-007",
+      "cohort": "single_food",
+      "gold_names": [
+        {
+          "aliases": [
+            "水煮蛋"
+          ],
+          "canonical_en": "boiled egg"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2521,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "水煮蛋",
+            "name_en": "Boiled egg",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "鸡蛋",
+            "name_en": "Egg",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "溏心蛋",
+            "name_en": "Soft-boiled egg",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 875,
+        "output_tokens": 128,
+        "estimated_cost_usd": 3.853e-05
+      }
+    },
+    {
+      "id": "recognition-single-food-008",
+      "cohort": "single_food",
+      "gold_names": [
+        {
+          "aliases": [
+            "tofu",
+            "豆腐",
+            "臭豆腐"
+          ],
+          "canonical_en": "stinky tofu"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2867,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": false,
+        "candidates": [],
+        "confidence": "low",
+        "should_abstain": true,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 1115,
+        "output_tokens": 38,
+        "estimated_cost_usd": 3.519e-05
+      }
+    },
+    {
+      "id": "recognition-single-food-009",
+      "cohort": "single_food",
+      "gold_names": [
+        {
+          "aliases": [
+            "米饭"
+          ],
+          "canonical_en": "white rice"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2694,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "白米饭",
+            "name_en": "Steamed White Rice",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "蒸米饭",
+            "name_en": "Boiled Rice",
+            "confidence": "low"
+          },
+          {
+            "name_zh": "煮白饭",
+            "name_en": "Cooked White Rice",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 995,
+        "output_tokens": 130,
+        "estimated_cost_usd": 4.208e-05
+      }
+    },
+    {
+      "id": "recognition-single-food-010",
+      "cohort": "single_food",
+      "gold_names": [
+        {
+          "aliases": [
+            "玉米"
+          ],
+          "canonical_en": "corn on the cob"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2159,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "水煮玉米",
+            "name_en": "Boiled Corn on the Cob",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "甜玉米",
+            "name_en": "Sweet Corn",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "双色玉米",
+            "name_en": "Bicolor Corn",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 1415,
+        "output_tokens": 117,
+        "estimated_cost_usd": 5.231e-05
+      }
+    },
+    {
+      "id": "recognition-single-food-011",
+      "cohort": "single_food",
+      "gold_names": [
+        {
+          "aliases": [
+            "土豆"
+          ],
+          "canonical_en": "potato"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2115,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "红皮土豆",
+            "name_en": "Red Potato",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "马铃薯",
+            "name_en": "Potato",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "红土豆",
+            "name_en": "Red Skin Potato",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 725,
+        "output_tokens": 125,
+        "estimated_cost_usd": 3.403e-05
+      }
+    },
+    {
+      "id": "recognition-single-food-012",
+      "cohort": "single_food",
+      "gold_names": [
+        {
+          "aliases": [
+            "鸡胸肉"
+          ],
+          "canonical_en": "chicken breast"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 3302,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "白煮鸡胸肉",
+            "name_en": "Boiled Chicken Breast",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "水煮鸡胸肉",
+            "name_en": "Poached Chicken Breast",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "清蒸鸡胸肉",
+            "name_en": "Steamed Chicken Breast",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 1085,
+        "output_tokens": 126,
+        "estimated_cost_usd": 4.414e-05
+      }
+    },
+    {
+      "id": "recognition-single-food-013",
+      "cohort": "single_food",
+      "gold_names": [
+        {
+          "aliases": [
+            "三文鱼"
+          ],
+          "canonical_en": "salmon"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2410,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "香煎三文鱼配芦笋",
+            "name_en": "Pan-seared Salmon with Asparagus",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "烤三文鱼排",
+            "name_en": "Baked Salmon Fillet",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "蒜香百里香煎鱼",
+            "name_en": "Garlic and Thyme Pan-fried Fish",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 1415,
+        "output_tokens": 150,
+        "estimated_cost_usd": 5.597e-05
+      }
+    },
+    {
+      "id": "recognition-single-food-014",
+      "cohort": "single_food",
+      "gold_names": [
+        {
+          "aliases": [
+            "原味酸奶"
+          ],
+          "canonical_en": "plain yogurt"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2117,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "牛奶泡饭",
+            "name_en": "Rice with Milk",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "米布丁",
+            "name_en": "Rice Pudding",
+            "confidence": "low"
+          },
+          {
+            "name_zh": "燕麦粥",
+            "name_en": "Oatmeal",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 671,
+        "output_tokens": 131,
+        "estimated_cost_usd": 3.319e-05
+      }
+    },
+    {
+      "id": "recognition-single-food-015",
+      "cohort": "single_food",
+      "gold_names": [
+        {
+          "aliases": [
+            "牛奶"
+          ],
+          "canonical_en": "milk"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 4078,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "牛奶",
+            "name_en": "Milk",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "豆浆",
+            "name_en": "Soy Milk",
+            "confidence": "low"
+          },
+          {
+            "name_zh": "米浆",
+            "name_en": "Rice Milk",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 1115,
+        "output_tokens": 124,
+        "estimated_cost_usd": 4.475e-05
+      }
+    },
+    {
+      "id": "recognition-mixed-meal-001",
+      "cohort": "mixed_meal",
+      "gold_names": [
+        {
+          "aliases": [
+            "寿司拼盘"
+          ],
+          "canonical_en": "sushi platter"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2153,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "寿司拼盘",
+            "name_en": "Sushi Platter",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "握寿司",
+            "name_en": "Nigiri Sushi",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "卷寿司",
+            "name_en": "Maki Sushi",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 725,
+        "output_tokens": 130,
+        "estimated_cost_usd": 3.458e-05
+      }
+    },
+    {
+      "id": "recognition-mixed-meal-002",
+      "cohort": "mixed_meal",
+      "gold_names": [
+        {
+          "aliases": [
+            "咖喱饭"
+          ],
+          "canonical_en": "curry rice"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2460,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "日式咖喱饭",
+            "name_en": "Japanese Curry Rice",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "炖肉咖喱",
+            "name_en": "Stewed Meat Curry",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "白米饭配咖喱",
+            "name_en": "White Rice with Curry",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 875,
+        "output_tokens": 133,
+        "estimated_cost_usd": 3.908e-05
+      }
+    },
+    {
+      "id": "recognition-mixed-meal-003",
+      "cohort": "mixed_meal",
+      "gold_names": [
+        {
+          "aliases": [
+            "沙拉"
+          ],
+          "canonical_en": "salad bowl"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2858,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "法拉费碗",
+            "name_en": "Falafel Bowl",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "中东谷物沙拉碗",
+            "name_en": "Middle Eastern Grain Bowl",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "炸鹰嘴豆泥饼配米饭",
+            "name_en": "Fried Chickpea Patty with Rice",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 905,
+        "output_tokens": 143,
+        "estimated_cost_usd": 4.103e-05
+      }
+    },
+    {
+      "id": "recognition-mixed-meal-004",
+      "cohort": "mixed_meal",
+      "gold_names": [
+        {
+          "aliases": [
+            "早餐拼盘"
+          ],
+          "canonical_en": "breakfast plate"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2554,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "苹果燕麦粥",
+            "name_en": "Apple Oatmeal",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "牛奶",
+            "name_en": "Milk",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "切片苹果",
+            "name_en": "Sliced Apple",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 785,
+        "output_tokens": 127,
+        "estimated_cost_usd": 3.592e-05
+      }
+    },
+    {
+      "id": "recognition-mixed-meal-005",
+      "cohort": "mixed_meal",
+      "gold_names": [
+        {
+          "aliases": [
+            "肉酱意面"
+          ],
+          "canonical_en": "pasta with meat sauce"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2454,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "肉酱螺旋意面",
+            "name_en": "Fusilli with Meat Sauce",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "意大利面配面包",
+            "name_en": "Pasta with Bread",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "碎肉拌面",
+            "name_en": "Minced Meat Noodles",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 875,
+        "output_tokens": 128,
+        "estimated_cost_usd": 3.853e-05
+      }
+    },
+    {
+      "id": "recognition-mixed-meal-006",
+      "cohort": "mixed_meal",
+      "gold_names": [
+        {
+          "aliases": [
+            "披萨"
+          ],
+          "canonical_en": "pizza"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2054,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "黑橄榄披萨",
+            "name_en": "Black Olive Pizza",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "混合配料披萨",
+            "name_en": "Topping Pizza",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "无糖可乐",
+            "name_en": "Diet Cola",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 875,
+        "output_tokens": 130,
+        "estimated_cost_usd": 3.875e-05
+      }
+    },
+    {
+      "id": "recognition-mixed-meal-007",
+      "cohort": "mixed_meal",
+      "gold_names": [
+        {
+          "aliases": [
+            "墨西哥卷饼碗"
+          ],
+          "canonical_en": "burrito bowl"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2823,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "墨西哥辣味玉米片",
+            "name_en": "Nacho Beans",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "墨西哥炖豆",
+            "name_en": "Frijoles Charros",
+            "confidence": "low"
+          },
+          {
+            "name_zh": "墨西哥肉酱饭",
+            "name_en": "Chile con Carne",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 875,
+        "output_tokens": 124,
+        "estimated_cost_usd": 3.808e-05
+      }
+    },
+    {
+      "id": "recognition-mixed-meal-008",
+      "cohort": "mixed_meal",
+      "gold_names": [
+        {
+          "aliases": [
+            "三明治"
+          ],
+          "canonical_en": "sandwich"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": false,
+      "forbidden_estimate_detected": false,
+      "fallback_used": true,
+      "error_code": "ValidationError",
+      "latency_ms": 3289,
+      "provider_response_model": null,
+      "prediction": null,
+      "usage": {
+        "input_tokens": 935,
+        "output_tokens": 151,
+        "estimated_cost_usd": 4.275e-05
+      }
+    },
+    {
+      "id": "recognition-mixed-meal-009",
+      "cohort": "mixed_meal",
+      "gold_names": [
+        {
+          "aliases": [
+            "汤面"
+          ],
+          "canonical_en": "noodle soup"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2059,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "杯面",
+            "name_en": "Cup Noodles",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "泡面",
+            "name_en": "Instant Ramen",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "鱼板拉面",
+            "name_en": "Ramen with Narutomaki",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 815,
+        "output_tokens": 132,
+        "estimated_cost_usd": 3.731e-05
+      }
+    },
+    {
+      "id": "recognition-mixed-meal-010",
+      "cohort": "mixed_meal",
+      "gold_names": [
+        {
+          "aliases": [
+            "牛排餐"
+          ],
+          "canonical_en": "steak dinner"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2688,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "铁板牛排套餐",
+            "name_en": "Sizzling Steak Set Meal",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "烤玉米配牛排",
+            "name_en": "Grilled Corn with Steak",
+            "confidence": "low"
+          },
+          {
+            "name_zh": "西式主餐",
+            "name_en": "Western Main Course",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 875,
+        "output_tokens": 124,
+        "estimated_cost_usd": 3.808e-05
+      }
+    },
+    {
+      "id": "recognition-packaged-food-001",
+      "cohort": "packaged_food",
+      "gold_names": [
+        {
+          "aliases": [
+            "盒装牛奶"
+          ],
+          "canonical_en": "packaged milk"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1975,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "牛奶",
+            "name_en": "Milk",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "纸盒装牛奶",
+            "name_en": "Carton Milk",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "乳制品",
+            "name_en": "Dairy Product",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 1415,
+        "output_tokens": 114,
+        "estimated_cost_usd": 5.197e-05
+      }
+    },
+    {
+      "id": "recognition-packaged-food-002",
+      "cohort": "packaged_food",
+      "gold_names": [
+        {
+          "aliases": [
+            "早餐谷物"
+          ],
+          "canonical_en": "breakfast cereal"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2038,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": false,
+        "candidates": [],
+        "confidence": "low",
+        "should_abstain": true,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 1505,
+        "output_tokens": 38,
+        "estimated_cost_usd": 4.603e-05
+      }
+    },
+    {
+      "id": "recognition-packaged-food-003",
+      "cohort": "packaged_food",
+      "gold_names": [
+        {
+          "aliases": [
+            "方便面"
+          ],
+          "canonical_en": "instant noodles"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2261,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "韩式杯面",
+            "name_en": "Korean Cup Noodles",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "鱼饼汤面",
+            "name_en": "Fish Cake Soup Noodles",
+            "confidence": "low"
+          },
+          {
+            "name_zh": "泡面",
+            "name_en": "Instant Noodles",
+            "confidence": "medium"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 1115,
+        "output_tokens": 134,
+        "estimated_cost_usd": 4.586e-05
+      }
+    },
+    {
+      "id": "recognition-packaged-food-004",
+      "cohort": "packaged_food",
+      "gold_names": [
+        {
+          "aliases": [
+            "杯装酸奶"
+          ],
+          "canonical_en": "packaged yogurt"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1742,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "布丁",
+            "name_en": "Pudding",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "奶冻",
+            "name_en": "Milk Jelly",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "酸奶",
+            "name_en": "Yogurt",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 875,
+        "output_tokens": 125,
+        "estimated_cost_usd": 3.819e-05
+      }
+    },
+    {
+      "id": "recognition-packaged-food-005",
+      "cohort": "packaged_food",
+      "gold_names": [
+        {
+          "aliases": [
+            "巧克力"
+          ],
+          "canonical_en": "chocolate bar"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1930,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "好时牛奶巧克力",
+            "name_en": "Hershey's Milk Chocolate Bar",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "牛奶巧克力棒",
+            "name_en": "Milk Chocolate Bar",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "包装巧克力",
+            "name_en": "Wrapped Chocolate Bar",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 367,
+        "output_tokens": 135,
+        "estimated_cost_usd": 2.519e-05
+      }
+    },
+    {
+      "id": "recognition-packaged-food-006",
+      "cohort": "packaged_food",
+      "gold_names": [
+        {
+          "aliases": [
+            "豆罐头"
+          ],
+          "canonical_en": "canned beans"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 4649,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "烤豆罐头",
+            "name_en": "Canned Baked Beans",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "Bush's 品牌烤豆",
+            "name_en": "Bush's Best Baked Beans",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "茄汁焗豆",
+            "name_en": "Baked Beans in Tomato Sauce",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 1805,
+        "output_tokens": 143,
+        "estimated_cost_usd": 6.603e-05
+      }
+    },
+    {
+      "id": "recognition-packaged-food-007",
+      "cohort": "packaged_food",
+      "gold_names": [
+        {
+          "aliases": [
+            "薯片"
+          ],
+          "canonical_en": "potato chips"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1985,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "薯片",
+            "name_en": "Potato Chips",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "波浪薯片",
+            "name_en": "Wavy Potato Chips",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "玉米片",
+            "name_en": "Tortilla Chips",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 1115,
+        "output_tokens": 118,
+        "estimated_cost_usd": 4.408e-05
+      }
+    },
+    {
+      "id": "recognition-packaged-food-008",
+      "cohort": "packaged_food",
+      "gold_names": [
+        {
+          "aliases": [
+            "包装面包"
+          ],
+          "canonical_en": "packaged bread"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 3159,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "厚切白面包",
+            "name_en": "Thick White Bread",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "切片面包",
+            "name_en": "Sliced Bread",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "Brace's 品牌面包",
+            "name_en": "Brace's Family Bread",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 875,
+        "output_tokens": 136,
+        "estimated_cost_usd": 3.942e-05
+      }
+    },
+    {
+      "id": "recognition-packaged-food-009",
+      "cohort": "packaged_food",
+      "gold_names": [
+        {
+          "aliases": [
+            "果汁"
+          ],
+          "canonical_en": "fruit juice"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2452,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "瓶装果汁",
+            "name_en": "Bottled fruit juice",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "浓缩果汁",
+            "name_en": "Concentrated fruit juice",
+            "confidence": "low"
+          },
+          {
+            "name_zh": "果味饮料",
+            "name_en": "Fruit-flavored beverage",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 605,
+        "output_tokens": 122,
+        "estimated_cost_usd": 3.036e-05
+      }
+    },
+    {
+      "id": "recognition-packaged-food-010",
+      "cohort": "packaged_food",
+      "gold_names": [
+        {
+          "aliases": [
+            "饼干"
+          ],
+          "canonical_en": "biscuits"
+        }
+      ],
+      "gold_should_abstain": false,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 3990,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": true,
+        "candidates": [
+          {
+            "name_zh": "果酱夹心饼干",
+            "name_en": "Jam sandwich cookies",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "草莓夹心曲奇",
+            "name_en": "Strawberry filled cookies",
+            "confidence": "medium"
+          },
+          {
+            "name_zh": "夹心软饼",
+            "name_en": "Filled soft cookies",
+            "confidence": "low"
+          }
+        ],
+        "confidence": "medium",
+        "should_abstain": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 455,
+        "output_tokens": 137,
+        "estimated_cost_usd": 2.786e-05
+      }
+    },
+    {
+      "id": "recognition-nonfood-001",
+      "cohort": "nonfood",
+      "gold_names": [
+        {
+          "aliases": [],
+          "canonical_en": ""
+        }
+      ],
+      "gold_should_abstain": true,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2194,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": false,
+        "candidates": [],
+        "confidence": "low",
+        "should_abstain": true,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 875,
+        "output_tokens": 38,
+        "estimated_cost_usd": 2.853e-05
+      }
+    },
+    {
+      "id": "recognition-nonfood-002",
+      "cohort": "nonfood",
+      "gold_names": [
+        {
+          "aliases": [],
+          "canonical_en": ""
+        }
+      ],
+      "gold_should_abstain": true,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2061,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": false,
+        "candidates": [],
+        "confidence": "low",
+        "should_abstain": true,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 1415,
+        "output_tokens": 38,
+        "estimated_cost_usd": 4.353e-05
+      }
+    },
+    {
+      "id": "recognition-nonfood-003",
+      "cohort": "nonfood",
+      "gold_names": [
+        {
+          "aliases": [],
+          "canonical_en": ""
+        }
+      ],
+      "gold_should_abstain": true,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1612,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": false,
+        "candidates": [],
+        "confidence": "low",
+        "should_abstain": true,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 965,
+        "output_tokens": 38,
+        "estimated_cost_usd": 3.103e-05
+      }
+    },
+    {
+      "id": "recognition-nonfood-004",
+      "cohort": "nonfood",
+      "gold_names": [
+        {
+          "aliases": [],
+          "canonical_en": ""
+        }
+      ],
+      "gold_should_abstain": true,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1726,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": false,
+        "candidates": [],
+        "confidence": "low",
+        "should_abstain": true,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 665,
+        "output_tokens": 38,
+        "estimated_cost_usd": 2.269e-05
+      }
+    },
+    {
+      "id": "recognition-nonfood-005",
+      "cohort": "nonfood",
+      "gold_names": [
+        {
+          "aliases": [],
+          "canonical_en": ""
+        }
+      ],
+      "gold_should_abstain": true,
+      "schema_valid": true,
+      "forbidden_estimate_detected": false,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2378,
+      "provider_response_model": "journey-recognition-eval-qwen3.7-flash-2026-07-15",
+      "prediction": {
+        "is_food": false,
+        "candidates": [],
+        "confidence": "low",
+        "should_abstain": true,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 725,
+        "output_tokens": 38,
+        "estimated_cost_usd": 2.436e-05
+      }
+    }
+  ]
+}

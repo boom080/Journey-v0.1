@@ -1,0 +1,97 @@
+{
+  "name": "@journey/mobile",
+  "main": "expo-router/entry",
+  "version": "0.1.0",
+  "dependencies": {
+    "@journey/contracts": "*",
+    "@journey/design-tokens": "*",
+    "@react-native-async-storage/async-storage": "2.2.0",
+    "@react-native-community/netinfo": "12.0.1",
+    "@tanstack/react-query": "^5.101.2",
+    "expo": "~57.0.6",
+    "expo-build-properties": "~57.0.6",
+    "expo-constants": "~57.0.5",
+    "expo-crypto": "~57.0.1",
+    "expo-dev-client": "~57.0.6",
+    "expo-image": "~57.0.1",
+    "expo-image-picker": "~57.0.5",
+    "expo-linking": "~57.0.3",
+    "expo-router": "~57.0.6",
+    "expo-secure-store": "~57.0.1",
+    "expo-splash-screen": "~57.0.4",
+    "expo-status-bar": "~57.0.1",
+    "expo-system-ui": "~57.0.1",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-native": "0.86.0",
+    "react-native-safe-area-context": "~5.7.0",
+    "react-native-screens": "4.25.2",
+    "react-native-web": "~0.21.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.1",
+    "@testing-library/react-native": "^14.0.1",
+    "@types/jest": "29.5.14",
+    "@types/node": "^26.1.1",
+    "@types/react": "~19.2.2",
+    "eslint": "^9.0.0",
+    "eslint-config-expo": "~57.0.0",
+    "jest": "~29.7.0",
+    "jest-expo": "~57.0.2",
+    "jest-junit": "^16.0.0",
+    "typescript": "~6.0.3"
+  },
+  "scripts": {
+    "start": "node --env-file-if-exists=../../.env ../../node_modules/expo/bin/cli start",
+    "android": "node --env-file-if-exists=../../.env ../../node_modules/expo/bin/cli run:android",
+    "ios": "node --env-file-if-exists=../../.env ../../node_modules/expo/bin/cli run:ios",
+    "web": "node --env-file-if-exists=../../.env ../../node_modules/expo/bin/cli start --web",
+    "web:build": "node --env-file-if-exists=../../.env ../../node_modules/expo/bin/cli export --platform web --clear",
+    "test": "npm run test:logic && npm run test:components",
+    "test:logic": "node --experimental-default-type=module --experimental-strip-types --test src/lib/mock-intent.test.ts",
+    "test:components": "jest --runInBand",
+    "test:ci": "jest --runInBand --coverage --ci --reporters=default --reporters=jest-junit",
+    "e2e:web": "playwright test",
+    "typecheck": "tsc --noEmit",
+    "lint": "expo lint"
+  },
+  "jest": {
+    "preset": "jest-expo",
+    "testMatch": [
+      "<rootDir>/tests/**/*.test.ts",
+      "<rootDir>/tests/**/*.test.tsx"
+    ],
+    "moduleNameMapper": {
+      "^@/assets/(.*)$": "<rootDir>/assets/$1",
+      "^@/(.*)$": "<rootDir>/src/$1"
+    },
+    "setupFiles": [
+      "<rootDir>/jest.setup.ts"
+    ],
+    "collectCoverageFrom": [
+      "src/components/ui.tsx",
+      "src/components/home-overview.tsx",
+      "src/lib/api.ts",
+      "src/app/(tabs)/index.tsx",
+      "src/app/sign-in.tsx"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 55,
+        "functions": 60,
+        "lines": 65,
+        "statements": 65
+      }
+    },
+    "coverageReporters": [
+      "text",
+      "json-summary",
+      "lcov"
+    ]
+  },
+  "jest-junit": {
+    "outputDirectory": "reports",
+    "outputName": "junit.xml"
+  },
+  "private": true
+}

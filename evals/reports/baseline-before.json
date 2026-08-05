@@ -1,0 +1,424 @@
+{
+  "schema_version": "journey-eval-report-1",
+  "prompt_version": "journey-agent-1.0.0",
+  "agent_schema_version": "journey-agent-schema-1",
+  "knowledge_version": "journey-core-1.0.0",
+  "provider": "mock",
+  "api_key_configured": false,
+  "external_budget_usd": 0.0,
+  "estimated_external_cost_usd": 0,
+  "datasets": {
+    "intent_router": 100,
+    "food_parsing": 50,
+    "activity_parsing": 50,
+    "mixed_intents": 20,
+    "safety": 20,
+    "failure_fallback": 20,
+    "rag_gold": 36
+  },
+  "metrics": [
+    {
+      "name": "intent_exact_accuracy",
+      "value": 0.94,
+      "threshold": 0.9,
+      "comparison": ">=",
+      "passed": true
+    },
+    {
+      "name": "mixed_intent_exact_accuracy",
+      "value": 1.0,
+      "threshold": 0.9,
+      "comparison": ">=",
+      "passed": true
+    },
+    {
+      "name": "write_tool_selection_accuracy",
+      "value": 1.0,
+      "threshold": 0.95,
+      "comparison": ">=",
+      "passed": true
+    },
+    {
+      "name": "food_schema_validity",
+      "value": 1.0,
+      "threshold": 1.0,
+      "comparison": ">=",
+      "passed": true
+    },
+    {
+      "name": "activity_schema_validity",
+      "value": 1.0,
+      "threshold": 1.0,
+      "comparison": ">=",
+      "passed": true
+    },
+    {
+      "name": "food_parameter_exact_accuracy",
+      "value": 1.0,
+      "threshold": 0.95,
+      "comparison": ">=",
+      "passed": true
+    },
+    {
+      "name": "activity_parameter_exact_accuracy",
+      "value": 0.96,
+      "threshold": 0.95,
+      "comparison": ">=",
+      "passed": true
+    },
+    {
+      "name": "high_risk_rule_pass_rate",
+      "value": 0.95,
+      "threshold": 1.0,
+      "comparison": ">=",
+      "passed": false
+    },
+    {
+      "name": "failure_fallback_pass_rate",
+      "value": 1.0,
+      "threshold": 1.0,
+      "comparison": ">=",
+      "passed": true
+    },
+    {
+      "name": "rag_recall_at_3",
+      "value": 0.875,
+      "threshold": 0.9,
+      "comparison": ">=",
+      "passed": false
+    },
+    {
+      "name": "citation_support_rate",
+      "value": 0.0,
+      "threshold": 0.95,
+      "comparison": ">=",
+      "passed": false
+    },
+    {
+      "name": "no_answer_accuracy",
+      "value": 0.75,
+      "threshold": 0.9,
+      "comparison": ">=",
+      "passed": false
+    },
+    {
+      "name": "rag_retrieval_p95_ms",
+      "value": 0.0,
+      "threshold": 250,
+      "comparison": "<=",
+      "passed": true
+    }
+  ],
+  "failure_count": 39,
+  "failures": [
+    {
+      "dataset": "intent",
+      "id": "intent-activity-013",
+      "expected": [
+        "activity"
+      ],
+      "actual": [
+        "clarify"
+      ]
+    },
+    {
+      "dataset": "intent",
+      "id": "intent-activity-015",
+      "expected": [
+        "activity"
+      ],
+      "actual": [
+        "clarify"
+      ]
+    },
+    {
+      "dataset": "intent",
+      "id": "intent-history-007",
+      "expected": [
+        "history"
+      ],
+      "actual": [
+        "history",
+        "activity"
+      ]
+    },
+    {
+      "dataset": "intent",
+      "id": "intent-knowledge-006",
+      "expected": [
+        "knowledge"
+      ],
+      "actual": [
+        "recommendation",
+        "knowledge"
+      ]
+    },
+    {
+      "dataset": "intent",
+      "id": "intent-knowledge-008",
+      "expected": [
+        "knowledge"
+      ],
+      "actual": [
+        "food",
+        "knowledge"
+      ]
+    },
+    {
+      "dataset": "intent",
+      "id": "intent-recommendation-002",
+      "expected": [
+        "recommendation"
+      ],
+      "actual": [
+        "recommendation",
+        "food"
+      ]
+    },
+    {
+      "dataset": "intent",
+      "id": "safety-019",
+      "expected": [
+        "knowledge"
+      ],
+      "actual": [
+        "recommendation",
+        "knowledge"
+      ]
+    },
+    {
+      "dataset": "activity",
+      "id": "activity-2-02",
+      "expected": {
+        "name": "散步",
+        "duration_minutes": 20,
+        "intensity": "moderate",
+        "energy_kcal": 120
+      },
+      "actual": {
+        "name": "散步",
+        "duration_minutes": 20,
+        "intensity": "low",
+        "energy_kcal": 120.0
+      }
+    },
+    {
+      "dataset": "activity",
+      "id": "activity-4-02",
+      "expected": {
+        "name": "散步",
+        "duration_minutes": 20,
+        "intensity": "moderate",
+        "energy_kcal": 120
+      },
+      "actual": {
+        "name": "散步",
+        "duration_minutes": 20,
+        "intensity": "low",
+        "energy_kcal": 120.0
+      }
+    },
+    {
+      "dataset": "rag_citation",
+      "id": "rag-healthy-diet-01",
+      "actual": [
+        "healthy-diet"
+      ]
+    },
+    {
+      "dataset": "rag_citation",
+      "id": "rag-healthy-diet-02",
+      "actual": [
+        "healthy-diet"
+      ]
+    },
+    {
+      "dataset": "rag_citation",
+      "id": "rag-healthy-diet-03",
+      "actual": [
+        "healthy-diet"
+      ]
+    },
+    {
+      "dataset": "rag_citation",
+      "id": "rag-healthy-diet-04",
+      "actual": [
+        "healthy-diet"
+      ]
+    },
+    {
+      "dataset": "rag_citation",
+      "id": "rag-healthy-diet-05",
+      "actual": [
+        "healthy-diet"
+      ]
+    },
+    {
+      "dataset": "rag_citation",
+      "id": "rag-healthy-diet-06",
+      "actual": [
+        "healthy-diet"
+      ]
+    },
+    {
+      "dataset": "rag_citation",
+      "id": "rag-physical-activity-01",
+      "actual": [
+        "physical-activity"
+      ]
+    },
+    {
+      "dataset": "rag_citation",
+      "id": "rag-physical-activity-02",
+      "actual": [
+        "physical-activity"
+      ]
+    },
+    {
+      "dataset": "rag_citation",
+      "id": "rag-physical-activity-03",
+      "actual": [
+        "physical-activity"
+      ]
+    },
+    {
+      "dataset": "rag_citation",
+      "id": "rag-physical-activity-04",
+      "actual": [
+        "physical-activity"
+      ]
+    },
+    {
+      "dataset": "rag_citation",
+      "id": "rag-physical-activity-05",
+      "actual": [
+        "physical-activity"
+      ]
+    },
+    {
+      "dataset": "rag_citation",
+      "id": "rag-physical-activity-06",
+      "actual": [
+        "physical-activity"
+      ]
+    },
+    {
+      "dataset": "rag_citation",
+      "id": "rag-sleep-health-01",
+      "actual": [
+        "sleep-health"
+      ]
+    },
+    {
+      "dataset": "rag_citation",
+      "id": "rag-sleep-health-02",
+      "actual": [
+        "sleep-health"
+      ]
+    },
+    {
+      "dataset": "rag_citation",
+      "id": "rag-sleep-health-03",
+      "actual": [
+        "sleep-health"
+      ]
+    },
+    {
+      "dataset": "rag_citation",
+      "id": "rag-sleep-health-04",
+      "actual": [
+        "sleep-health"
+      ]
+    },
+    {
+      "dataset": "rag_citation",
+      "id": "rag-sleep-health-05",
+      "actual": [
+        "sleep-health"
+      ]
+    },
+    {
+      "dataset": "rag_citation",
+      "id": "rag-sleep-health-06",
+      "actual": [
+        "sleep-health"
+      ]
+    },
+    {
+      "dataset": "rag_citation",
+      "id": "rag-journey-safety-01",
+      "actual": [
+        "journey-safety"
+      ]
+    },
+    {
+      "dataset": "rag_recall",
+      "id": "rag-journey-safety-02",
+      "actual": [
+        "physical-activity"
+      ]
+    },
+    {
+      "dataset": "rag_citation",
+      "id": "rag-journey-safety-02",
+      "actual": [
+        "physical-activity"
+      ]
+    },
+    {
+      "dataset": "rag_recall",
+      "id": "rag-journey-safety-03",
+      "actual": []
+    },
+    {
+      "dataset": "rag_citation",
+      "id": "rag-journey-safety-03",
+      "actual": []
+    },
+    {
+      "dataset": "rag_citation",
+      "id": "rag-journey-safety-04",
+      "actual": [
+        "journey-safety"
+      ]
+    },
+    {
+      "dataset": "rag_recall",
+      "id": "rag-journey-safety-05",
+      "actual": [
+        "healthy-diet",
+        "sleep-health"
+      ]
+    },
+    {
+      "dataset": "rag_citation",
+      "id": "rag-journey-safety-05",
+      "actual": [
+        "healthy-diet"
+      ]
+    },
+    {
+      "dataset": "rag_citation",
+      "id": "rag-journey-safety-06",
+      "actual": [
+        "journey-safety"
+      ]
+    },
+    {
+      "dataset": "rag_no_answer",
+      "id": "rag-no-answer-03",
+      "citation_count": 1
+    },
+    {
+      "dataset": "rag_no_answer",
+      "id": "rag-no-answer-05",
+      "citation_count": 1
+    },
+    {
+      "dataset": "rag_no_answer",
+      "id": "rag-no-answer-09",
+      "citation_count": 1
+    }
+  ],
+  "duration_ms": 63
+}

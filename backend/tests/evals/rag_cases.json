@@ -1,0 +1,6 @@
+[
+  {"input": "怎样保持均衡饮食", "expected_slug": "healthy-diet"},
+  {"input": "运动后如何恢复", "expected_slug": "physical-activity"},
+  {"input": "睡眠和训练恢复", "expected_slug": "sleep-health"},
+  {"input": "疾病和药物可以问 Journey 吗", "expected_slug": "journey-safety"}
+]

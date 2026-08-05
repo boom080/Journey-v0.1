@@ -13,6 +13,27 @@ backend/**/*.pyc
 node_modules/
 dist/
 .swc/
+.expo/
+apps/mobile/.expo/
+apps/mobile/dist/
+apps/mobile/dist-ios/
+apps/mobile/dist-android/
+coverage/
+/reports/
+test-results/
+playwright-report/
+apps/mobile/coverage/
+apps/mobile/reports/
+apps/mobile/test-results/
+apps/mobile/playwright-report/
+artifacts/
+evals/food_image_real/assets/
+evals/food_image_holdout/assets/
+evals/food_image_scale_candidate/assets/
+evals/food_image_scale_holdout/assets/
+evals/food_image_recognition_holdout/assets/
+.pytest_cache/
+.ruff_cache/
 
 *.db
 *.db-journal

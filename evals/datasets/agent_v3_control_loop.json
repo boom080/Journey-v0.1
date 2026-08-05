@@ -1,0 +1,22 @@
+[
+  {"id":"checkpoint-001","kind":"checkpoint","input":"午餐吃米饭 300 千卡，然后根据今天记录给我建议"},
+  {"id":"checkpoint-002","kind":"checkpoint","input":"跑步 30 分钟 180 千卡，然后给我建议"},
+  {"id":"checkpoint-003","kind":"checkpoint","input":"午餐吃苹果 80 千卡，然后跑步 30 分钟 180 千卡，再根据今天记录给建议"},
+  {"id":"checkpoint-004","kind":"checkpoint","input":"今天称重 69.5 kg，然后根据今天记录给我建议"},
+  {"id":"checkpoint-005","kind":"checkpoint","input":"游泳 20 分钟 160 千卡，然后生成本周总结"},
+  {"id":"checkpoint-006","kind":"checkpoint","input":"晚餐吃鸡胸肉 220 千卡，然后生成本周总结"},
+  {"id":"checkpoint-007","kind":"checkpoint","input":"早餐吃鸡蛋 90 千卡，然后体重 68.2，再根据今天记录给建议"},
+  {"id":"checkpoint-008","kind":"checkpoint","input":"加餐喝牛奶 120 千卡，然后散步 25 分钟 90 千卡，再生成本周总结"},
+  {"id":"recovery-001","kind":"recovery","tool":"knowledge.answer","recovery_succeeds":true,"expected_decision":"fallback"},
+  {"id":"recovery-002","kind":"recovery","tool":"recommendation.generate","recovery_succeeds":true,"expected_decision":"fallback"},
+  {"id":"recovery-003","kind":"recovery","tool":"knowledge.answer","recovery_succeeds":false,"expected_decision":"stop"},
+  {"id":"recovery-004","kind":"recovery","tool":"recommendation.generate","recovery_succeeds":false,"expected_decision":"stop"},
+  {"id":"recovery-005","kind":"recovery","tool":"context.load","recovery_succeeds":false,"expected_decision":"stop"},
+  {"id":"recovery-006","kind":"recovery","tool":"profile.read","recovery_succeeds":false,"expected_decision":"stop"},
+  {"id":"privacy-001","kind":"privacy","input":"午餐吃私密苹果 80 千卡，然后给我建议"},
+  {"id":"privacy-002","kind":"privacy","input":"跑步 31 分钟 181 千卡，然后给我建议"},
+  {"id":"privacy-003","kind":"privacy","input":"体重 68.3 kg，然后给我建议"},
+  {"id":"privacy-004","kind":"privacy","input":"晚餐吃内部代号餐 420 千卡，然后生成本周总结"},
+  {"id":"privacy-005","kind":"privacy","input":"游泳 22 分钟 162 千卡，然后生成本周总结"},
+  {"id":"privacy-006","kind":"privacy","input":"早餐吃测试鸡蛋 91 千卡，然后根据今天记录给我建议"}
+]

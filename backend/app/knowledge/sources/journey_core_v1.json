@@ -1,0 +1,69 @@
+{
+  "bundle_version": "journey-core-1.0.0",
+  "sources": [
+    {
+      "slug": "healthy-diet",
+      "title": "健康饮食基础",
+      "source_url": "https://www.who.int/news-room/fact-sheets/detail/healthy-diet",
+      "region": "global",
+      "license_note": "Journey-authored paraphrase; reference-only source URL; no copied article text",
+      "version": "1.0.0",
+      "documents": [
+        {
+          "external_id": "balanced-diet",
+          "title": "均衡饮食与记录",
+          "content": "日常饮食应关注整体结构，而不是把单一食物贴上绝对好坏标签。记录饮食时可同时关注总能量、蛋白质、蔬菜水果和食物多样性。减脂或增肌都应采用可长期坚持的调整，避免极端节食。",
+          "metadata": {"topics": ["饮食", "营养", "减脂", "增肌"], "safety": "general_lifestyle"}
+        }
+      ]
+    },
+    {
+      "slug": "physical-activity",
+      "title": "身体活动基础",
+      "source_url": "https://www.who.int/news-room/fact-sheets/detail/physical-activity",
+      "region": "global",
+      "license_note": "Journey-authored paraphrase; reference-only source URL; no copied article text",
+      "version": "1.0.0",
+      "documents": [
+        {
+          "external_id": "activity-recovery",
+          "title": "运动、恢复与渐进",
+          "content": "运动计划应结合当前基础逐步增加频率、时长或强度，并安排恢复。出现明显疼痛、胸闷、晕厥等异常情况时应停止运动并寻求专业帮助。热量消耗只能作为估算，不应被当作医疗结论。",
+          "metadata": {"topics": ["运动", "恢复", "训练", "安全"], "safety": "general_lifestyle"}
+        }
+      ]
+    },
+    {
+      "slug": "sleep-health",
+      "title": "睡眠与生活方式",
+      "source_url": "https://www.cdc.gov/sleep/about/index.html",
+      "region": "global",
+      "license_note": "Journey-authored paraphrase; reference-only source URL; no copied article text",
+      "version": "1.0.0",
+      "documents": [
+        {
+          "external_id": "sleep-recovery",
+          "title": "睡眠、食欲与训练恢复",
+          "content": "规律睡眠有助于日常精力、训练恢复和食欲管理。可以先固定起床时间、减少临睡前刺激并观察一段时间。长期严重失眠、呼吸暂停或白天功能明显受影响时，应咨询专业人员。",
+          "metadata": {"topics": ["睡眠", "恢复", "食欲"], "safety": "general_lifestyle"}
+        }
+      ]
+    },
+    {
+      "slug": "journey-safety",
+      "title": "Journey 健康边界",
+      "source_url": "journey://knowledge/safety",
+      "region": "global",
+      "license_note": "Project-authored",
+      "version": "1.0.0",
+      "documents": [
+        {
+          "external_id": "medical-boundary",
+          "title": "非医疗产品边界",
+          "content": "Journey 只提供一般健身、营养和生活方式信息，不诊断疾病、不开处方，也不替代医生或注册营养专业人员。涉及疾病、药物、孕期、进食障碍或急性症状的问题，应优先咨询合格专业人员。",
+          "metadata": {"topics": ["安全", "医疗边界"], "safety": "medical_boundary"}
+        }
+      ]
+    }
+  ]
+}

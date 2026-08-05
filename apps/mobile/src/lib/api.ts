@@ -1,0 +1,228 @@
+import type {
+  AgentConfirmationRequest,
+  AgentConfirmationResponse,
+  AgentRunResponse,
+  ActivityRecord,
+  ActivityRecordCreate,
+  ApiErrorResponse,
+  ApiHealthResponse,
+  FoodRecord,
+  FoodRecordCreate,
+  FoodImageAnalysisResponse,
+  FoodImageAnalyzeRequest,
+  Goal,
+  GoalUpsertRequest,
+  HomeToday,
+  JourneyProfile,
+  JourneyResponse,
+  LoginRequest,
+  MessageResponse,
+  Page,
+  ProfileUpdateRequest,
+  RefreshRequest,
+  RegisterRequest,
+  TokenPair,
+  WeightRecord,
+  WeightRecordCreate,
+} from '@journey/contracts';
+
+import { getApiBaseUrl } from '@/config/environment';
+import { clearStoredSession, loadStoredSession, saveStoredSession } from '@/lib/session-storage';
+
+const REQUEST_TIMEOUT_MS = 10_000;
+type SessionListener = (session: TokenPair | null) => void;
+const sessionListeners = new Set<SessionListener>();
+
+export class ApiError extends Error {
+  constructor(
+    message: string,
+    readonly code: string,
+    readonly status: number,
+    readonly details?: unknown,
+  ) {
+    super(message);
+  }
+}
+
+export class ApiNetworkError extends Error {}
+
+export function subscribeToSession(listener: SessionListener): () => void {
+  sessionListeners.add(listener);
+  return () => sessionListeners.delete(listener);
+}
+
+async function setSession(session: TokenPair | null) {
+  if (session) await saveStoredSession(session);
+  else await clearStoredSession();
+  sessionListeners.forEach((listener) => listener(session));
+}
+
+async function parseError(response: Response): Promise<ApiError> {
+  try {
+    const payload = (await response.json()) as ApiErrorResponse;
+    return new ApiError(payload.error.message, payload.error.code, response.status, payload.error.details);
+  } catch {
+    return new ApiError(`请求失败（${response.status}）`, 'HTTP_ERROR', response.status);
+  }
+}
+
+async function rawRequest<T>(
+  path: string,
+  init: RequestInit = {},
+  options: { auth?: boolean; retryAuth?: boolean } = {},
+): Promise<T> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+  const session = options.auth === false ? null : await loadStoredSession();
+  const headers = new Headers(init.headers);
+  if (init.body && !headers.has('Content-Type')) headers.set('Content-Type', 'application/json');
+  if (session?.access_token) headers.set('Authorization', `Bearer ${session.access_token}`);
+
+  try {
+    const response = await fetch(`${getApiBaseUrl()}${path}`, { ...init, headers, signal: controller.signal });
+    if (response.status === 401 && options.auth !== false && options.retryAuth !== false && session?.refresh_token) {
+      const refreshed = await refreshSession({ refresh_token: session.refresh_token }).catch(() => null);
+      if (refreshed) return rawRequest<T>(path, init, { ...options, retryAuth: false });
+      await setSession(null);
+    }
+    if (!response.ok) throw await parseError(response);
+    if (response.status === 204) return undefined as T;
+    return (await response.json()) as T;
+  } catch (error) {
+    if (error instanceof ApiError) throw error;
+    if (error instanceof Error && error.name === 'AbortError') {
+      throw new ApiNetworkError('请求超时，请稍后重试');
+    }
+    throw new ApiNetworkError('网络不可用，请检查连接');
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+export async function login(payload: LoginRequest): Promise<TokenPair> {
+  const session = await rawRequest<TokenPair>('/api/v1/auth/login', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  }, { auth: false });
+  await setSession(session);
+  return session;
+}
+
+export async function register(payload: RegisterRequest): Promise<TokenPair> {
+  const session = await rawRequest<TokenPair>('/api/v1/auth/register', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  }, { auth: false });
+  await setSession(session);
+  return session;
+}
+
+export async function refreshSession(payload: RefreshRequest): Promise<TokenPair> {
+  const session = await rawRequest<TokenPair>('/api/v1/auth/refresh', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  }, { auth: false });
+  await setSession(session);
+  return session;
+}
+
+export async function logout(): Promise<void> {
+  const session = await loadStoredSession();
+  if (session) {
+    await rawRequest<MessageResponse>('/api/v1/auth/logout', {
+      method: 'POST',
+      body: JSON.stringify({ refresh_token: session.refresh_token }),
+    }).catch(() => undefined);
+  }
+  await setSession(null);
+}
+
+export async function restoreSession(): Promise<TokenPair | null> {
+  const session = await loadStoredSession();
+  if (!session) return null;
+  if (new Date(session.refresh_expires_at).getTime() <= Date.now()) {
+    await setSession(null);
+    return null;
+  }
+  if (new Date(session.access_expires_at).getTime() <= Date.now() + 30_000) {
+    return refreshSession({ refresh_token: session.refresh_token }).catch(async () => {
+      await setSession(null);
+      return null;
+    });
+  }
+  return session;
+}
+
+export const fetchProfile = () => rawRequest<JourneyProfile>('/api/v1/profile');
+export const updateProfile = (payload: ProfileUpdateRequest) =>
+  rawRequest<JourneyProfile>('/api/v1/profile', { method: 'PATCH', body: JSON.stringify(payload) });
+export const fetchGoal = () => rawRequest<Goal>('/api/v1/goals/current');
+export const saveGoal = (payload: GoalUpsertRequest) =>
+  rawRequest<Goal>('/api/v1/goals/current', { method: 'PUT', body: JSON.stringify(payload) });
+export const fetchHomeToday = () => rawRequest<HomeToday>('/api/v1/home/today');
+export const fetchJourney = (limit = 7, cursor?: string) =>
+  rawRequest<JourneyResponse>(`/api/v1/journey?limit=${limit}${cursor ? `&cursor=${cursor}` : ''}`);
+
+const recordPath = { food: 'food-records', activity: 'activity-records', weight: 'weight-records' } as const;
+export type RecordKind = keyof typeof recordPath;
+
+export async function createRecord(
+  kind: RecordKind,
+  payload: FoodRecordCreate | ActivityRecordCreate | WeightRecordCreate,
+  idempotencyKey: string,
+): Promise<FoodRecord | ActivityRecord | WeightRecord> {
+  return rawRequest(`/api/v1/${recordPath[kind]}`, {
+    method: 'POST',
+    headers: { 'Idempotency-Key': idempotencyKey },
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function updateRecord(
+  kind: RecordKind,
+  id: string,
+  payload: Record<string, unknown>,
+): Promise<FoodRecord | ActivityRecord | WeightRecord> {
+  return rawRequest(`/api/v1/${recordPath[kind]}/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+  });
+}
+
+export const deleteRecord = (kind: RecordKind, id: string) =>
+  rawRequest<void>(`/api/v1/${recordPath[kind]}/${id}`, { method: 'DELETE' });
+
+export const listFoodRecords = () => rawRequest<Page<FoodRecord>>('/api/v1/food-records?limit=100');
+export const listActivityRecords = () => rawRequest<Page<ActivityRecord>>('/api/v1/activity-records?limit=100');
+export const listWeightRecords = () => rawRequest<Page<WeightRecord>>('/api/v1/weight-records?limit=100');
+
+export const runAgent = (message: string, threadId?: string) =>
+  rawRequest<AgentRunResponse>('/api/v1/agent/runs', {
+    method: 'POST',
+    body: JSON.stringify({ message, thread_id: threadId }),
+  });
+
+export const resumeAgentRun = (runId: string) =>
+  rawRequest<AgentRunResponse>(`/api/v1/agent/runs/${runId}/resume`, {
+    method: 'POST',
+  });
+
+export const analyzeFoodImage = (payload: FoodImageAnalyzeRequest) =>
+  rawRequest<FoodImageAnalysisResponse>('/api/v1/food-images/analyses', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+
+export const confirmAgentCandidate = (
+  candidateId: string,
+  payload: AgentConfirmationRequest,
+  idempotencyKey: string,
+) => rawRequest<AgentConfirmationResponse>(`/api/v1/agent/confirmations/${candidateId}`, {
+  method: 'POST',
+  headers: { 'Idempotency-Key': idempotencyKey },
+  body: JSON.stringify(payload),
+});
+
+export async function fetchApiHealth(): Promise<ApiHealthResponse> {
+  return rawRequest<ApiHealthResponse>('/health/live', {}, { auth: false });
+}

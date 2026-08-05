@@ -1,0 +1,227 @@
+name: journey
+
+services:
+  db:
+    image: postgres:18.4-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-journey}
+      POSTGRES_USER: ${POSTGRES_USER:-journey}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-local-journey-db-password}
+      POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - journey_postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-journey} -d ${POSTGRES_DB:-journey}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+    restart: unless-stopped
+
+  api:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    environment:
+      APP_ENV: local
+      APP_SECRET_KEY: ${APP_SECRET_KEY:-local-development-secret-change-before-use}
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-journey}:${POSTGRES_PASSWORD:-local-journey-db-password}@db:5432/${POSTGRES_DB:-journey}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:8081,http://localhost:19006,http://127.0.0.1:4173}
+      ACCESS_TOKEN_MINUTES: ${ACCESS_TOKEN_MINUTES:-15}
+      REFRESH_TOKEN_DAYS: ${REFRESH_TOKEN_DAYS:-30}
+      SEED_TEST_ACCOUNT: ${SEED_TEST_ACCOUNT:-true}
+      TEST_ACCOUNT_EMAIL: ${TEST_ACCOUNT_EMAIL:-demo@journey.local}
+      TEST_ACCOUNT_USERNAME: ${TEST_ACCOUNT_USERNAME:-journey_demo}
+      TEST_ACCOUNT_PASSWORD: ${TEST_ACCOUNT_PASSWORD:-JourneyDemo2026}
+      AGENT_PROVIDER: ${AGENT_PROVIDER:-mock}
+      AGENT_V2_ENABLED: ${AGENT_V2_ENABLED:-true}
+      AGENT_V3_ENABLED: ${AGENT_V3_ENABLED:-true}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
+      QWEN_API_KEY: ${QWEN_API_KEY:-}
+      GLM_API_KEY: ${GLM_API_KEY:-}
+      KIMI_API_KEY: ${KIMI_API_KEY:-}
+      OPENAI_COMPATIBLE_API_KEY: ${OPENAI_COMPATIBLE_API_KEY:-}
+      AGENT_API_KEY: ${AGENT_API_KEY:-}
+      AGENT_API_BASE_URL: ${AGENT_API_BASE_URL:-}
+      AGENT_DEFAULT_MODEL: ${AGENT_DEFAULT_MODEL:-journey-deterministic-v1}
+      AGENT_MODEL_MAP_JSON: ${AGENT_MODEL_MAP_JSON:-{}}
+      DEEPSEEK_API_BASE_URL: ${DEEPSEEK_API_BASE_URL:-https://api.deepseek.com}
+      DEEPSEEK_DEFAULT_MODEL: ${DEEPSEEK_DEFAULT_MODEL:-deepseek-v4-flash}
+      DEEPSEEK_MODEL_MAP_JSON: '${DEEPSEEK_MODEL_MAP_JSON:-{"recommendation":"deepseek-v4-pro","weekly_summary":"deepseek-v4-pro"}}'
+      DEEPSEEK_MODEL_PRICING_JSON: '${DEEPSEEK_MODEL_PRICING_JSON:-{"deepseek-v4-flash":{"input":0.14,"output":0.28},"deepseek-v4-pro":{"input":0.435,"output":0.87}}}'
+      QWEN_API_BASE_URL: ${QWEN_API_BASE_URL:-https://dashscope.aliyuncs.com/compatible-mode/v1}
+      QWEN_DEFAULT_MODEL: ${QWEN_DEFAULT_MODEL:-qwen3.6-flash}
+      QWEN_MODEL_MAP_JSON: '${QWEN_MODEL_MAP_JSON:-{"recommendation":"qwen3.7-plus","weekly_summary":"qwen3.7-plus"}}'
+      QWEN_MODEL_PRICING_JSON: '${QWEN_MODEL_PRICING_JSON:-{}}'
+      QWEN_INPUT_USD_PER_MILLION: ${QWEN_INPUT_USD_PER_MILLION:-0}
+      QWEN_OUTPUT_USD_PER_MILLION: ${QWEN_OUTPUT_USD_PER_MILLION:-0}
+      GLM_API_BASE_URL: ${GLM_API_BASE_URL:-https://open.bigmodel.cn/api/paas/v4}
+      GLM_DEFAULT_MODEL: ${GLM_DEFAULT_MODEL:-glm-5.2}
+      GLM_MODEL_PRICING_JSON: '${GLM_MODEL_PRICING_JSON:-{}}'
+      GLM_INPUT_USD_PER_MILLION: ${GLM_INPUT_USD_PER_MILLION:-0}
+      GLM_OUTPUT_USD_PER_MILLION: ${GLM_OUTPUT_USD_PER_MILLION:-0}
+      KIMI_API_BASE_URL: ${KIMI_API_BASE_URL:-https://api.moonshot.cn/v1}
+      KIMI_DEFAULT_MODEL: ${KIMI_DEFAULT_MODEL:-kimi-k2.6}
+      KIMI_MODEL_PRICING_JSON: '${KIMI_MODEL_PRICING_JSON:-{}}'
+      KIMI_INPUT_USD_PER_MILLION: ${KIMI_INPUT_USD_PER_MILLION:-0}
+      KIMI_OUTPUT_USD_PER_MILLION: ${KIMI_OUTPUT_USD_PER_MILLION:-0}
+      OPENAI_COMPATIBLE_API_BASE_URL: ${OPENAI_COMPATIBLE_API_BASE_URL:-}
+      OPENAI_COMPATIBLE_DEFAULT_MODEL: ${OPENAI_COMPATIBLE_DEFAULT_MODEL:-}
+      AGENT_TIMEOUT_SECONDS: ${AGENT_TIMEOUT_SECONDS:-12}
+      AGENT_MAX_RETRIES: ${AGENT_MAX_RETRIES:-1}
+      AGENT_MAX_OUTPUT_TOKENS: ${AGENT_MAX_OUTPUT_TOKENS:-2048}
+      AGENT_DAILY_BUDGET_USD: ${AGENT_DAILY_BUDGET_USD:-0}
+      AGENT_INPUT_USD_PER_MILLION: ${AGENT_INPUT_USD_PER_MILLION:-0}
+      AGENT_OUTPUT_USD_PER_MILLION: ${AGENT_OUTPUT_USD_PER_MILLION:-0}
+      LITELLM_LOG: ${LITELLM_LOG:-ERROR}
+      SEED_BUILTIN_KNOWLEDGE: ${SEED_BUILTIN_KNOWLEDGE:-true}
+      FOOD_IMAGE_ANALYSIS_ENABLED: ${FOOD_IMAGE_ANALYSIS_ENABLED:-true}
+      FOOD_IMAGE_PROVIDER: ${FOOD_IMAGE_PROVIDER:-mock}
+      FOOD_IMAGE_MODEL: ${FOOD_IMAGE_MODEL:-journey-food-image-mock-v1}
+      FOOD_IMAGE_API_BASE_URL: ${FOOD_IMAGE_API_BASE_URL:-}
+      FOOD_IMAGE_INPUT_USD_PER_MILLION: ${FOOD_IMAGE_INPUT_USD_PER_MILLION:-0}
+      FOOD_IMAGE_OUTPUT_USD_PER_MILLION: ${FOOD_IMAGE_OUTPUT_USD_PER_MILLION:-0}
+      FOOD_IMAGE_DAILY_BUDGET_USD: ${FOOD_IMAGE_DAILY_BUDGET_USD:-0}
+      FOOD_IMAGE_EXTERNAL_UPLOAD_CONFIRMED: ${FOOD_IMAGE_EXTERNAL_UPLOAD_CONFIRMED:-false}
+      FOOD_IMAGE_MAX_BYTES: ${FOOD_IMAGE_MAX_BYTES:-5242880}
+      FOOD_IMAGE_MAX_DIMENSION: ${FOOD_IMAGE_MAX_DIMENSION:-4096}
+    ports:
+      - "127.0.0.1:${API_PORT:-8000}:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/ready', timeout=2)"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+  test-db:
+    profiles: ["test", "blackbox"]
+    image: postgres:18.4-alpine
+    environment:
+      POSTGRES_DB: journey_test
+      POSTGRES_USER: journey
+      POSTGRES_PASSWORD: local-journey-db-password
+      POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256
+    tmpfs:
+      - /var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U journey -d journey_test"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+      start_period: 3s
+
+  test:
+    profiles: ["test"]
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+      target: test
+    environment:
+      PYTHONPATH: /app
+      APP_ENV: test
+      APP_SECRET_KEY: local-test-secret-at-least-32-characters
+      DATABASE_URL: postgresql+psycopg://journey:local-journey-db-password@test-db:5432/journey_test
+      SEED_TEST_ACCOUNT: "false"
+      AGENT_PROVIDER: mock
+      AGENT_V2_ENABLED: "true"
+      AGENT_V3_ENABLED: "true"
+      OPENAI_API_KEY: ""
+      DEEPSEEK_API_KEY: ""
+      QWEN_API_KEY: ""
+      GLM_API_KEY: ""
+      KIMI_API_KEY: ""
+      OPENAI_COMPATIBLE_API_KEY: ""
+      AGENT_API_KEY: ""
+      AGENT_API_BASE_URL: ""
+      AGENT_DEFAULT_MODEL: journey-deterministic-v1
+      AGENT_MODEL_MAP_JSON: "{}"
+      AGENT_DAILY_BUDGET_USD: "0"
+      AGENT_INPUT_USD_PER_MILLION: "0"
+      AGENT_OUTPUT_USD_PER_MILLION: "0"
+      LITELLM_LOG: ERROR
+      SEED_BUILTIN_KNOWLEDGE: "true"
+      FOOD_IMAGE_ANALYSIS_ENABLED: "true"
+      FOOD_IMAGE_PROVIDER: mock
+      FOOD_IMAGE_EXTERNAL_UPLOAD_CONFIRMED: "false"
+    depends_on:
+      test-db:
+        condition: service_healthy
+    volumes:
+      - ./reports:/reports
+    command:
+      - sh
+      - -c
+      - >-
+        mkdir -p /reports/backend/allure-results /reports/evals &&
+        alembic upgrade head &&
+        pytest -q -p no:cacheprovider tests evals/test_*.py
+        --junitxml=/reports/backend/junit.xml
+        --alluredir=/reports/backend/allure-results
+        --cov=app --cov-report=term-missing
+        --cov-report=xml:/reports/backend/coverage.xml
+        --cov-fail-under=70 &&
+        python evals/run_evals.py
+        --output /reports/evals/latest.json --enforce
+    restart: "no"
+
+  blackbox-api:
+    profiles: ["blackbox"]
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    environment:
+      APP_ENV: test
+      APP_SECRET_KEY: local-blackbox-secret-at-least-32-characters
+      DATABASE_URL: postgresql+psycopg://journey:local-journey-db-password@test-db:5432/journey_test
+      SEED_TEST_ACCOUNT: "false"
+      AGENT_PROVIDER: mock
+      AGENT_V2_ENABLED: "true"
+      AGENT_V3_ENABLED: "true"
+      AGENT_API_KEY: ""
+      AGENT_DAILY_BUDGET_USD: "0"
+      SEED_BUILTIN_KNOWLEDGE: "true"
+      FOOD_IMAGE_ANALYSIS_ENABLED: "false"
+    depends_on:
+      test-db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/ready', timeout=2)"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+      start_period: 5s
+    restart: "no"
+
+  blackbox:
+    profiles: ["blackbox"]
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+      target: test
+    environment:
+      BLACKBOX_BASE_URL: http://blackbox-api:8000
+    depends_on:
+      blackbox-api:
+        condition: service_healthy
+    volumes:
+      - ./reports:/reports
+    command:
+      - pytest
+      - -q
+      - -p
+      - no:cacheprovider
+      - blackbox_tests
+      - --junitxml=/reports/backend/blackbox-junit.xml
+      - --alluredir=/reports/backend/blackbox-allure-results
+    restart: "no"
+
+volumes:
+  journey_postgres_data:

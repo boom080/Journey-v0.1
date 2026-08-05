@@ -1,55 +1,69 @@
+import uuid
 from datetime import datetime
-from typing import Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-
-class WechatLoginRequest(BaseModel):
-    code: str = Field(..., min_length=1, max_length=255)
-    nickname: Optional[str] = Field(default=None, max_length=50)
-    avatar_url: Optional[str] = Field(default=None, max_length=255)
+from app.domain.identity import normalize_email, normalize_username, validate_password
 
 
-class InviteVerifyRequest(BaseModel):
-    code: str = Field(..., min_length=1, max_length=64)
+class RegisterRequest(BaseModel):
+    email: str = Field(max_length=254)
+    username: str = Field(max_length=32)
+    password: str
+    display_name: str = Field(min_length=1, max_length=50)
+
+    @field_validator("email")
+    @classmethod
+    def valid_email(cls, value: str) -> str:
+        return normalize_email(value)
+
+    @field_validator("username")
+    @classmethod
+    def valid_username(cls, value: str) -> str:
+        return normalize_username(value)
+
+    @field_validator("password")
+    @classmethod
+    def strong_password(cls, value: str) -> str:
+        return validate_password(value)
+
+    @field_validator("display_name")
+    @classmethod
+    def clean_display_name(cls, value: str) -> str:
+        cleaned = value.strip()
+        if not cleaned:
+            raise ValueError("Display name cannot be blank")
+        return cleaned
 
 
-class UserProfilePayload(BaseModel):
-    id: int
-    openid: str
-    unionid: Optional[str] = None
-    nickname: str
-    avatar_url: Optional[str] = None
-    is_activated: bool
-    invite_code_id: Optional[int] = None
-    goal: str
-    gender: Optional[str] = None
-    height: Optional[float] = None
-    weight: Optional[float] = None
-    body_fat_rate: Optional[float] = None
+class LoginRequest(BaseModel):
+    identifier: str = Field(min_length=3, max_length=254)
+    password: str = Field(min_length=1, max_length=128)
+
+
+class RefreshRequest(BaseModel):
+    refresh_token: str = Field(min_length=32)
+
+
+class IdentityResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    kind: str
+    display_value: str
+    is_verified: bool
+
+
+class UserResponse(BaseModel):
+    id: uuid.UUID
+    status: str
+    identities: list[IdentityResponse]
+    created_at: datetime
 
 
 class TokenResponse(BaseModel):
-    access_token: str
     token_type: str = "bearer"
-    openid: str
-    unionid: Optional[str] = None
-    user: UserProfilePayload
-
-
-class InviteCodePayload(BaseModel):
-    id: int
-    code: str
-    status: str
-    max_uses: int
-    used_count: int
-    used_by_user_id: Optional[int] = None
-    used_by_openid: Optional[str] = None
-    expires_at: Optional[datetime] = None
-
-
-class InviteVerifyResponse(BaseModel):
-    message: str
-    invite_code_id: int
-    user: UserProfilePayload
-    invite_code: InviteCodePayload
+    access_token: str
+    access_expires_at: datetime
+    refresh_token: str
+    refresh_expires_at: datetime
+    user: UserResponse

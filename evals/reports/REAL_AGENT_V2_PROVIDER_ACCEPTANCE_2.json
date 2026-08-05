@@ -1,0 +1,639 @@
+{
+  "dataset": {
+    "path": "agent_v2_plans.json",
+    "selected_ids": [
+      "plan-001",
+      "plan-002",
+      "plan-003",
+      "plan-004",
+      "plan-006",
+      "plan-007",
+      "plan-009",
+      "plan-012"
+    ],
+    "sha256": "fecc5b19cc0faae5252db89333fa1961821d1bdaf9e9dae96e63058c2f50c14e"
+  },
+  "evaluation_version": "journey-real-agent-v2-acceptance-1.0.1",
+  "gate_passed": true,
+  "generated_at": "2026-08-03T08:40:10.129406+00:00",
+  "max_cost_usd": 0.02,
+  "metrics": {
+    "intent_exact_accuracy": {
+      "passed": true,
+      "threshold": 0.875,
+      "value": 1.0
+    },
+    "latency_p95_ms": {
+      "passed": true,
+      "threshold": 8000.0,
+      "value": 3112.0
+    },
+    "plan_schema_validity": {
+      "passed": true,
+      "threshold": 1.0,
+      "value": 1.0
+    },
+    "policy_and_confirmation_pass_rate": {
+      "passed": true,
+      "threshold": 1.0,
+      "value": 1.0
+    },
+    "provider_model_match_rate": {
+      "passed": true,
+      "threshold": 1.0,
+      "value": 1.0
+    },
+    "schema_no_fallback_rate": {
+      "passed": true,
+      "threshold": 1.0,
+      "value": 1.0
+    },
+    "tool_sequence_accuracy": {
+      "passed": true,
+      "threshold": 0.875,
+      "value": 1.0
+    },
+    "total_estimated_cost_usd": {
+      "passed": true,
+      "threshold": 0.02,
+      "value": 0.002578
+    },
+    "usage_capture_rate": {
+      "passed": true,
+      "threshold": 1.0,
+      "value": 1.0
+    }
+  },
+  "model": "deepseek-v4-flash",
+  "planner_prompt_version": "journey-agent-planner-2.0.1",
+  "prompt_version": "journey-agent-2.0.0",
+  "provider": "deepseek",
+  "results": [
+    {
+      "actual_intents": [
+        "food"
+      ],
+      "actual_tools": [
+        "food.parse_candidate"
+      ],
+      "expected_intents": [
+        "food"
+      ],
+      "expected_tools": [
+        "food.parse_candidate"
+      ],
+      "id": "plan-001",
+      "intent_passed": true,
+      "plan": {
+        "clarification_question": null,
+        "goal": "[REDACTED]",
+        "needs_clarification": false,
+        "schema_version": "2",
+        "steps": [
+          {
+            "depends_on": [],
+            "id": "step-1",
+            "reason": "解析用户提供的午餐饮食信息（苹果 80 千卡）并生成待确认候选",
+            "requires_confirmation": true,
+            "segment": null,
+            "tool": "food.parse_candidate"
+          }
+        ]
+      },
+      "planner_invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 0.0002086,
+        "fallback_used": false,
+        "input_tokens": 1244,
+        "latency_ms": 2775,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 123,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "policy_passed": true,
+      "policy_violations": [],
+      "router_invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 9.128e-05,
+        "fallback_used": false,
+        "input_tokens": 520,
+        "latency_ms": 2281,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 66,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "schema_valid": true,
+      "tools_passed": true
+    },
+    {
+      "actual_intents": [
+        "activity"
+      ],
+      "actual_tools": [
+        "activity.parse_candidate"
+      ],
+      "expected_intents": [
+        "activity"
+      ],
+      "expected_tools": [
+        "activity.parse_candidate"
+      ],
+      "id": "plan-002",
+      "intent_passed": true,
+      "plan": {
+        "clarification_question": null,
+        "goal": "[REDACTED]",
+        "needs_clarification": false,
+        "schema_version": "2",
+        "steps": [
+          {
+            "depends_on": [],
+            "id": "step-1",
+            "reason": "解析运动候选并生成待确认记录",
+            "requires_confirmation": true,
+            "segment": null,
+            "tool": "activity.parse_candidate"
+          }
+        ]
+      },
+      "planner_invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 0.00020804,
+        "fallback_used": false,
+        "input_tokens": 1248,
+        "latency_ms": 2269,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 119,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "policy_passed": true,
+      "policy_violations": [],
+      "router_invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 9.212e-05,
+        "fallback_used": false,
+        "input_tokens": 522,
+        "latency_ms": 1031,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 68,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "schema_valid": true,
+      "tools_passed": true
+    },
+    {
+      "actual_intents": [
+        "weight"
+      ],
+      "actual_tools": [
+        "weight.parse_candidate"
+      ],
+      "expected_intents": [
+        "weight"
+      ],
+      "expected_tools": [
+        "weight.parse_candidate"
+      ],
+      "id": "plan-003",
+      "intent_passed": true,
+      "plan": {
+        "clarification_question": null,
+        "goal": "[REDACTED]",
+        "needs_clarification": false,
+        "schema_version": "2",
+        "steps": [
+          {
+            "depends_on": [],
+            "id": "step-1",
+            "reason": "解析用户输入的体重 69.5 kg 并生成待确认候选",
+            "requires_confirmation": true,
+            "segment": null,
+            "tool": "weight.parse_candidate"
+          }
+        ]
+      },
+      "planner_invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 0.00020692,
+        "fallback_used": false,
+        "input_tokens": 1244,
+        "latency_ms": 1380,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 117,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "policy_passed": true,
+      "policy_violations": [],
+      "router_invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 9.128e-05,
+        "fallback_used": false,
+        "input_tokens": 520,
+        "latency_ms": 2504,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 66,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "schema_valid": true,
+      "tools_passed": true
+    },
+    {
+      "actual_intents": [
+        "profile"
+      ],
+      "actual_tools": [
+        "profile.read"
+      ],
+      "expected_intents": [
+        "profile"
+      ],
+      "expected_tools": [
+        "profile.read"
+      ],
+      "id": "plan-004",
+      "intent_passed": true,
+      "plan": {
+        "clarification_question": null,
+        "goal": "[REDACTED]",
+        "needs_clarification": false,
+        "schema_version": "2",
+        "steps": [
+          {
+            "depends_on": [],
+            "id": "step-1",
+            "reason": "读取用户画像以获取体重信息",
+            "requires_confirmation": false,
+            "segment": null,
+            "tool": "profile.read"
+          }
+        ]
+      },
+      "planner_invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 0.0002016,
+        "fallback_used": false,
+        "input_tokens": 1234,
+        "latency_ms": 1844,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 103,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "policy_passed": true,
+      "policy_violations": [],
+      "router_invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 8.918e-05,
+        "fallback_used": false,
+        "input_tokens": 515,
+        "latency_ms": 879,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 61,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "schema_valid": true,
+      "tools_passed": true
+    },
+    {
+      "actual_intents": [
+        "knowledge"
+      ],
+      "actual_tools": [
+        "knowledge.answer"
+      ],
+      "expected_intents": [
+        "knowledge"
+      ],
+      "expected_tools": [
+        "knowledge.answer"
+      ],
+      "id": "plan-006",
+      "intent_passed": true,
+      "plan": {
+        "clarification_question": null,
+        "goal": "[REDACTED]",
+        "needs_clarification": false,
+        "schema_version": "2",
+        "steps": [
+          {
+            "depends_on": [],
+            "id": "step-1",
+            "reason": "用户询问蛋白质安排，属于知识类问题，直接检索受控知识并回答",
+            "requires_confirmation": false,
+            "segment": null,
+            "tool": "knowledge.answer"
+          }
+        ]
+      },
+      "planner_invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 0.00020972,
+        "fallback_used": false,
+        "input_tokens": 1238,
+        "latency_ms": 2733,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 130,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "policy_passed": true,
+      "policy_violations": [],
+      "router_invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 9.002e-05,
+        "fallback_used": false,
+        "input_tokens": 517,
+        "latency_ms": 1711,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 63,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "schema_valid": true,
+      "tools_passed": true
+    },
+    {
+      "actual_intents": [
+        "recommendation"
+      ],
+      "actual_tools": [
+        "context.load",
+        "knowledge.retrieve",
+        "recommendation.generate"
+      ],
+      "expected_intents": [
+        "recommendation"
+      ],
+      "expected_tools": [
+        "context.load",
+        "knowledge.retrieve",
+        "recommendation.generate"
+      ],
+      "id": "plan-007",
+      "intent_passed": true,
+      "plan": {
+        "clarification_question": "请问您希望我根据今天的哪方面记录给您建议呢？比如饮食、运动、体重，还是综合建议？",
+        "goal": "[REDACTED]",
+        "needs_clarification": true,
+        "schema_version": "2",
+        "steps": [
+          {
+            "depends_on": [],
+            "id": "step-1",
+            "reason": "加载用户画像、目标和近期聚合数据，为生成建议提供上下文",
+            "requires_confirmation": false,
+            "segment": null,
+            "tool": "context.load"
+          },
+          {
+            "depends_on": [
+              "step-1"
+            ],
+            "id": "step-2",
+            "reason": "检索与用户目标和今天记录相关的受控知识，用于支撑建议生成",
+            "requires_confirmation": false,
+            "segment": null,
+            "tool": "knowledge.retrieve"
+          },
+          {
+            "depends_on": [
+              "step-1",
+              "step-2"
+            ],
+            "id": "step-3",
+            "reason": "基于加载的上下文和检索的知识，生成针对今天记录的个性化建议",
+            "requires_confirmation": false,
+            "segment": null,
+            "tool": "recommendation.generate"
+          }
+        ]
+      },
+      "planner_invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 0.00025648,
+        "fallback_used": false,
+        "input_tokens": 1264,
+        "latency_ms": 2770,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 284,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "policy_passed": true,
+      "policy_violations": [],
+      "router_invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 0.00010794,
+        "fallback_used": false,
+        "input_tokens": 517,
+        "latency_ms": 2710,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 127,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "schema_valid": true,
+      "tools_passed": true
+    },
+    {
+      "actual_intents": [
+        "food",
+        "activity"
+      ],
+      "actual_tools": [
+        "food.parse_candidate",
+        "activity.parse_candidate"
+      ],
+      "expected_intents": [
+        "activity",
+        "food"
+      ],
+      "expected_tools": [
+        "food.parse_candidate",
+        "activity.parse_candidate"
+      ],
+      "id": "plan-009",
+      "intent_passed": true,
+      "plan": {
+        "clarification_question": null,
+        "goal": "[REDACTED]",
+        "needs_clarification": false,
+        "schema_version": "2",
+        "steps": [
+          {
+            "depends_on": [],
+            "id": "step-1",
+            "reason": "解析午餐苹果 80 千卡的饮食候选并生成待确认记录",
+            "requires_confirmation": true,
+            "segment": null,
+            "tool": "food.parse_candidate"
+          },
+          {
+            "depends_on": [],
+            "id": "step-2",
+            "reason": "解析跑步 30 分钟 180 千卡的运动候选并生成待确认记录",
+            "requires_confirmation": true,
+            "segment": null,
+            "tool": "activity.parse_candidate"
+          }
+        ]
+      },
+      "planner_invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 0.00023436,
+        "fallback_used": false,
+        "input_tokens": 1286,
+        "latency_ms": 3112,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 194,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "policy_passed": true,
+      "policy_violations": [],
+      "router_invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 0.00010136,
+        "fallback_used": false,
+        "input_tokens": 532,
+        "latency_ms": 1573,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 96,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "schema_valid": true,
+      "tools_passed": true
+    },
+    {
+      "actual_intents": [
+        "food",
+        "activity",
+        "recommendation"
+      ],
+      "actual_tools": [
+        "food.parse_candidate",
+        "activity.parse_candidate",
+        "context.load",
+        "knowledge.retrieve",
+        "recommendation.generate"
+      ],
+      "expected_intents": [
+        "activity",
+        "food",
+        "recommendation"
+      ],
+      "expected_tools": [
+        "food.parse_candidate",
+        "activity.parse_candidate",
+        "context.load",
+        "knowledge.retrieve",
+        "recommendation.generate"
+      ],
+      "id": "plan-012",
+      "intent_passed": true,
+      "plan": {
+        "clarification_question": null,
+        "goal": "[REDACTED]",
+        "needs_clarification": false,
+        "schema_version": "2",
+        "steps": [
+          {
+            "depends_on": [],
+            "id": "step-1",
+            "reason": "解析晚餐鸡胸肉 220 千卡饮食候选，需用户确认",
+            "requires_confirmation": true,
+            "segment": null,
+            "tool": "food.parse_candidate"
+          },
+          {
+            "depends_on": [],
+            "id": "step-2",
+            "reason": "解析训练 45 分钟 300 千卡运动候选，需用户确认",
+            "requires_confirmation": true,
+            "segment": null,
+            "tool": "activity.parse_candidate"
+          },
+          {
+            "depends_on": [
+              "step-1",
+              "step-2"
+            ],
+            "id": "step-3",
+            "reason": "加载用户画像、目标和近期聚合数据，为生成建议提供上下文",
+            "requires_confirmation": false,
+            "segment": null,
+            "tool": "context.load"
+          },
+          {
+            "depends_on": [
+              "step-1",
+              "step-2"
+            ],
+            "id": "step-4",
+            "reason": "检索与饮食、运动相关的受控知识，为建议生成提供依据",
+            "requires_confirmation": false,
+            "segment": null,
+            "tool": "knowledge.retrieve"
+          },
+          {
+            "depends_on": [
+              "step-3",
+              "step-4"
+            ],
+            "id": "step-5",
+            "reason": "基于上下文和知识生成个性化建议",
+            "requires_confirmation": false,
+            "segment": null,
+            "tool": "recommendation.generate"
+          }
+        ]
+      },
+      "planner_invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 0.0002786,
+        "fallback_used": false,
+        "input_tokens": 1324,
+        "latency_ms": 2610,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 333,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "policy_passed": true,
+      "policy_violations": [],
+      "router_invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 0.00011074,
+        "fallback_used": false,
+        "input_tokens": 541,
+        "latency_ms": 1410,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 125,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "schema_valid": true,
+      "tools_passed": true
+    }
+  ],
+  "router_prompt_version": "intent-router-1.0.1",
+  "schema_version": "journey-agent-schema-2",
+  "summary": {
+    "calls": 16,
+    "cases": 8,
+    "estimated_cost_usd": 0.00257824,
+    "fallbacks": 0,
+    "input_tokens": 14266,
+    "latency_p95_ms": 3112,
+    "output_tokens": 2075,
+    "retries": 0
+  }
+}

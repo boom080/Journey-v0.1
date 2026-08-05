@@ -1,0 +1,14 @@
+[
+  {"input": "午餐吃了鸡肉饭 520 千卡", "expected": ["food"]},
+  {"input": "跑步 30 分钟消耗 240 千卡", "expected": ["activity"]},
+  {"input": "体重 70.5", "expected": ["weight"]},
+  {"input": "我的目标是什么", "expected": ["profile"]},
+  {"input": "查看最近记录", "expected": ["history"]},
+  {"input": "蛋白质对恢复有什么影响？", "expected": ["knowledge"]},
+  {"input": "根据今天记录给我建议", "expected": ["recommendation"]},
+  {"input": "请生成本周总结", "expected": ["weekly_summary"]},
+  {"input": "晚餐吃了面 400 千卡，然后散步 20 分钟", "expected": ["food", "activity"]},
+  {"input": "我今天喝了牛奶 120 千卡以及体重 68.2", "expected": ["food", "weight"]},
+  {"input": "看看过去几天趋势并且给我建议", "expected": ["history", "recommendation"]},
+  {"input": "帮我处理一下", "expected": ["clarify"]}
+]

@@ -1,0 +1,502 @@
+[
+  {
+    "id": "activity-1-01",
+    "input": "低强度跑步 30 分钟 210 千卡",
+    "expected": {
+      "name": "低强度跑步",
+      "duration_minutes": 30,
+      "intensity": "low",
+      "energy_kcal": 210
+    }
+  },
+  {
+    "id": "activity-1-02",
+    "input": "低强度散步 20 分钟 120 千卡",
+    "expected": {
+      "name": "低强度散步",
+      "duration_minutes": 20,
+      "intensity": "low",
+      "energy_kcal": 120
+    }
+  },
+  {
+    "id": "activity-1-03",
+    "input": "低强度游泳 45 分钟 360 千卡",
+    "expected": {
+      "name": "低强度游泳",
+      "duration_minutes": 45,
+      "intensity": "low",
+      "energy_kcal": 360
+    }
+  },
+  {
+    "id": "activity-1-04",
+    "input": "低强度骑车 60 分钟 420 千卡",
+    "expected": {
+      "name": "低强度骑车",
+      "duration_minutes": 60,
+      "intensity": "low",
+      "energy_kcal": 420
+    }
+  },
+  {
+    "id": "activity-1-05",
+    "input": "低强度瑜伽 25 分钟 100 千卡",
+    "expected": {
+      "name": "低强度瑜伽",
+      "duration_minutes": 25,
+      "intensity": "low",
+      "energy_kcal": 100
+    }
+  },
+  {
+    "id": "activity-1-06",
+    "input": "低强度力量训练 50 分钟 300 千卡",
+    "expected": {
+      "name": "低强度力量训练",
+      "duration_minutes": 50,
+      "intensity": "low",
+      "energy_kcal": 300
+    }
+  },
+  {
+    "id": "activity-1-07",
+    "input": "低强度跳绳 15 分钟 180 千卡",
+    "expected": {
+      "name": "低强度跳绳",
+      "duration_minutes": 15,
+      "intensity": "low",
+      "energy_kcal": 180
+    }
+  },
+  {
+    "id": "activity-1-08",
+    "input": "低强度健身 40 分钟 260 千卡",
+    "expected": {
+      "name": "低强度健身",
+      "duration_minutes": 40,
+      "intensity": "low",
+      "energy_kcal": 260
+    }
+  },
+  {
+    "id": "activity-1-09",
+    "input": "低强度核心训练 35 分钟 190 千卡",
+    "expected": {
+      "name": "低强度核心训练",
+      "duration_minutes": 35,
+      "intensity": "low",
+      "energy_kcal": 190
+    }
+  },
+  {
+    "id": "activity-1-10",
+    "input": "低强度拉伸 18 分钟 80 千卡",
+    "expected": {
+      "name": "低强度拉伸",
+      "duration_minutes": 18,
+      "intensity": "low",
+      "energy_kcal": 80
+    }
+  },
+  {
+    "id": "activity-2-01",
+    "input": "跑步 30 分钟 210 千卡",
+    "expected": {
+      "name": "跑步",
+      "duration_minutes": 30,
+      "intensity": "moderate",
+      "energy_kcal": 210
+    }
+  },
+  {
+    "id": "activity-2-02",
+    "input": "散步 20 分钟 120 千卡",
+    "expected": {
+      "name": "散步",
+      "duration_minutes": 20,
+      "intensity": "low",
+      "energy_kcal": 120
+    }
+  },
+  {
+    "id": "activity-2-03",
+    "input": "游泳 45 分钟 360 千卡",
+    "expected": {
+      "name": "游泳",
+      "duration_minutes": 45,
+      "intensity": "moderate",
+      "energy_kcal": 360
+    }
+  },
+  {
+    "id": "activity-2-04",
+    "input": "骑车 60 分钟 420 千卡",
+    "expected": {
+      "name": "骑车",
+      "duration_minutes": 60,
+      "intensity": "moderate",
+      "energy_kcal": 420
+    }
+  },
+  {
+    "id": "activity-2-05",
+    "input": "瑜伽 25 分钟 100 千卡",
+    "expected": {
+      "name": "瑜伽",
+      "duration_minutes": 25,
+      "intensity": "moderate",
+      "energy_kcal": 100
+    }
+  },
+  {
+    "id": "activity-2-06",
+    "input": "力量训练 50 分钟 300 千卡",
+    "expected": {
+      "name": "力量训练",
+      "duration_minutes": 50,
+      "intensity": "moderate",
+      "energy_kcal": 300
+    }
+  },
+  {
+    "id": "activity-2-07",
+    "input": "跳绳 15 分钟 180 千卡",
+    "expected": {
+      "name": "跳绳",
+      "duration_minutes": 15,
+      "intensity": "moderate",
+      "energy_kcal": 180
+    }
+  },
+  {
+    "id": "activity-2-08",
+    "input": "健身 40 分钟 260 千卡",
+    "expected": {
+      "name": "健身",
+      "duration_minutes": 40,
+      "intensity": "moderate",
+      "energy_kcal": 260
+    }
+  },
+  {
+    "id": "activity-2-09",
+    "input": "核心训练 35 分钟 190 千卡",
+    "expected": {
+      "name": "核心训练",
+      "duration_minutes": 35,
+      "intensity": "moderate",
+      "energy_kcal": 190
+    }
+  },
+  {
+    "id": "activity-2-10",
+    "input": "拉伸 18 分钟 80 千卡",
+    "expected": {
+      "name": "拉伸",
+      "duration_minutes": 18,
+      "intensity": "moderate",
+      "energy_kcal": 80
+    }
+  },
+  {
+    "id": "activity-3-01",
+    "input": "高强度跑步 30 分钟 210 千卡",
+    "expected": {
+      "name": "高强度跑步",
+      "duration_minutes": 30,
+      "intensity": "high",
+      "energy_kcal": 210
+    }
+  },
+  {
+    "id": "activity-3-02",
+    "input": "高强度散步 20 分钟 120 千卡",
+    "expected": {
+      "name": "高强度散步",
+      "duration_minutes": 20,
+      "intensity": "high",
+      "energy_kcal": 120
+    }
+  },
+  {
+    "id": "activity-3-03",
+    "input": "高强度游泳 45 分钟 360 千卡",
+    "expected": {
+      "name": "高强度游泳",
+      "duration_minutes": 45,
+      "intensity": "high",
+      "energy_kcal": 360
+    }
+  },
+  {
+    "id": "activity-3-04",
+    "input": "高强度骑车 60 分钟 420 千卡",
+    "expected": {
+      "name": "高强度骑车",
+      "duration_minutes": 60,
+      "intensity": "high",
+      "energy_kcal": 420
+    }
+  },
+  {
+    "id": "activity-3-05",
+    "input": "高强度瑜伽 25 分钟 100 千卡",
+    "expected": {
+      "name": "高强度瑜伽",
+      "duration_minutes": 25,
+      "intensity": "high",
+      "energy_kcal": 100
+    }
+  },
+  {
+    "id": "activity-3-06",
+    "input": "高强度力量训练 50 分钟 300 千卡",
+    "expected": {
+      "name": "高强度力量训练",
+      "duration_minutes": 50,
+      "intensity": "high",
+      "energy_kcal": 300
+    }
+  },
+  {
+    "id": "activity-3-07",
+    "input": "高强度跳绳 15 分钟 180 千卡",
+    "expected": {
+      "name": "高强度跳绳",
+      "duration_minutes": 15,
+      "intensity": "high",
+      "energy_kcal": 180
+    }
+  },
+  {
+    "id": "activity-3-08",
+    "input": "高强度健身 40 分钟 260 千卡",
+    "expected": {
+      "name": "高强度健身",
+      "duration_minutes": 40,
+      "intensity": "high",
+      "energy_kcal": 260
+    }
+  },
+  {
+    "id": "activity-3-09",
+    "input": "高强度核心训练 35 分钟 190 千卡",
+    "expected": {
+      "name": "高强度核心训练",
+      "duration_minutes": 35,
+      "intensity": "high",
+      "energy_kcal": 190
+    }
+  },
+  {
+    "id": "activity-3-10",
+    "input": "高强度拉伸 18 分钟 80 千卡",
+    "expected": {
+      "name": "高强度拉伸",
+      "duration_minutes": 18,
+      "intensity": "high",
+      "energy_kcal": 80
+    }
+  },
+  {
+    "id": "activity-4-01",
+    "input": "跑步 30 分钟 210 千卡",
+    "expected": {
+      "name": "跑步",
+      "duration_minutes": 30,
+      "intensity": "moderate",
+      "energy_kcal": 210
+    }
+  },
+  {
+    "id": "activity-4-02",
+    "input": "散步 20 分钟 120 千卡",
+    "expected": {
+      "name": "散步",
+      "duration_minutes": 20,
+      "intensity": "low",
+      "energy_kcal": 120
+    }
+  },
+  {
+    "id": "activity-4-03",
+    "input": "游泳 45 分钟 360 千卡",
+    "expected": {
+      "name": "游泳",
+      "duration_minutes": 45,
+      "intensity": "moderate",
+      "energy_kcal": 360
+    }
+  },
+  {
+    "id": "activity-4-04",
+    "input": "骑车 60 分钟 420 千卡",
+    "expected": {
+      "name": "骑车",
+      "duration_minutes": 60,
+      "intensity": "moderate",
+      "energy_kcal": 420
+    }
+  },
+  {
+    "id": "activity-4-05",
+    "input": "瑜伽 25 分钟 100 千卡",
+    "expected": {
+      "name": "瑜伽",
+      "duration_minutes": 25,
+      "intensity": "moderate",
+      "energy_kcal": 100
+    }
+  },
+  {
+    "id": "activity-4-06",
+    "input": "力量训练 50 分钟 300 千卡",
+    "expected": {
+      "name": "力量训练",
+      "duration_minutes": 50,
+      "intensity": "moderate",
+      "energy_kcal": 300
+    }
+  },
+  {
+    "id": "activity-4-07",
+    "input": "跳绳 15 分钟 180 千卡",
+    "expected": {
+      "name": "跳绳",
+      "duration_minutes": 15,
+      "intensity": "moderate",
+      "energy_kcal": 180
+    }
+  },
+  {
+    "id": "activity-4-08",
+    "input": "健身 40 分钟 260 千卡",
+    "expected": {
+      "name": "健身",
+      "duration_minutes": 40,
+      "intensity": "moderate",
+      "energy_kcal": 260
+    }
+  },
+  {
+    "id": "activity-4-09",
+    "input": "核心训练 35 分钟 190 千卡",
+    "expected": {
+      "name": "核心训练",
+      "duration_minutes": 35,
+      "intensity": "moderate",
+      "energy_kcal": 190
+    }
+  },
+  {
+    "id": "activity-4-10",
+    "input": "拉伸 18 分钟 80 千卡",
+    "expected": {
+      "name": "拉伸",
+      "duration_minutes": 18,
+      "intensity": "moderate",
+      "energy_kcal": 80
+    }
+  },
+  {
+    "id": "activity-5-01",
+    "input": "舒缓跑步 30 分钟 210 千卡",
+    "expected": {
+      "name": "舒缓跑步",
+      "duration_minutes": 30,
+      "intensity": "low",
+      "energy_kcal": 210
+    }
+  },
+  {
+    "id": "activity-5-02",
+    "input": "舒缓散步 20 分钟 120 千卡",
+    "expected": {
+      "name": "舒缓散步",
+      "duration_minutes": 20,
+      "intensity": "low",
+      "energy_kcal": 120
+    }
+  },
+  {
+    "id": "activity-5-03",
+    "input": "舒缓游泳 45 分钟 360 千卡",
+    "expected": {
+      "name": "舒缓游泳",
+      "duration_minutes": 45,
+      "intensity": "low",
+      "energy_kcal": 360
+    }
+  },
+  {
+    "id": "activity-5-04",
+    "input": "舒缓骑车 60 分钟 420 千卡",
+    "expected": {
+      "name": "舒缓骑车",
+      "duration_minutes": 60,
+      "intensity": "low",
+      "energy_kcal": 420
+    }
+  },
+  {
+    "id": "activity-5-05",
+    "input": "舒缓瑜伽 25 分钟 100 千卡",
+    "expected": {
+      "name": "舒缓瑜伽",
+      "duration_minutes": 25,
+      "intensity": "low",
+      "energy_kcal": 100
+    }
+  },
+  {
+    "id": "activity-5-06",
+    "input": "舒缓力量训练 50 分钟 300 千卡",
+    "expected": {
+      "name": "舒缓力量训练",
+      "duration_minutes": 50,
+      "intensity": "low",
+      "energy_kcal": 300
+    }
+  },
+  {
+    "id": "activity-5-07",
+    "input": "舒缓跳绳 15 分钟 180 千卡",
+    "expected": {
+      "name": "舒缓跳绳",
+      "duration_minutes": 15,
+      "intensity": "low",
+      "energy_kcal": 180
+    }
+  },
+  {
+    "id": "activity-5-08",
+    "input": "舒缓健身 40 分钟 260 千卡",
+    "expected": {
+      "name": "舒缓健身",
+      "duration_minutes": 40,
+      "intensity": "low",
+      "energy_kcal": 260
+    }
+  },
+  {
+    "id": "activity-5-09",
+    "input": "舒缓核心训练 35 分钟 190 千卡",
+    "expected": {
+      "name": "舒缓核心训练",
+      "duration_minutes": 35,
+      "intensity": "low",
+      "energy_kcal": 190
+    }
+  },
+  {
+    "id": "activity-5-10",
+    "input": "舒缓拉伸 18 分钟 80 千卡",
+    "expected": {
+      "name": "舒缓拉伸",
+      "duration_minutes": 18,
+      "intensity": "low",
+      "energy_kcal": 80
+    }
+  }
+]

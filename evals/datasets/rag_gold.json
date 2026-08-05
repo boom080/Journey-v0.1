@@ -1,0 +1,218 @@
+[
+  {
+    "id": "rag-healthy-diet-01",
+    "input": "怎样保持均衡饮食",
+    "expected_slug": "healthy-diet",
+    "answerable": true
+  },
+  {
+    "id": "rag-healthy-diet-02",
+    "input": "减脂是否应该极端节食",
+    "expected_slug": "healthy-diet",
+    "answerable": true
+  },
+  {
+    "id": "rag-healthy-diet-03",
+    "input": "日常饮食要关注什么",
+    "expected_slug": "healthy-diet",
+    "answerable": true
+  },
+  {
+    "id": "rag-healthy-diet-04",
+    "input": "增肌饮食如何长期坚持",
+    "expected_slug": "healthy-diet",
+    "answerable": true
+  },
+  {
+    "id": "rag-healthy-diet-05",
+    "input": "食物应该简单分成好坏吗",
+    "expected_slug": "healthy-diet",
+    "answerable": true
+  },
+  {
+    "id": "rag-healthy-diet-06",
+    "input": "记录饮食除了热量还看什么",
+    "expected_slug": "healthy-diet",
+    "answerable": true
+  },
+  {
+    "id": "rag-physical-activity-01",
+    "input": "运动后如何恢复",
+    "expected_slug": "physical-activity",
+    "answerable": true
+  },
+  {
+    "id": "rag-physical-activity-02",
+    "input": "训练强度应该怎样增加",
+    "expected_slug": "physical-activity",
+    "answerable": true
+  },
+  {
+    "id": "rag-physical-activity-03",
+    "input": "运动出现胸闷怎么办",
+    "expected_slug": "physical-activity",
+    "answerable": true
+  },
+  {
+    "id": "rag-physical-activity-04",
+    "input": "热量消耗估算可靠吗",
+    "expected_slug": "physical-activity",
+    "answerable": true
+  },
+  {
+    "id": "rag-physical-activity-05",
+    "input": "如何渐进增加运动时长",
+    "expected_slug": "physical-activity",
+    "answerable": true
+  },
+  {
+    "id": "rag-physical-activity-06",
+    "input": "训练计划为什么需要恢复",
+    "expected_slug": "physical-activity",
+    "answerable": true
+  },
+  {
+    "id": "rag-sleep-health-01",
+    "input": "睡眠如何影响训练恢复",
+    "expected_slug": "sleep-health",
+    "answerable": true
+  },
+  {
+    "id": "rag-sleep-health-02",
+    "input": "怎样建立规律睡眠",
+    "expected_slug": "sleep-health",
+    "answerable": true
+  },
+  {
+    "id": "rag-sleep-health-03",
+    "input": "失眠严重时应该怎么办",
+    "expected_slug": "sleep-health",
+    "answerable": true
+  },
+  {
+    "id": "rag-sleep-health-04",
+    "input": "睡眠和食欲有关吗",
+    "expected_slug": "sleep-health",
+    "answerable": true
+  },
+  {
+    "id": "rag-sleep-health-05",
+    "input": "固定起床时间有什么作用",
+    "expected_slug": "sleep-health",
+    "answerable": true
+  },
+  {
+    "id": "rag-sleep-health-06",
+    "input": "白天功能受睡眠影响怎么办",
+    "expected_slug": "sleep-health",
+    "answerable": true
+  },
+  {
+    "id": "rag-journey-safety-01",
+    "input": "Journey 能诊断疾病吗",
+    "expected_slug": "journey-safety",
+    "answerable": true
+  },
+  {
+    "id": "rag-journey-safety-02",
+    "input": "可以让 Journey 开处方吗",
+    "expected_slug": "journey-safety",
+    "answerable": true
+  },
+  {
+    "id": "rag-journey-safety-03",
+    "input": "健康建议能替代医生吗",
+    "expected_slug": "journey-safety",
+    "answerable": true
+  },
+  {
+    "id": "rag-journey-safety-04",
+    "input": "孕期问题应该咨询谁",
+    "expected_slug": "journey-safety",
+    "answerable": true
+  },
+  {
+    "id": "rag-journey-safety-05",
+    "input": "进食障碍可以由应用治疗吗",
+    "expected_slug": "journey-safety",
+    "answerable": true
+  },
+  {
+    "id": "rag-journey-safety-06",
+    "input": "药物问题能不能直接问 Journey",
+    "expected_slug": "journey-safety",
+    "answerable": true
+  },
+  {
+    "id": "rag-no-answer-01",
+    "input": "法国首都是什么",
+    "expected_slug": null,
+    "answerable": false
+  },
+  {
+    "id": "rag-no-answer-02",
+    "input": "量子计算机如何纠错",
+    "expected_slug": null,
+    "answerable": false
+  },
+  {
+    "id": "rag-no-answer-03",
+    "input": "明天天气怎么样",
+    "expected_slug": null,
+    "answerable": false
+  },
+  {
+    "id": "rag-no-answer-04",
+    "input": "如何修理汽车发动机",
+    "expected_slug": null,
+    "answerable": false
+  },
+  {
+    "id": "rag-no-answer-05",
+    "input": "哪只股票明天会上涨",
+    "expected_slug": null,
+    "answerable": false
+  },
+  {
+    "id": "rag-no-answer-06",
+    "input": "唐朝是哪一年建立的",
+    "expected_slug": null,
+    "answerable": false
+  },
+  {
+    "id": "rag-no-answer-07",
+    "input": "怎么学习法语发音",
+    "expected_slug": null,
+    "answerable": false
+  },
+  {
+    "id": "rag-no-answer-08",
+    "input": "火星距离地球多远",
+    "expected_slug": null,
+    "answerable": false
+  },
+  {
+    "id": "rag-no-answer-09",
+    "input": "推荐一部科幻电影",
+    "expected_slug": null,
+    "answerable": false
+  },
+  {
+    "id": "rag-no-answer-10",
+    "input": "如何配置家用路由器",
+    "expected_slug": null,
+    "answerable": false
+  },
+  {
+    "id": "rag-no-answer-11",
+    "input": "钢琴和弦怎么弹",
+    "expected_slug": null,
+    "answerable": false
+  },
+  {
+    "id": "rag-no-answer-12",
+    "input": "咖啡机如何除垢",
+    "expected_slug": null,
+    "answerable": false
+  }
+]

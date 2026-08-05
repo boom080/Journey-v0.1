@@ -1,0 +1,144 @@
+{
+  "schema_version": "journey-eval-report-1",
+  "prompt_version": "journey-agent-1.0.0",
+  "agent_schema_version": "journey-agent-schema-1",
+  "knowledge_version": "journey-core-1.0.0",
+  "provider": "mock",
+  "api_key_configured": false,
+  "external_budget_usd": 0.0,
+  "estimated_external_cost_usd": 0,
+  "datasets": {
+    "intent_router": 100,
+    "food_parsing": 50,
+    "activity_parsing": 50,
+    "mixed_intents": 20,
+    "safety": 20,
+    "failure_fallback": 20,
+    "rag_gold": 36,
+    "food_image_contract": 22
+  },
+  "metrics": [
+    {
+      "name": "intent_exact_accuracy",
+      "value": 1.0,
+      "threshold": 0.9,
+      "comparison": ">=",
+      "passed": true
+    },
+    {
+      "name": "mixed_intent_exact_accuracy",
+      "value": 1.0,
+      "threshold": 0.9,
+      "comparison": ">=",
+      "passed": true
+    },
+    {
+      "name": "write_tool_selection_accuracy",
+      "value": 1.0,
+      "threshold": 0.95,
+      "comparison": ">=",
+      "passed": true
+    },
+    {
+      "name": "food_schema_validity",
+      "value": 1.0,
+      "threshold": 1.0,
+      "comparison": ">=",
+      "passed": true
+    },
+    {
+      "name": "activity_schema_validity",
+      "value": 1.0,
+      "threshold": 1.0,
+      "comparison": ">=",
+      "passed": true
+    },
+    {
+      "name": "food_parameter_exact_accuracy",
+      "value": 1.0,
+      "threshold": 0.95,
+      "comparison": ">=",
+      "passed": true
+    },
+    {
+      "name": "activity_parameter_exact_accuracy",
+      "value": 1.0,
+      "threshold": 0.95,
+      "comparison": ">=",
+      "passed": true
+    },
+    {
+      "name": "high_risk_rule_pass_rate",
+      "value": 1.0,
+      "threshold": 1.0,
+      "comparison": ">=",
+      "passed": true
+    },
+    {
+      "name": "failure_fallback_pass_rate",
+      "value": 1.0,
+      "threshold": 1.0,
+      "comparison": ">=",
+      "passed": true
+    },
+    {
+      "name": "rag_recall_at_3",
+      "value": 1.0,
+      "threshold": 0.9,
+      "comparison": ">=",
+      "passed": true
+    },
+    {
+      "name": "citation_support_rate",
+      "value": 1.0,
+      "threshold": 0.95,
+      "comparison": ">=",
+      "passed": true
+    },
+    {
+      "name": "no_answer_accuracy",
+      "value": 1.0,
+      "threshold": 0.9,
+      "comparison": ">=",
+      "passed": true
+    },
+    {
+      "name": "rag_retrieval_p95_ms",
+      "value": 0.0,
+      "threshold": 250,
+      "comparison": "<=",
+      "passed": true
+    },
+    {
+      "name": "food_image_schema_contract_accuracy",
+      "value": 1.0,
+      "threshold": 1.0,
+      "comparison": ">=",
+      "passed": true
+    },
+    {
+      "name": "food_image_user_correction_required_rate",
+      "value": 1.0,
+      "threshold": 1.0,
+      "comparison": ">=",
+      "passed": true
+    },
+    {
+      "name": "food_image_portion_and_energy_range_validity",
+      "value": 1.0,
+      "threshold": 1.0,
+      "comparison": ">=",
+      "passed": true
+    },
+    {
+      "name": "food_image_nonfood_abstention_contract",
+      "value": 1.0,
+      "threshold": 1.0,
+      "comparison": ">=",
+      "passed": true
+    }
+  ],
+  "failure_count": 0,
+  "failures": [],
+  "duration_ms": 61
+}

@@ -1,0 +1,452 @@
+[
+  {
+    "id": "food-breakfast-01",
+    "input": "早餐吃了燕麦粥 320 千卡",
+    "expected": {
+      "meal_type": "breakfast",
+      "name": "燕麦粥",
+      "energy_kcal": 320
+    }
+  },
+  {
+    "id": "food-breakfast-02",
+    "input": "早餐吃了鸡肉饭 520 千卡",
+    "expected": {
+      "meal_type": "breakfast",
+      "name": "鸡肉饭",
+      "energy_kcal": 520
+    }
+  },
+  {
+    "id": "food-breakfast-03",
+    "input": "早餐吃了牛奶 180 千卡",
+    "expected": {
+      "meal_type": "breakfast",
+      "name": "牛奶",
+      "energy_kcal": 180
+    }
+  },
+  {
+    "id": "food-breakfast-04",
+    "input": "早餐吃了苹果 88 千卡",
+    "expected": {
+      "meal_type": "breakfast",
+      "name": "苹果",
+      "energy_kcal": 88
+    }
+  },
+  {
+    "id": "food-breakfast-05",
+    "input": "早餐吃了鸡蛋 140 千卡",
+    "expected": {
+      "meal_type": "breakfast",
+      "name": "鸡蛋",
+      "energy_kcal": 140
+    }
+  },
+  {
+    "id": "food-breakfast-06",
+    "input": "早餐吃了牛肉面 610 千卡",
+    "expected": {
+      "meal_type": "breakfast",
+      "name": "牛肉面",
+      "energy_kcal": 610
+    }
+  },
+  {
+    "id": "food-breakfast-07",
+    "input": "早餐吃了酸奶 120 千卡",
+    "expected": {
+      "meal_type": "breakfast",
+      "name": "酸奶",
+      "energy_kcal": 120
+    }
+  },
+  {
+    "id": "food-breakfast-08",
+    "input": "早餐吃了豆浆 95 千卡",
+    "expected": {
+      "meal_type": "breakfast",
+      "name": "豆浆",
+      "energy_kcal": 95
+    }
+  },
+  {
+    "id": "food-breakfast-09",
+    "input": "早餐吃了水果沙拉 230 千卡",
+    "expected": {
+      "meal_type": "breakfast",
+      "name": "水果沙拉",
+      "energy_kcal": 230
+    }
+  },
+  {
+    "id": "food-breakfast-10",
+    "input": "早餐吃了蔬菜汤 160 千卡",
+    "expected": {
+      "meal_type": "breakfast",
+      "name": "蔬菜汤",
+      "energy_kcal": 160
+    }
+  },
+  {
+    "id": "food-lunch-01",
+    "input": "午餐吃了燕麦粥 320 千卡",
+    "expected": {
+      "meal_type": "lunch",
+      "name": "燕麦粥",
+      "energy_kcal": 320
+    }
+  },
+  {
+    "id": "food-lunch-02",
+    "input": "午餐吃了鸡肉饭 520 千卡",
+    "expected": {
+      "meal_type": "lunch",
+      "name": "鸡肉饭",
+      "energy_kcal": 520
+    }
+  },
+  {
+    "id": "food-lunch-03",
+    "input": "午餐吃了牛奶 180 千卡",
+    "expected": {
+      "meal_type": "lunch",
+      "name": "牛奶",
+      "energy_kcal": 180
+    }
+  },
+  {
+    "id": "food-lunch-04",
+    "input": "午餐吃了苹果 88 千卡",
+    "expected": {
+      "meal_type": "lunch",
+      "name": "苹果",
+      "energy_kcal": 88
+    }
+  },
+  {
+    "id": "food-lunch-05",
+    "input": "午餐吃了鸡蛋 140 千卡",
+    "expected": {
+      "meal_type": "lunch",
+      "name": "鸡蛋",
+      "energy_kcal": 140
+    }
+  },
+  {
+    "id": "food-lunch-06",
+    "input": "午餐吃了牛肉面 610 千卡",
+    "expected": {
+      "meal_type": "lunch",
+      "name": "牛肉面",
+      "energy_kcal": 610
+    }
+  },
+  {
+    "id": "food-lunch-07",
+    "input": "午餐吃了酸奶 120 千卡",
+    "expected": {
+      "meal_type": "lunch",
+      "name": "酸奶",
+      "energy_kcal": 120
+    }
+  },
+  {
+    "id": "food-lunch-08",
+    "input": "午餐吃了豆浆 95 千卡",
+    "expected": {
+      "meal_type": "lunch",
+      "name": "豆浆",
+      "energy_kcal": 95
+    }
+  },
+  {
+    "id": "food-lunch-09",
+    "input": "午餐吃了水果沙拉 230 千卡",
+    "expected": {
+      "meal_type": "lunch",
+      "name": "水果沙拉",
+      "energy_kcal": 230
+    }
+  },
+  {
+    "id": "food-lunch-10",
+    "input": "午餐吃了蔬菜汤 160 千卡",
+    "expected": {
+      "meal_type": "lunch",
+      "name": "蔬菜汤",
+      "energy_kcal": 160
+    }
+  },
+  {
+    "id": "food-dinner-01",
+    "input": "晚餐吃了燕麦粥 320 千卡",
+    "expected": {
+      "meal_type": "dinner",
+      "name": "燕麦粥",
+      "energy_kcal": 320
+    }
+  },
+  {
+    "id": "food-dinner-02",
+    "input": "晚餐吃了鸡肉饭 520 千卡",
+    "expected": {
+      "meal_type": "dinner",
+      "name": "鸡肉饭",
+      "energy_kcal": 520
+    }
+  },
+  {
+    "id": "food-dinner-03",
+    "input": "晚餐吃了牛奶 180 千卡",
+    "expected": {
+      "meal_type": "dinner",
+      "name": "牛奶",
+      "energy_kcal": 180
+    }
+  },
+  {
+    "id": "food-dinner-04",
+    "input": "晚餐吃了苹果 88 千卡",
+    "expected": {
+      "meal_type": "dinner",
+      "name": "苹果",
+      "energy_kcal": 88
+    }
+  },
+  {
+    "id": "food-dinner-05",
+    "input": "晚餐吃了鸡蛋 140 千卡",
+    "expected": {
+      "meal_type": "dinner",
+      "name": "鸡蛋",
+      "energy_kcal": 140
+    }
+  },
+  {
+    "id": "food-dinner-06",
+    "input": "晚餐吃了牛肉面 610 千卡",
+    "expected": {
+      "meal_type": "dinner",
+      "name": "牛肉面",
+      "energy_kcal": 610
+    }
+  },
+  {
+    "id": "food-dinner-07",
+    "input": "晚餐吃了酸奶 120 千卡",
+    "expected": {
+      "meal_type": "dinner",
+      "name": "酸奶",
+      "energy_kcal": 120
+    }
+  },
+  {
+    "id": "food-dinner-08",
+    "input": "晚餐吃了豆浆 95 千卡",
+    "expected": {
+      "meal_type": "dinner",
+      "name": "豆浆",
+      "energy_kcal": 95
+    }
+  },
+  {
+    "id": "food-dinner-09",
+    "input": "晚餐吃了水果沙拉 230 千卡",
+    "expected": {
+      "meal_type": "dinner",
+      "name": "水果沙拉",
+      "energy_kcal": 230
+    }
+  },
+  {
+    "id": "food-dinner-10",
+    "input": "晚餐吃了蔬菜汤 160 千卡",
+    "expected": {
+      "meal_type": "dinner",
+      "name": "蔬菜汤",
+      "energy_kcal": 160
+    }
+  },
+  {
+    "id": "food-snack-01",
+    "input": "加餐吃了燕麦粥 320 千卡",
+    "expected": {
+      "meal_type": "snack",
+      "name": "燕麦粥",
+      "energy_kcal": 320
+    }
+  },
+  {
+    "id": "food-snack-02",
+    "input": "加餐吃了鸡肉饭 520 千卡",
+    "expected": {
+      "meal_type": "snack",
+      "name": "鸡肉饭",
+      "energy_kcal": 520
+    }
+  },
+  {
+    "id": "food-snack-03",
+    "input": "加餐吃了牛奶 180 千卡",
+    "expected": {
+      "meal_type": "snack",
+      "name": "牛奶",
+      "energy_kcal": 180
+    }
+  },
+  {
+    "id": "food-snack-04",
+    "input": "加餐吃了苹果 88 千卡",
+    "expected": {
+      "meal_type": "snack",
+      "name": "苹果",
+      "energy_kcal": 88
+    }
+  },
+  {
+    "id": "food-snack-05",
+    "input": "加餐吃了鸡蛋 140 千卡",
+    "expected": {
+      "meal_type": "snack",
+      "name": "鸡蛋",
+      "energy_kcal": 140
+    }
+  },
+  {
+    "id": "food-snack-06",
+    "input": "加餐吃了牛肉面 610 千卡",
+    "expected": {
+      "meal_type": "snack",
+      "name": "牛肉面",
+      "energy_kcal": 610
+    }
+  },
+  {
+    "id": "food-snack-07",
+    "input": "加餐吃了酸奶 120 千卡",
+    "expected": {
+      "meal_type": "snack",
+      "name": "酸奶",
+      "energy_kcal": 120
+    }
+  },
+  {
+    "id": "food-snack-08",
+    "input": "加餐吃了豆浆 95 千卡",
+    "expected": {
+      "meal_type": "snack",
+      "name": "豆浆",
+      "energy_kcal": 95
+    }
+  },
+  {
+    "id": "food-snack-09",
+    "input": "加餐吃了水果沙拉 230 千卡",
+    "expected": {
+      "meal_type": "snack",
+      "name": "水果沙拉",
+      "energy_kcal": 230
+    }
+  },
+  {
+    "id": "food-snack-10",
+    "input": "加餐吃了蔬菜汤 160 千卡",
+    "expected": {
+      "meal_type": "snack",
+      "name": "蔬菜汤",
+      "energy_kcal": 160
+    }
+  },
+  {
+    "id": "food-other-01",
+    "input": "吃了燕麦粥 320 千卡",
+    "expected": {
+      "meal_type": "other",
+      "name": "燕麦粥",
+      "energy_kcal": 320
+    }
+  },
+  {
+    "id": "food-other-02",
+    "input": "吃了鸡肉饭 520 千卡",
+    "expected": {
+      "meal_type": "other",
+      "name": "鸡肉饭",
+      "energy_kcal": 520
+    }
+  },
+  {
+    "id": "food-other-03",
+    "input": "吃了牛奶 180 千卡",
+    "expected": {
+      "meal_type": "other",
+      "name": "牛奶",
+      "energy_kcal": 180
+    }
+  },
+  {
+    "id": "food-other-04",
+    "input": "吃了苹果 88 千卡",
+    "expected": {
+      "meal_type": "other",
+      "name": "苹果",
+      "energy_kcal": 88
+    }
+  },
+  {
+    "id": "food-other-05",
+    "input": "吃了鸡蛋 140 千卡",
+    "expected": {
+      "meal_type": "other",
+      "name": "鸡蛋",
+      "energy_kcal": 140
+    }
+  },
+  {
+    "id": "food-other-06",
+    "input": "吃了牛肉面 610 千卡",
+    "expected": {
+      "meal_type": "other",
+      "name": "牛肉面",
+      "energy_kcal": 610
+    }
+  },
+  {
+    "id": "food-other-07",
+    "input": "吃了酸奶 120 千卡",
+    "expected": {
+      "meal_type": "other",
+      "name": "酸奶",
+      "energy_kcal": 120
+    }
+  },
+  {
+    "id": "food-other-08",
+    "input": "吃了豆浆 95 千卡",
+    "expected": {
+      "meal_type": "other",
+      "name": "豆浆",
+      "energy_kcal": 95
+    }
+  },
+  {
+    "id": "food-other-09",
+    "input": "吃了水果沙拉 230 千卡",
+    "expected": {
+      "meal_type": "other",
+      "name": "水果沙拉",
+      "energy_kcal": 230
+    }
+  },
+  {
+    "id": "food-other-10",
+    "input": "吃了蔬菜汤 160 千卡",
+    "expected": {
+      "meal_type": "other",
+      "name": "蔬菜汤",
+      "energy_kcal": 160
+    }
+  }
+]

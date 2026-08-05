@@ -1,31 +1,22 @@
 {
-  "name": "journey-miniapp",
-  "version": "1.0.0",
+  "name": "journey",
+  "version": "0.1.0",
   "private": true,
+  "packageManager": "npm@10.9.8",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "dev:weapp": "taro build --type weapp --watch",
-    "build:weapp": "taro build --type weapp",
-    "build:h5": "taro build --type h5"
-  },
-  "dependencies": {
-    "@tarojs/components": "^4.0.8",
-    "@tarojs/helper": "^4.0.8",
-    "@tarojs/plugin-framework-react": "^4.0.8",
-    "@tarojs/plugin-platform-weapp": "^4.0.8",
-    "@tarojs/react": "^4.0.8",
-    "@tarojs/runtime": "^4.0.8",
-    "@tarojs/shared": "^4.0.8",
-    "@tarojs/taro": "^4.0.8",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.26.0",
-    "@babel/preset-react": "^7.26.3",
-    "@tarojs/cli": "^4.0.8",
-    "@tarojs/webpack5-runner": "^4.0.8",
-    "babel-preset-taro": "^4.1.11",
-    "sass": "^1.84.0",
-    "webpack": "5.91.0"
+    "mobile:start": "npm run start --workspace @journey/mobile",
+    "mobile:ios": "npm run ios --workspace @journey/mobile",
+    "mobile:android": "npm run android --workspace @journey/mobile",
+    "mobile:web": "npm run web --workspace @journey/mobile",
+    "mobile:web:build": "npm run web:build --workspace @journey/mobile",
+    "mobile:typecheck": "npm run typecheck --workspace @journey/mobile",
+    "mobile:lint": "npm run lint --workspace @journey/mobile",
+    "mobile:test": "npm run test --workspace @journey/mobile",
+    "mobile:test:ci": "npm run test:ci --workspace @journey/mobile",
+    "mobile:e2e:web": "npm run e2e:web --workspace @journey/mobile"
   }
 }

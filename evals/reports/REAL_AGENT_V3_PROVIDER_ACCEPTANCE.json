@@ -1,0 +1,374 @@
+{
+  "dataset": {
+    "path": "agent_v3_control_loop.json",
+    "selected_ids": [
+      "checkpoint-001",
+      "checkpoint-002",
+      "checkpoint-003",
+      "checkpoint-005"
+    ],
+    "sha256": "09b56dbf353157ecb54aa082da09e56013bccf2dd9681fdba380d627ac289b53"
+  },
+  "evaluation_version": "journey-real-agent-v3-acceptance-1.0.0",
+  "gate_passed": true,
+  "generated_at": "2026-08-04T04:16:19.307612+00:00",
+  "max_cost_usd": 0.02,
+  "metrics": {
+    "checkpoint_plan_pass_rate": 1.0,
+    "provider_match_rate": 1.0,
+    "recovery_choice_pass_rate": 1.0,
+    "schema_no_fallback_rate": 1.0,
+    "total_estimated_cost_usd": 0.00171864
+  },
+  "model": "deepseek-v4-flash",
+  "planned_calls": 10,
+  "planner_prompt_version": "journey-agent-planner-3.0.0",
+  "provider": "deepseek",
+  "recovery_results": [
+    {
+      "decision": {
+        "action": "use_alternative",
+        "reason": "knowledge.answer 因 model_timeout 失败，且该错误可恢复。使用允许的替代工具 knowledge.safe_summary 来继续完成知识回答任务。",
+        "tool": "knowledge.safe_summary"
+      },
+      "invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 0.0001043,
+        "fallback_used": false,
+        "input_tokens": 525,
+        "latency_ms": 1342,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 110,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "passed": true,
+      "tool": "knowledge.answer"
+    },
+    {
+      "decision": {
+        "action": "use_alternative",
+        "reason": "recommendation.generate 因模型超时失败，且该错误可恢复。使用规则回退方案 recommendation.rules_fallback 作为替代，以确保推荐功能仍能正常产出结果。",
+        "tool": "recommendation.rules_fallback"
+      },
+      "invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 0.00010668,
+        "fallback_used": false,
+        "input_tokens": 528,
+        "latency_ms": 1180,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 117,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "passed": true,
+      "tool": "recommendation.generate"
+    }
+  ],
+  "replanner_prompt_version": "journey-agent-replanner-1.0.0",
+  "results": [
+    {
+      "id": "checkpoint-001",
+      "passed": true,
+      "plan": {
+        "clarification_question": null,
+        "goal": "执行已校验的工具计划：food.parse_candidate、context.load、knowledge.retrieve、recommendation.generate",
+        "needs_clarification": false,
+        "schema_version": "3",
+        "steps": [
+          {
+            "depends_on": [],
+            "id": "step-1",
+            "reason": "解析午餐米饭300千卡并生成待确认候选",
+            "requires_confirmation": true,
+            "segment": null,
+            "tool": "food.parse_candidate"
+          },
+          {
+            "depends_on": [
+              "step-1"
+            ],
+            "id": "step-2",
+            "reason": "加载最小必要画像、目标和近期聚合，依赖饮食候选确认",
+            "requires_confirmation": false,
+            "segment": null,
+            "tool": "context.load"
+          },
+          {
+            "depends_on": [
+              "step-1"
+            ],
+            "id": "step-3",
+            "reason": "为个性化建议检索受控知识",
+            "requires_confirmation": false,
+            "segment": null,
+            "tool": "knowledge.retrieve"
+          },
+          {
+            "depends_on": [
+              "step-2",
+              "step-3"
+            ],
+            "id": "step-4",
+            "reason": "基于上下文和知识生成个性化建议",
+            "requires_confirmation": false,
+            "segment": null,
+            "tool": "recommendation.generate"
+          }
+        ]
+      },
+      "planner": {
+        "error_code": null,
+        "estimated_cost_usd": 0.00026754,
+        "fallback_used": false,
+        "input_tokens": 1421,
+        "latency_ms": 3128,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 245,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "router": {
+        "error_code": null,
+        "estimated_cost_usd": 9.982e-05,
+        "fallback_used": false,
+        "input_tokens": 527,
+        "latency_ms": 1719,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 93,
+        "provider": "deepseek",
+        "retries": 0
+      }
+    },
+    {
+      "id": "checkpoint-002",
+      "passed": true,
+      "plan": {
+        "clarification_question": null,
+        "goal": "执行已校验的工具计划：activity.parse_candidate、context.load、knowledge.retrieve、recommendation.generate",
+        "needs_clarification": false,
+        "schema_version": "3",
+        "steps": [
+          {
+            "depends_on": [],
+            "id": "step-1",
+            "reason": "解析跑步运动候选，需要用户确认",
+            "requires_confirmation": true,
+            "segment": null,
+            "tool": "activity.parse_candidate"
+          },
+          {
+            "depends_on": [
+              "step-1"
+            ],
+            "id": "step-2",
+            "reason": "加载画像、目标和近期聚合以支持建议生成",
+            "requires_confirmation": false,
+            "segment": null,
+            "tool": "context.load"
+          },
+          {
+            "depends_on": [
+              "step-1"
+            ],
+            "id": "step-3",
+            "reason": "检索与运动建议相关的受控知识",
+            "requires_confirmation": false,
+            "segment": null,
+            "tool": "knowledge.retrieve"
+          },
+          {
+            "depends_on": [
+              "step-2",
+              "step-3"
+            ],
+            "id": "step-4",
+            "reason": "基于上下文和知识生成个性化建议",
+            "requires_confirmation": false,
+            "segment": null,
+            "tool": "recommendation.generate"
+          }
+        ]
+      },
+      "planner": {
+        "error_code": null,
+        "estimated_cost_usd": 0.00026544,
+        "fallback_used": false,
+        "input_tokens": 1420,
+        "latency_ms": 2256,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 238,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "router": {
+        "error_code": null,
+        "estimated_cost_usd": 0.0001106,
+        "fallback_used": false,
+        "input_tokens": 526,
+        "latency_ms": 1466,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 132,
+        "provider": "deepseek",
+        "retries": 0
+      }
+    },
+    {
+      "id": "checkpoint-003",
+      "passed": true,
+      "plan": {
+        "clarification_question": null,
+        "goal": "执行已校验的工具计划：food.parse_candidate、activity.parse_candidate、context.load、knowledge.retrieve、recommendation.generate",
+        "needs_clarification": false,
+        "schema_version": "3",
+        "steps": [
+          {
+            "depends_on": [],
+            "id": "step-1",
+            "reason": "解析午餐苹果饮食并生成待确认候选",
+            "requires_confirmation": true,
+            "segment": null,
+            "tool": "food.parse_candidate"
+          },
+          {
+            "depends_on": [],
+            "id": "step-2",
+            "reason": "解析跑步运动并生成待确认候选",
+            "requires_confirmation": true,
+            "segment": null,
+            "tool": "activity.parse_candidate"
+          },
+          {
+            "depends_on": [
+              "step-1",
+              "step-2"
+            ],
+            "id": "step-3",
+            "reason": "加载画像、目标和近期聚合数据用于生成建议",
+            "requires_confirmation": false,
+            "segment": null,
+            "tool": "context.load"
+          },
+          {
+            "depends_on": [
+              "step-3"
+            ],
+            "id": "step-4",
+            "reason": "检索与饮食运动相关的受控知识",
+            "requires_confirmation": false,
+            "segment": null,
+            "tool": "knowledge.retrieve"
+          },
+          {
+            "depends_on": [
+              "step-3",
+              "step-4"
+            ],
+            "id": "step-5",
+            "reason": "基于上下文和知识生成个性化建议",
+            "requires_confirmation": false,
+            "segment": null,
+            "tool": "recommendation.generate"
+          }
+        ]
+      },
+      "planner": {
+        "error_code": null,
+        "estimated_cost_usd": 0.00028854,
+        "fallback_used": false,
+        "input_tokens": 1463,
+        "latency_ms": 2725,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 299,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "router": {
+        "error_code": null,
+        "estimated_cost_usd": 0.0001099,
+        "fallback_used": false,
+        "input_tokens": 539,
+        "latency_ms": 1085,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 123,
+        "provider": "deepseek",
+        "retries": 0
+      }
+    },
+    {
+      "id": "checkpoint-005",
+      "passed": true,
+      "plan": {
+        "clarification_question": null,
+        "goal": "执行已校验的工具计划：activity.parse_candidate、context.load、knowledge.retrieve、weekly_summary.generate",
+        "needs_clarification": false,
+        "schema_version": "3",
+        "steps": [
+          {
+            "depends_on": [],
+            "id": "step-1",
+            "reason": "解析游泳运动并生成待确认候选",
+            "requires_confirmation": true,
+            "segment": null,
+            "tool": "activity.parse_candidate"
+          },
+          {
+            "depends_on": [
+              "step-1"
+            ],
+            "id": "step-2",
+            "reason": "加载必要画像、目标和近期聚合数据",
+            "requires_confirmation": false,
+            "segment": null,
+            "tool": "context.load"
+          },
+          {
+            "depends_on": [
+              "step-1"
+            ],
+            "id": "step-3",
+            "reason": "检索周总结所需的受控知识",
+            "requires_confirmation": false,
+            "segment": null,
+            "tool": "knowledge.retrieve"
+          },
+          {
+            "depends_on": [
+              "step-2",
+              "step-3"
+            ],
+            "id": "step-4",
+            "reason": "基于上下文和知识生成本周总结",
+            "requires_confirmation": false,
+            "segment": null,
+            "tool": "weekly_summary.generate"
+          }
+        ]
+      },
+      "planner": {
+        "error_code": null,
+        "estimated_cost_usd": 0.00026558,
+        "fallback_used": false,
+        "input_tokens": 1423,
+        "latency_ms": 1837,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 237,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "router": {
+        "error_code": null,
+        "estimated_cost_usd": 0.00010024,
+        "fallback_used": false,
+        "input_tokens": 528,
+        "latency_ms": 844,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 94,
+        "provider": "deepseek",
+        "retries": 0
+      }
+    }
+  ],
+  "router_prompt_version": "intent-router-1.0.1"
+}

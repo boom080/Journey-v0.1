@@ -1,0 +1,569 @@
+[
+  {
+    "id": "food-image-food-01",
+    "expected_valid": true,
+    "expected_is_food": true,
+    "output": {
+      "is_food": true,
+      "name": "鸡肉饭",
+      "items": [
+        {
+          "name": "鸡肉饭",
+          "portion_amount": 1,
+          "portion_unit": "份",
+          "energy_kcal": 520
+        }
+      ],
+      "meal_type": "other",
+      "portion_amount": 1,
+      "portion_unit": "份",
+      "energy_kcal": 520,
+      "energy_min_kcal": 360,
+      "energy_max_kcal": 720,
+      "confidence": "low",
+      "assumptions": [
+        "合成评测候选"
+      ],
+      "needs_user_correction": true
+    }
+  },
+  {
+    "id": "food-image-food-02",
+    "expected_valid": true,
+    "expected_is_food": true,
+    "output": {
+      "is_food": true,
+      "name": "燕麦粥",
+      "items": [
+        {
+          "name": "燕麦粥",
+          "portion_amount": 1,
+          "portion_unit": "碗",
+          "energy_kcal": 280
+        }
+      ],
+      "meal_type": "other",
+      "portion_amount": 1,
+      "portion_unit": "碗",
+      "energy_kcal": 280,
+      "energy_min_kcal": 180,
+      "energy_max_kcal": 420,
+      "confidence": "low",
+      "assumptions": [
+        "合成评测候选"
+      ],
+      "needs_user_correction": true
+    }
+  },
+  {
+    "id": "food-image-food-03",
+    "expected_valid": true,
+    "expected_is_food": true,
+    "output": {
+      "is_food": true,
+      "name": "番茄炒蛋",
+      "items": [
+        {
+          "name": "番茄炒蛋",
+          "portion_amount": 1,
+          "portion_unit": "盘",
+          "energy_kcal": 330
+        }
+      ],
+      "meal_type": "other",
+      "portion_amount": 1,
+      "portion_unit": "盘",
+      "energy_kcal": 330,
+      "energy_min_kcal": 220,
+      "energy_max_kcal": 480,
+      "confidence": "low",
+      "assumptions": [
+        "合成评测候选"
+      ],
+      "needs_user_correction": true
+    }
+  },
+  {
+    "id": "food-image-food-04",
+    "expected_valid": true,
+    "expected_is_food": true,
+    "output": {
+      "is_food": true,
+      "name": "牛肉面",
+      "items": [
+        {
+          "name": "牛肉面",
+          "portion_amount": 1,
+          "portion_unit": "碗",
+          "energy_kcal": 610
+        }
+      ],
+      "meal_type": "other",
+      "portion_amount": 1,
+      "portion_unit": "碗",
+      "energy_kcal": 610,
+      "energy_min_kcal": 420,
+      "energy_max_kcal": 820,
+      "confidence": "low",
+      "assumptions": [
+        "合成评测候选"
+      ],
+      "needs_user_correction": true
+    }
+  },
+  {
+    "id": "food-image-food-05",
+    "expected_valid": true,
+    "expected_is_food": true,
+    "output": {
+      "is_food": true,
+      "name": "水果沙拉",
+      "items": [
+        {
+          "name": "水果沙拉",
+          "portion_amount": 1,
+          "portion_unit": "份",
+          "energy_kcal": 230
+        }
+      ],
+      "meal_type": "other",
+      "portion_amount": 1,
+      "portion_unit": "份",
+      "energy_kcal": 230,
+      "energy_min_kcal": 140,
+      "energy_max_kcal": 360,
+      "confidence": "low",
+      "assumptions": [
+        "合成评测候选"
+      ],
+      "needs_user_correction": true
+    }
+  },
+  {
+    "id": "food-image-food-06",
+    "expected_valid": true,
+    "expected_is_food": true,
+    "output": {
+      "is_food": true,
+      "name": "三明治",
+      "items": [
+        {
+          "name": "三明治",
+          "portion_amount": 1,
+          "portion_unit": "个",
+          "energy_kcal": 390
+        }
+      ],
+      "meal_type": "other",
+      "portion_amount": 1,
+      "portion_unit": "个",
+      "energy_kcal": 390,
+      "energy_min_kcal": 250,
+      "energy_max_kcal": 560,
+      "confidence": "low",
+      "assumptions": [
+        "合成评测候选"
+      ],
+      "needs_user_correction": true
+    }
+  },
+  {
+    "id": "food-image-food-07",
+    "expected_valid": true,
+    "expected_is_food": true,
+    "output": {
+      "is_food": true,
+      "name": "米饭和清蒸鱼",
+      "items": [
+        {
+          "name": "米饭和清蒸鱼",
+          "portion_amount": 1,
+          "portion_unit": "份",
+          "energy_kcal": 560
+        }
+      ],
+      "meal_type": "other",
+      "portion_amount": 1,
+      "portion_unit": "份",
+      "energy_kcal": 560,
+      "energy_min_kcal": 380,
+      "energy_max_kcal": 780,
+      "confidence": "low",
+      "assumptions": [
+        "合成评测候选"
+      ],
+      "needs_user_correction": true
+    }
+  },
+  {
+    "id": "food-image-food-08",
+    "expected_valid": true,
+    "expected_is_food": true,
+    "output": {
+      "is_food": true,
+      "name": "酸奶坚果杯",
+      "items": [
+        {
+          "name": "酸奶坚果杯",
+          "portion_amount": 1,
+          "portion_unit": "杯",
+          "energy_kcal": 310
+        }
+      ],
+      "meal_type": "other",
+      "portion_amount": 1,
+      "portion_unit": "杯",
+      "energy_kcal": 310,
+      "energy_min_kcal": 190,
+      "energy_max_kcal": 460,
+      "confidence": "low",
+      "assumptions": [
+        "合成评测候选"
+      ],
+      "needs_user_correction": true
+    }
+  },
+  {
+    "id": "food-image-food-09",
+    "expected_valid": true,
+    "expected_is_food": true,
+    "output": {
+      "is_food": true,
+      "name": "蔬菜汤",
+      "items": [
+        {
+          "name": "蔬菜汤",
+          "portion_amount": 1,
+          "portion_unit": "碗",
+          "energy_kcal": 170
+        }
+      ],
+      "meal_type": "other",
+      "portion_amount": 1,
+      "portion_unit": "碗",
+      "energy_kcal": 170,
+      "energy_min_kcal": 90,
+      "energy_max_kcal": 280,
+      "confidence": "low",
+      "assumptions": [
+        "合成评测候选"
+      ],
+      "needs_user_correction": true
+    }
+  },
+  {
+    "id": "food-image-food-10",
+    "expected_valid": true,
+    "expected_is_food": true,
+    "output": {
+      "is_food": true,
+      "name": "鸡蛋面包早餐",
+      "items": [
+        {
+          "name": "鸡蛋面包早餐",
+          "portion_amount": 1,
+          "portion_unit": "份",
+          "energy_kcal": 440
+        }
+      ],
+      "meal_type": "other",
+      "portion_amount": 1,
+      "portion_unit": "份",
+      "energy_kcal": 440,
+      "energy_min_kcal": 290,
+      "energy_max_kcal": 620,
+      "confidence": "low",
+      "assumptions": [
+        "合成评测候选"
+      ],
+      "needs_user_correction": true
+    }
+  },
+  {
+    "id": "food-image-food-11",
+    "expected_valid": true,
+    "expected_is_food": true,
+    "output": {
+      "is_food": true,
+      "name": "豆腐盖饭",
+      "items": [
+        {
+          "name": "豆腐盖饭",
+          "portion_amount": 1,
+          "portion_unit": "份",
+          "energy_kcal": 490
+        }
+      ],
+      "meal_type": "other",
+      "portion_amount": 1,
+      "portion_unit": "份",
+      "energy_kcal": 490,
+      "energy_min_kcal": 320,
+      "energy_max_kcal": 690,
+      "confidence": "low",
+      "assumptions": [
+        "合成评测候选"
+      ],
+      "needs_user_correction": true
+    }
+  },
+  {
+    "id": "food-image-food-12",
+    "expected_valid": true,
+    "expected_is_food": true,
+    "output": {
+      "is_food": true,
+      "name": "香蕉奶昔",
+      "items": [
+        {
+          "name": "香蕉奶昔",
+          "portion_amount": 1,
+          "portion_unit": "杯",
+          "energy_kcal": 350
+        }
+      ],
+      "meal_type": "other",
+      "portion_amount": 1,
+      "portion_unit": "杯",
+      "energy_kcal": 350,
+      "energy_min_kcal": 220,
+      "energy_max_kcal": 510,
+      "confidence": "low",
+      "assumptions": [
+        "合成评测候选"
+      ],
+      "needs_user_correction": true
+    }
+  },
+  {
+    "id": "food-image-nonfood-01",
+    "expected_valid": true,
+    "expected_is_food": false,
+    "output": {
+      "is_food": false,
+      "name": null,
+      "items": [],
+      "meal_type": "other",
+      "portion_amount": null,
+      "portion_unit": null,
+      "energy_kcal": null,
+      "energy_min_kcal": null,
+      "energy_max_kcal": null,
+      "confidence": "low",
+      "assumptions": [
+        "无法确认图片中存在食物"
+      ],
+      "needs_user_correction": true
+    }
+  },
+  {
+    "id": "food-image-nonfood-02",
+    "expected_valid": true,
+    "expected_is_food": false,
+    "output": {
+      "is_food": false,
+      "name": null,
+      "items": [],
+      "meal_type": "other",
+      "portion_amount": null,
+      "portion_unit": null,
+      "energy_kcal": null,
+      "energy_min_kcal": null,
+      "energy_max_kcal": null,
+      "confidence": "low",
+      "assumptions": [
+        "无法确认图片中存在食物"
+      ],
+      "needs_user_correction": true
+    }
+  },
+  {
+    "id": "food-image-nonfood-03",
+    "expected_valid": true,
+    "expected_is_food": false,
+    "output": {
+      "is_food": false,
+      "name": null,
+      "items": [],
+      "meal_type": "other",
+      "portion_amount": null,
+      "portion_unit": null,
+      "energy_kcal": null,
+      "energy_min_kcal": null,
+      "energy_max_kcal": null,
+      "confidence": "low",
+      "assumptions": [
+        "无法确认图片中存在食物"
+      ],
+      "needs_user_correction": true
+    }
+  },
+  {
+    "id": "food-image-nonfood-04",
+    "expected_valid": true,
+    "expected_is_food": false,
+    "output": {
+      "is_food": false,
+      "name": null,
+      "items": [],
+      "meal_type": "other",
+      "portion_amount": null,
+      "portion_unit": null,
+      "energy_kcal": null,
+      "energy_min_kcal": null,
+      "energy_max_kcal": null,
+      "confidence": "low",
+      "assumptions": [
+        "无法确认图片中存在食物"
+      ],
+      "needs_user_correction": true
+    }
+  },
+  {
+    "id": "food-image-nonfood-05",
+    "expected_valid": true,
+    "expected_is_food": false,
+    "output": {
+      "is_food": false,
+      "name": null,
+      "items": [],
+      "meal_type": "other",
+      "portion_amount": null,
+      "portion_unit": null,
+      "energy_kcal": null,
+      "energy_min_kcal": null,
+      "energy_max_kcal": null,
+      "confidence": "low",
+      "assumptions": [
+        "无法确认图片中存在食物"
+      ],
+      "needs_user_correction": true
+    }
+  },
+  {
+    "id": "food-image-nonfood-06",
+    "expected_valid": true,
+    "expected_is_food": false,
+    "output": {
+      "is_food": false,
+      "name": null,
+      "items": [],
+      "meal_type": "other",
+      "portion_amount": null,
+      "portion_unit": null,
+      "energy_kcal": null,
+      "energy_min_kcal": null,
+      "energy_max_kcal": null,
+      "confidence": "low",
+      "assumptions": [
+        "无法确认图片中存在食物"
+      ],
+      "needs_user_correction": true
+    }
+  },
+  {
+    "id": "food-image-invalid-01",
+    "expected_valid": false,
+    "expected_is_food": true,
+    "output": {
+      "is_food": true,
+      "name": "鸡肉饭",
+      "items": [
+        {
+          "name": "鸡肉饭",
+          "portion_amount": 1,
+          "portion_unit": "份",
+          "energy_kcal": 520
+        }
+      ],
+      "meal_type": "other",
+      "portion_amount": 1,
+      "portion_unit": "份",
+      "energy_kcal": 520,
+      "energy_min_kcal": null,
+      "energy_max_kcal": 720,
+      "confidence": "low",
+      "assumptions": [
+        "合成评测候选"
+      ],
+      "needs_user_correction": true
+    }
+  },
+  {
+    "id": "food-image-invalid-02",
+    "expected_valid": false,
+    "expected_is_food": true,
+    "output": {
+      "is_food": true,
+      "name": "燕麦粥",
+      "items": [
+        {
+          "name": "燕麦粥",
+          "portion_amount": 1,
+          "portion_unit": "碗",
+          "energy_kcal": 280
+        }
+      ],
+      "meal_type": "other",
+      "portion_amount": 1,
+      "portion_unit": "碗",
+      "energy_kcal": 999,
+      "energy_min_kcal": 180,
+      "energy_max_kcal": 420,
+      "confidence": "low",
+      "assumptions": [
+        "合成评测候选"
+      ],
+      "needs_user_correction": true
+    }
+  },
+  {
+    "id": "food-image-invalid-03",
+    "expected_valid": false,
+    "expected_is_food": true,
+    "output": {
+      "is_food": true,
+      "name": "番茄炒蛋",
+      "items": [
+        {
+          "name": "番茄炒蛋",
+          "portion_amount": 1,
+          "portion_unit": "盘",
+          "energy_kcal": 330
+        }
+      ],
+      "meal_type": "other",
+      "portion_amount": 1,
+      "portion_unit": "盘",
+      "energy_kcal": 330,
+      "energy_min_kcal": 220,
+      "energy_max_kcal": 480,
+      "confidence": "low",
+      "assumptions": [
+        "合成评测候选"
+      ],
+      "needs_user_correction": false
+    }
+  },
+  {
+    "id": "food-image-invalid-04",
+    "expected_valid": false,
+    "expected_is_food": true,
+    "output": {
+      "is_food": true,
+      "name": "牛肉面",
+      "items": [],
+      "meal_type": "other",
+      "portion_amount": 1,
+      "portion_unit": "碗",
+      "energy_kcal": 610,
+      "energy_min_kcal": 420,
+      "energy_max_kcal": 820,
+      "confidence": "low",
+      "assumptions": [
+        "合成评测候选"
+      ],
+      "needs_user_correction": true
+    }
+  }
+]

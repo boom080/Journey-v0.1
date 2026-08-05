@@ -1,0 +1,454 @@
+{
+  "dataset": {
+    "path": "agent_v2_plans.json",
+    "selected_ids": [
+      "plan-001",
+      "plan-002",
+      "plan-003",
+      "plan-004",
+      "plan-006",
+      "plan-007",
+      "plan-009",
+      "plan-012"
+    ],
+    "sha256": "fecc5b19cc0faae5252db89333fa1961821d1bdaf9e9dae96e63058c2f50c14e"
+  },
+  "evaluation_version": "journey-real-agent-v2-acceptance-1.0.0",
+  "gate_passed": false,
+  "generated_at": "2026-08-03T08:29:14.172771+00:00",
+  "max_cost_usd": 0.02,
+  "metrics": {
+    "intent_exact_accuracy": {
+      "passed": true,
+      "threshold": 0.875,
+      "value": 1.0
+    },
+    "latency_p95_ms": {
+      "passed": true,
+      "threshold": 8000.0,
+      "value": 3804.0
+    },
+    "plan_schema_validity": {
+      "passed": true,
+      "threshold": 1.0,
+      "value": 1.0
+    },
+    "policy_and_confirmation_pass_rate": {
+      "passed": false,
+      "threshold": 1.0,
+      "value": 0.75
+    },
+    "provider_model_match_rate": {
+      "passed": true,
+      "threshold": 1.0,
+      "value": 1.0
+    },
+    "schema_no_fallback_rate": {
+      "passed": true,
+      "threshold": 1.0,
+      "value": 1.0
+    },
+    "tool_sequence_accuracy": {
+      "passed": false,
+      "threshold": 0.875,
+      "value": 0.0
+    },
+    "total_estimated_cost_usd": {
+      "passed": true,
+      "threshold": 0.02,
+      "value": 0.002607
+    },
+    "usage_capture_rate": {
+      "passed": true,
+      "threshold": 1.0,
+      "value": 1.0
+    }
+  },
+  "model": "deepseek-v4-flash",
+  "planner_prompt_version": "journey-agent-planner-2.0.0",
+  "prompt_version": "journey-agent-2.0.0",
+  "provider": "deepseek",
+  "results": [
+    {
+      "actual_intents": [
+        "food"
+      ],
+      "actual_tools": [
+        "context.load",
+        "food.parse_candidate"
+      ],
+      "expected_intents": [
+        "food"
+      ],
+      "expected_tools": [
+        "food.parse_candidate"
+      ],
+      "id": "plan-001",
+      "intent_passed": true,
+      "planner_invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 0.0002198,
+        "fallback_used": false,
+        "input_tokens": 1092,
+        "latency_ms": 2216,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 239,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "policy_passed": true,
+      "policy_violations": [],
+      "router_invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 9.128e-05,
+        "fallback_used": false,
+        "input_tokens": 520,
+        "latency_ms": 1279,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 66,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "schema_valid": true,
+      "tools_passed": false
+    },
+    {
+      "actual_intents": [
+        "activity"
+      ],
+      "actual_tools": [
+        "context.load",
+        "activity.parse_candidate"
+      ],
+      "expected_intents": [
+        "activity"
+      ],
+      "expected_tools": [
+        "activity.parse_candidate"
+      ],
+      "id": "plan-002",
+      "intent_passed": true,
+      "planner_invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 0.0002226,
+        "fallback_used": false,
+        "input_tokens": 1096,
+        "latency_ms": 2387,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 247,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "policy_passed": true,
+      "policy_violations": [],
+      "router_invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 9.212e-05,
+        "fallback_used": false,
+        "input_tokens": 522,
+        "latency_ms": 1097,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 68,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "schema_valid": true,
+      "tools_passed": false
+    },
+    {
+      "actual_intents": [
+        "weight"
+      ],
+      "actual_tools": [
+        "context.load",
+        "weight.parse_candidate"
+      ],
+      "expected_intents": [
+        "weight"
+      ],
+      "expected_tools": [
+        "weight.parse_candidate"
+      ],
+      "id": "plan-003",
+      "intent_passed": true,
+      "planner_invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 0.00021952,
+        "fallback_used": false,
+        "input_tokens": 1092,
+        "latency_ms": 2360,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 238,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "policy_passed": true,
+      "policy_violations": [],
+      "router_invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 9.128e-05,
+        "fallback_used": false,
+        "input_tokens": 520,
+        "latency_ms": 1413,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 66,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "schema_valid": true,
+      "tools_passed": false
+    },
+    {
+      "actual_intents": [
+        "profile"
+      ],
+      "actual_tools": [
+        "context.load",
+        "profile.read",
+        "journey.read"
+      ],
+      "expected_intents": [
+        "profile"
+      ],
+      "expected_tools": [
+        "profile.read"
+      ],
+      "id": "plan-004",
+      "intent_passed": true,
+      "planner_invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 0.0002058,
+        "fallback_used": false,
+        "input_tokens": 1082,
+        "latency_ms": 1813,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 194,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "policy_passed": true,
+      "policy_violations": [],
+      "router_invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 8.918e-05,
+        "fallback_used": false,
+        "input_tokens": 515,
+        "latency_ms": 1243,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 61,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "schema_valid": true,
+      "tools_passed": false
+    },
+    {
+      "actual_intents": [
+        "knowledge"
+      ],
+      "actual_tools": [
+        "context.load",
+        "knowledge.answer"
+      ],
+      "expected_intents": [
+        "knowledge"
+      ],
+      "expected_tools": [
+        "knowledge.answer"
+      ],
+      "id": "plan-006",
+      "intent_passed": true,
+      "planner_invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 0.00021196,
+        "fallback_used": false,
+        "input_tokens": 1086,
+        "latency_ms": 1952,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 214,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "policy_passed": true,
+      "policy_violations": [],
+      "router_invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 9.002e-05,
+        "fallback_used": false,
+        "input_tokens": 517,
+        "latency_ms": 1022,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 63,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "schema_valid": true,
+      "tools_passed": false
+    },
+    {
+      "actual_intents": [
+        "recommendation"
+      ],
+      "actual_tools": [
+        "context.load",
+        "journey.read",
+        "knowledge.retrieve",
+        "recommendation.generate"
+      ],
+      "expected_intents": [
+        "recommendation"
+      ],
+      "expected_tools": [
+        "context.load",
+        "knowledge.retrieve",
+        "recommendation.generate"
+      ],
+      "id": "plan-007",
+      "intent_passed": true,
+      "planner_invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 0.00022372,
+        "fallback_used": false,
+        "input_tokens": 1088,
+        "latency_ms": 2694,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 255,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "policy_passed": false,
+      "policy_violations": [
+        "personalized_generation_missing_dependencies"
+      ],
+      "router_invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 8.918e-05,
+        "fallback_used": false,
+        "input_tokens": 517,
+        "latency_ms": 2020,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 60,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "schema_valid": true,
+      "tools_passed": false
+    },
+    {
+      "actual_intents": [
+        "food",
+        "activity"
+      ],
+      "actual_tools": [
+        "context.load",
+        "food.parse_candidate",
+        "activity.parse_candidate"
+      ],
+      "expected_intents": [
+        "activity",
+        "food"
+      ],
+      "expected_tools": [
+        "food.parse_candidate",
+        "activity.parse_candidate"
+      ],
+      "id": "plan-009",
+      "intent_passed": true,
+      "planner_invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 0.00024724,
+        "fallback_used": false,
+        "input_tokens": 1134,
+        "latency_ms": 2375,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 316,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "policy_passed": true,
+      "policy_violations": [],
+      "router_invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 0.00010136,
+        "fallback_used": false,
+        "input_tokens": 532,
+        "latency_ms": 1356,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 96,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "schema_valid": true,
+      "tools_passed": false
+    },
+    {
+      "actual_intents": [
+        "food",
+        "activity",
+        "recommendation"
+      ],
+      "actual_tools": [
+        "context.load",
+        "food.parse_candidate",
+        "activity.parse_candidate",
+        "journey.read",
+        "knowledge.retrieve",
+        "recommendation.generate"
+      ],
+      "expected_intents": [
+        "activity",
+        "food",
+        "recommendation"
+      ],
+      "expected_tools": [
+        "food.parse_candidate",
+        "activity.parse_candidate",
+        "context.load",
+        "knowledge.retrieve",
+        "recommendation.generate"
+      ],
+      "id": "plan-012",
+      "intent_passed": true,
+      "planner_invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 0.00030128,
+        "fallback_used": false,
+        "input_tokens": 1172,
+        "latency_ms": 3804,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 490,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "policy_passed": false,
+      "policy_violations": [
+        "personalized_generation_missing_dependencies"
+      ],
+      "router_invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 0.00011074,
+        "fallback_used": false,
+        "input_tokens": 541,
+        "latency_ms": 1205,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 125,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "schema_valid": true,
+      "tools_passed": false
+    }
+  ],
+  "router_prompt_version": "intent-router-1.0.1",
+  "schema_version": "journey-agent-schema-2",
+  "summary": {
+    "calls": 16,
+    "cases": 8,
+    "estimated_cost_usd": 0.00260708,
+    "fallbacks": 0,
+    "input_tokens": 13026,
+    "latency_p95_ms": 3804,
+    "output_tokens": 2798,
+    "retries": 0
+  }
+}

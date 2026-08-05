@@ -1,0 +1,773 @@
+{
+  "datasets": {
+    "activity_parsing.json": {
+      "selected_samples": 5,
+      "sha256": "88b71793023533760d2932e8420d4a6922bcc86a2c7237106d03c8adcc8fe775"
+    },
+    "food_parsing.json": {
+      "selected_samples": 5,
+      "sha256": "ab81d5320ee31bab5f59b1640028ce161d17b73ac77b85efed8f2737bc962904"
+    },
+    "intent_router.json": {
+      "selected_samples": 18,
+      "sha256": "6f783a6a82b118b45ba7530b86c24584adc81e30c7c4d5ecf99abc4dd64dbae1"
+    }
+  },
+  "evaluation_version": "journey-real-text-provider-acceptance-1.0.0",
+  "gate_passed": true,
+  "generated_at": "2026-08-01T14:35:21.065243+00:00",
+  "max_cost_usd": 0.02,
+  "metrics": {
+    "activity_parse_accuracy": {
+      "passed": true,
+      "threshold": 0.8,
+      "value": 1.0
+    },
+    "food_parse_accuracy": {
+      "passed": true,
+      "threshold": 0.8,
+      "value": 1.0
+    },
+    "latency_p95_ms": {
+      "passed": true,
+      "threshold": 8000.0,
+      "value": 1595.0
+    },
+    "provider_model_match_rate": {
+      "passed": true,
+      "threshold": 1.0,
+      "value": 1.0
+    },
+    "router_exact_accuracy": {
+      "passed": true,
+      "threshold": 0.9,
+      "value": 0.9444444444444444
+    },
+    "schema_no_fallback_rate": {
+      "passed": true,
+      "threshold": 1.0,
+      "value": 1.0
+    },
+    "total_estimated_cost_usd": {
+      "passed": true,
+      "threshold": 0.02,
+      "value": 0.00240632
+    },
+    "usage_capture_rate": {
+      "passed": true,
+      "threshold": 1.0,
+      "value": 1.0
+    }
+  },
+  "model": "deepseek-v4-flash",
+  "prompt_version": "journey-agent-1.0.0",
+  "provider": "deepseek",
+  "results": [
+    {
+      "actual": [
+        "food"
+      ],
+      "capability": "intent_classification",
+      "expected": [
+        "food"
+      ],
+      "id": "intent-food-001",
+      "invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 8.792e-05,
+        "fallback_used": false,
+        "input_tokens": 494,
+        "latency_ms": 1182,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 67,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "passed": true,
+      "wall_latency_ms": 1182
+    },
+    {
+      "actual": [
+        "food"
+      ],
+      "capability": "intent_classification",
+      "expected": [
+        "food"
+      ],
+      "id": "intent-food-002",
+      "invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 8.792e-05,
+        "fallback_used": false,
+        "input_tokens": 494,
+        "latency_ms": 1397,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 67,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "passed": true,
+      "wall_latency_ms": 1397
+    },
+    {
+      "actual": [
+        "activity"
+      ],
+      "capability": "intent_classification",
+      "expected": [
+        "activity"
+      ],
+      "id": "intent-activity-001",
+      "invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 8.624e-05,
+        "fallback_used": false,
+        "input_tokens": 490,
+        "latency_ms": 1047,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 63,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "passed": true,
+      "wall_latency_ms": 1048
+    },
+    {
+      "actual": [
+        "activity"
+      ],
+      "capability": "intent_classification",
+      "expected": [
+        "activity"
+      ],
+      "id": "intent-activity-002",
+      "invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 8.624e-05,
+        "fallback_used": false,
+        "input_tokens": 490,
+        "latency_ms": 1135,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 63,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "passed": true,
+      "wall_latency_ms": 1135
+    },
+    {
+      "actual": [
+        "weight"
+      ],
+      "capability": "intent_classification",
+      "expected": [
+        "weight"
+      ],
+      "id": "intent-weight-001",
+      "invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 8.624e-05,
+        "fallback_used": false,
+        "input_tokens": 490,
+        "latency_ms": 1183,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 63,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "passed": true,
+      "wall_latency_ms": 1183
+    },
+    {
+      "actual": [
+        "weight"
+      ],
+      "capability": "intent_classification",
+      "expected": [
+        "weight"
+      ],
+      "id": "intent-weight-002",
+      "invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 8.624e-05,
+        "fallback_used": false,
+        "input_tokens": 490,
+        "latency_ms": 1378,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 63,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "passed": true,
+      "wall_latency_ms": 1378
+    },
+    {
+      "actual": [
+        "profile"
+      ],
+      "capability": "intent_classification",
+      "expected": [
+        "profile"
+      ],
+      "id": "intent-profile-001",
+      "invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 8.54e-05,
+        "fallback_used": false,
+        "input_tokens": 488,
+        "latency_ms": 1535,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 61,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "passed": true,
+      "wall_latency_ms": 1535
+    },
+    {
+      "actual": [
+        "weight"
+      ],
+      "capability": "intent_classification",
+      "expected": [
+        "profile"
+      ],
+      "id": "intent-profile-002",
+      "invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 8.54e-05,
+        "fallback_used": false,
+        "input_tokens": 488,
+        "latency_ms": 931,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 61,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "passed": false,
+      "wall_latency_ms": 931
+    },
+    {
+      "actual": [
+        "history"
+      ],
+      "capability": "intent_classification",
+      "expected": [
+        "history"
+      ],
+      "id": "intent-history-001",
+      "invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 8.498e-05,
+        "fallback_used": false,
+        "input_tokens": 487,
+        "latency_ms": 1232,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 60,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "passed": true,
+      "wall_latency_ms": 1232
+    },
+    {
+      "actual": [
+        "history"
+      ],
+      "capability": "intent_classification",
+      "expected": [
+        "history"
+      ],
+      "id": "intent-history-002",
+      "invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 8.54e-05,
+        "fallback_used": false,
+        "input_tokens": 488,
+        "latency_ms": 950,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 61,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "passed": true,
+      "wall_latency_ms": 950
+    },
+    {
+      "actual": [
+        "knowledge"
+      ],
+      "capability": "intent_classification",
+      "expected": [
+        "knowledge"
+      ],
+      "id": "intent-knowledge-001",
+      "invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 8.582e-05,
+        "fallback_used": false,
+        "input_tokens": 489,
+        "latency_ms": 1466,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 62,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "passed": true,
+      "wall_latency_ms": 1467
+    },
+    {
+      "actual": [
+        "knowledge"
+      ],
+      "capability": "intent_classification",
+      "expected": [
+        "knowledge"
+      ],
+      "id": "intent-knowledge-002",
+      "invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 8.624e-05,
+        "fallback_used": false,
+        "input_tokens": 490,
+        "latency_ms": 1155,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 63,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "passed": true,
+      "wall_latency_ms": 1155
+    },
+    {
+      "actual": [
+        "recommendation"
+      ],
+      "capability": "intent_classification",
+      "expected": [
+        "recommendation"
+      ],
+      "id": "intent-recommendation-001",
+      "invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 8.68e-05,
+        "fallback_used": false,
+        "input_tokens": 490,
+        "latency_ms": 1006,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 65,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "passed": true,
+      "wall_latency_ms": 1006
+    },
+    {
+      "actual": [
+        "recommendation"
+      ],
+      "capability": "intent_classification",
+      "expected": [
+        "recommendation"
+      ],
+      "id": "intent-recommendation-002",
+      "invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 8.638e-05,
+        "fallback_used": false,
+        "input_tokens": 489,
+        "latency_ms": 1060,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 64,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "passed": true,
+      "wall_latency_ms": 1060
+    },
+    {
+      "actual": [
+        "weekly_summary"
+      ],
+      "capability": "intent_classification",
+      "expected": [
+        "weekly_summary"
+      ],
+      "id": "intent-weekly_summary-001",
+      "invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 8.596e-05,
+        "fallback_used": false,
+        "input_tokens": 488,
+        "latency_ms": 1205,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 63,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "passed": true,
+      "wall_latency_ms": 1205
+    },
+    {
+      "actual": [
+        "weekly_summary"
+      ],
+      "capability": "intent_classification",
+      "expected": [
+        "weekly_summary"
+      ],
+      "id": "intent-weekly_summary-002",
+      "invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 8.638e-05,
+        "fallback_used": false,
+        "input_tokens": 489,
+        "latency_ms": 1017,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 64,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "passed": true,
+      "wall_latency_ms": 1017
+    },
+    {
+      "actual": [
+        "clarify"
+      ],
+      "capability": "intent_classification",
+      "expected": [
+        "clarify"
+      ],
+      "id": "intent-clarify-001",
+      "invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 0.00010612,
+        "fallback_used": false,
+        "input_tokens": 488,
+        "latency_ms": 2068,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 135,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "passed": true,
+      "wall_latency_ms": 2068
+    },
+    {
+      "actual": [
+        "clarify"
+      ],
+      "capability": "intent_classification",
+      "expected": [
+        "clarify"
+      ],
+      "id": "intent-clarify-002",
+      "invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 0.00010122,
+        "fallback_used": false,
+        "input_tokens": 487,
+        "latency_ms": 1587,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 118,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "passed": true,
+      "wall_latency_ms": 1587
+    },
+    {
+      "actual": {
+        "energy_kcal": 320.0,
+        "meal_type": "breakfast",
+        "name": "燕麦粥",
+        "portion_amount": null,
+        "portion_unit": null
+      },
+      "capability": "food_text_parse",
+      "expected": {
+        "energy_kcal": 320,
+        "meal_type": "breakfast",
+        "name": "燕麦粥"
+      },
+      "id": "food-breakfast-01",
+      "invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 8.316e-05,
+        "fallback_used": false,
+        "input_tokens": 446,
+        "latency_ms": 956,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 74,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "passed": true
+    },
+    {
+      "actual": {
+        "energy_kcal": 520.0,
+        "meal_type": "breakfast",
+        "name": "鸡肉饭",
+        "portion_amount": null,
+        "portion_unit": null
+      },
+      "capability": "food_text_parse",
+      "expected": {
+        "energy_kcal": 520,
+        "meal_type": "breakfast",
+        "name": "鸡肉饭"
+      },
+      "id": "food-breakfast-02",
+      "invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 8.316e-05,
+        "fallback_used": false,
+        "input_tokens": 446,
+        "latency_ms": 959,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 74,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "passed": true
+    },
+    {
+      "actual": {
+        "energy_kcal": 180.0,
+        "meal_type": "breakfast",
+        "name": "牛奶",
+        "portion_amount": null,
+        "portion_unit": null
+      },
+      "capability": "food_text_parse",
+      "expected": {
+        "energy_kcal": 180,
+        "meal_type": "breakfast",
+        "name": "牛奶"
+      },
+      "id": "food-breakfast-03",
+      "invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 8.274e-05,
+        "fallback_used": false,
+        "input_tokens": 445,
+        "latency_ms": 1199,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 73,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "passed": true
+    },
+    {
+      "actual": {
+        "energy_kcal": 88.0,
+        "meal_type": "breakfast",
+        "name": "苹果",
+        "portion_amount": null,
+        "portion_unit": null
+      },
+      "capability": "food_text_parse",
+      "expected": {
+        "energy_kcal": 88,
+        "meal_type": "breakfast",
+        "name": "苹果"
+      },
+      "id": "food-breakfast-04",
+      "invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 8.274e-05,
+        "fallback_used": false,
+        "input_tokens": 445,
+        "latency_ms": 1362,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 73,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "passed": true
+    },
+    {
+      "actual": {
+        "energy_kcal": 140.0,
+        "meal_type": "breakfast",
+        "name": "鸡蛋",
+        "portion_amount": null,
+        "portion_unit": null
+      },
+      "capability": "food_text_parse",
+      "expected": {
+        "energy_kcal": 140,
+        "meal_type": "breakfast",
+        "name": "鸡蛋"
+      },
+      "id": "food-breakfast-05",
+      "invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 8.274e-05,
+        "fallback_used": false,
+        "input_tokens": 445,
+        "latency_ms": 1258,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 73,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "passed": true
+    },
+    {
+      "actual": {
+        "duration_minutes": 30,
+        "energy_kcal": 210.0,
+        "intensity": "low",
+        "name": "低强度跑步"
+      },
+      "capability": "activity_text_parse",
+      "expected": {
+        "duration_minutes": 30,
+        "energy_kcal": 210,
+        "intensity": "low",
+        "name": "低强度跑步"
+      },
+      "id": "activity-1-01",
+      "invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 8.12e-05,
+        "fallback_used": false,
+        "input_tokens": 396,
+        "latency_ms": 1595,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 92,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "passed": true
+    },
+    {
+      "actual": {
+        "duration_minutes": 20,
+        "energy_kcal": 120.0,
+        "intensity": "low",
+        "name": "低强度散步"
+      },
+      "capability": "activity_text_parse",
+      "expected": {
+        "duration_minutes": 20,
+        "energy_kcal": 120,
+        "intensity": "low",
+        "name": "低强度散步"
+      },
+      "id": "activity-1-02",
+      "invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 8.12e-05,
+        "fallback_used": false,
+        "input_tokens": 396,
+        "latency_ms": 1429,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 92,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "passed": true
+    },
+    {
+      "actual": {
+        "duration_minutes": 45,
+        "energy_kcal": 360.0,
+        "intensity": "low",
+        "name": "游泳"
+      },
+      "capability": "activity_text_parse",
+      "expected": {
+        "duration_minutes": 45,
+        "energy_kcal": 360,
+        "intensity": "low",
+        "name": "低强度游泳"
+      },
+      "id": "activity-1-03",
+      "invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 8.064e-05,
+        "fallback_used": false,
+        "input_tokens": 396,
+        "latency_ms": 1087,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 90,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "passed": true
+    },
+    {
+      "actual": {
+        "duration_minutes": 60,
+        "energy_kcal": 420.0,
+        "intensity": "low",
+        "name": "骑车"
+      },
+      "capability": "activity_text_parse",
+      "expected": {
+        "duration_minutes": 60,
+        "energy_kcal": 420,
+        "intensity": "low",
+        "name": "低强度骑车"
+      },
+      "id": "activity-1-04",
+      "invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 8.064e-05,
+        "fallback_used": false,
+        "input_tokens": 396,
+        "latency_ms": 1193,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 90,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "passed": true
+    },
+    {
+      "actual": {
+        "duration_minutes": 25,
+        "energy_kcal": 100.0,
+        "intensity": "low",
+        "name": "低强度瑜伽"
+      },
+      "capability": "activity_text_parse",
+      "expected": {
+        "duration_minutes": 25,
+        "energy_kcal": 100,
+        "intensity": "low",
+        "name": "低强度瑜伽"
+      },
+      "id": "activity-1-05",
+      "invocation": {
+        "error_code": null,
+        "estimated_cost_usd": 8.12e-05,
+        "fallback_used": false,
+        "input_tokens": 396,
+        "latency_ms": 1384,
+        "model": "deepseek-v4-flash",
+        "output_tokens": 92,
+        "provider": "deepseek",
+        "retries": 0
+      },
+      "passed": true
+    }
+  ],
+  "router_prompt_version": "intent-router-1.0.0",
+  "schema_version": "journey-agent-schema-1",
+  "summary": {
+    "calls": 28,
+    "estimated_cost_usd": 0.00240632,
+    "fallbacks": 0,
+    "input_tokens": 13016,
+    "latency_median_ms": 1199,
+    "latency_p95_ms": 1595,
+    "output_tokens": 2086,
+    "retries": 0
+  }
+}

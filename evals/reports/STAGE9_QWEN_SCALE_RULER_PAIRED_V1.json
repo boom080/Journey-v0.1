@@ -1,0 +1,1690 @@
+{
+  "run_label": "stage9-qwen-scale-ruler-paired-v1",
+  "generated_at": "2026-07-29T06:26:11.897868+00:00",
+  "dataset_version": "journey-food-image-scale-holdout-v1",
+  "dataset_pairs": 30,
+  "provider": "qwen",
+  "model": "qwen3.7-flash",
+  "api_base_region": "cn-beijing",
+  "adapter_scope": "isolated_evaluation_only_public_api_unchanged",
+  "prompt_version": "journey-food-image-scale-ruler-eval-1.0.0",
+  "prompt_sha256": "0ea1cf19465d73c2c6ba104f96e35e70cfa43096eef09ec4c3d49ba4223143b0",
+  "schema_version": "journey-food-image-scale-ruler-schema-1",
+  "schema_sha256": "83f321e0a8f900a5f937a73d19c221df9daa609da497a0eb682c7e60e3db513a",
+  "sealed_holdout_prompt_tuning_allowed": false,
+  "metrics": {
+    "schema_valid_rate": {
+      "value": 0.883333,
+      "threshold": 1.0,
+      "comparison": ">=",
+      "passed": false,
+      "numerator": 53,
+      "denominator": 60
+    },
+    "needs_user_correction_rate": {
+      "value": 0.883333,
+      "threshold": 1.0,
+      "comparison": ">=",
+      "passed": false,
+      "numerator": 53,
+      "denominator": 60
+    },
+    "with_ruler_portion_median_relative_error": {
+      "value": 0.478155,
+      "threshold": 0.3,
+      "comparison": "<=",
+      "passed": false,
+      "numerator": null,
+      "denominator": null
+    },
+    "relative_error_improvement_vs_without_ruler": {
+      "value": 0.043689,
+      "threshold": 0.15,
+      "comparison": ">=",
+      "passed": false,
+      "numerator": null,
+      "denominator": null
+    },
+    "scale_reference_usage_accuracy": {
+      "value": 0.883333,
+      "threshold": 0.95,
+      "comparison": ">=",
+      "passed": false,
+      "numerator": 53,
+      "denominator": 60
+    },
+    "provider_fallback_count": {
+      "value": 7.0,
+      "threshold": 0,
+      "comparison": "<=",
+      "passed": false,
+      "numerator": null,
+      "denominator": null
+    },
+    "latency_p95_ms": {
+      "value": 3744.0,
+      "threshold": 8000,
+      "comparison": "<=",
+      "passed": true,
+      "numerator": null,
+      "denominator": null
+    },
+    "max_estimated_cost_usd_per_call": {
+      "value": 3.1e-05,
+      "threshold": 0.01,
+      "comparison": "<=",
+      "passed": true,
+      "numerator": null,
+      "denominator": null
+    }
+  },
+  "gate_passed": false,
+  "summary": {
+    "with_ruler_median_relative_error": 0.478155,
+    "without_ruler_median_relative_error": 0.5,
+    "relative_error_improvement": 0.043689,
+    "input_tokens": 24035,
+    "output_tokens": 7032,
+    "estimated_cost_usd": 0.00144897,
+    "latency_median_ms": 1564.0,
+    "paired_predictions_complete": false
+  },
+  "results": [
+    {
+      "id": "pair-xhs-008-p01",
+      "variant": "with_ruler",
+      "gold_food_name_zh": "鸡翅尖",
+      "gold_mass_g": 10.0,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 4129,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生鸡翅中段",
+        "portion_mass_g": 15.0,
+        "confidence": "low",
+        "assumptions": [
+          "该食物为单块带骨生鸡翅中，基于常见规格估算单体重量。",
+          "直尺刻度清晰可见且与盘子近似同平面，作为尺寸参考依据。",
+          "未包含盘子或秤具的重量，仅评估可见食物部分。"
+        ],
+        "scale_reference_used": true,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 471,
+        "output_tokens": 121,
+        "estimated_cost_usd": 2.653e-05
+      }
+    },
+    {
+      "id": "pair-xhs-008-p01",
+      "variant": "without_ruler",
+      "gold_food_name_zh": "鸡翅尖",
+      "gold_mass_g": 10.0,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1320,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生鸡翅中",
+        "portion_mass_g": 15.0,
+        "confidence": "low",
+        "assumptions": [
+          "该食物为单个去骨或带骨的生鸡翅中段，依据其形态和大小进行估算。",
+          "未使用任何物理参照物（如尺子）来校准尺寸，重量完全基于视觉体积的保守推测。",
+          "图中秤的读数被遮挡，无法获取精确数值，仅作为背景物体处理。"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 439,
+        "output_tokens": 135,
+        "estimated_cost_usd": 2.719e-05
+      }
+    },
+    {
+      "id": "pair-xhs-008-p02",
+      "variant": "without_ruler",
+      "gold_food_name_zh": "牛肉",
+      "gold_mass_g": 10.0,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 4675,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生肉块",
+        "portion_mass_g": 15.0,
+        "confidence": "low",
+        "assumptions": [
+          "基于常见餐盘直径（约20-22cm）与食物在盘中占比进行视觉比例估算。",
+          "假设该肉块为常规密度的红肉（如牛肉或猪肉），厚度约为1.5-2厘米。",
+          "未使用任何物理尺度参照物，重量仅为基于视觉经验的保守推测值。"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 439,
+        "output_tokens": 138,
+        "estimated_cost_usd": 2.753e-05
+      }
+    },
+    {
+      "id": "pair-xhs-008-p02",
+      "variant": "with_ruler",
+      "gold_food_name_zh": "牛肉",
+      "gold_mass_g": 10.0,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1774,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生肉块",
+        "portion_mass_g": 15.0,
+        "confidence": "low",
+        "assumptions": [
+          "基于直尺参照估算肉块长约2.0cm、宽约1.2cm，假设厚度约为1.0cm。",
+          "假设该食物为普通红肉（如牛肉或猪肉），密度接近水（1.0 g/cm³）。",
+          "未计入盘子重量，仅对可见的独立食物块进行体积与质量估算。"
+        ],
+        "scale_reference_used": true,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 471,
+        "output_tokens": 142,
+        "estimated_cost_usd": 2.886e-05
+      }
+    },
+    {
+      "id": "pair-xhs-008-p03",
+      "variant": "with_ruler",
+      "gold_food_name_zh": "鸡翅尖",
+      "gold_mass_g": 20.2,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1683,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生鸡翅尖",
+        "portion_mass_g": 25.0,
+        "confidence": "low",
+        "assumptions": [
+          "图中两块肉块被识别为生鸡翅尖，单只重量估算约10-15克。",
+          "右侧直尺刻度清晰可见且与盘子近似同平面，用于辅助判断物体尺寸比例。",
+          "未包含盘子或背景木纹的重量，仅计算可见食物部分。"
+        ],
+        "scale_reference_used": true,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 471,
+        "output_tokens": 128,
+        "estimated_cost_usd": 2.731e-05
+      }
+    },
+    {
+      "id": "pair-xhs-008-p03",
+      "variant": "without_ruler",
+      "gold_food_name_zh": "鸡翅尖",
+      "gold_mass_g": 20.2,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1512,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生鸡翅尖",
+        "portion_mass_g": 25.0,
+        "confidence": "low",
+        "assumptions": [
+          "图中可见两个生鸡翅尖，基于常见单只重量约10-15克进行估算。",
+          "未使用任何物理参照物（如尺子）来校准尺寸，仅凭视觉比例推测。",
+          "食物处于冷冻或冷藏状态，未考虑烹饪后的水分流失或油脂变化。"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 439,
+        "output_tokens": 132,
+        "estimated_cost_usd": 2.686e-05
+      }
+    },
+    {
+      "id": "pair-xhs-008-p04",
+      "variant": "without_ruler",
+      "gold_food_name_zh": "牛肉",
+      "gold_mass_g": 20.0,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1261,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生肉块",
+        "portion_mass_g": 15.0,
+        "confidence": "low",
+        "assumptions": [
+          "基于常见餐盘尺寸与肉块视觉比例估算，无物理参照物。",
+          "假设该肉块为密度接近水的生鲜肌肉组织。",
+          "未包含盘子或遮挡区域的重量信息。"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 439,
+        "output_tokens": 110,
+        "estimated_cost_usd": 2.442e-05
+      }
+    },
+    {
+      "id": "pair-xhs-008-p04",
+      "variant": "with_ruler",
+      "gold_food_name_zh": "牛肉",
+      "gold_mass_g": 20.0,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1503,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生肉块",
+        "portion_mass_g": 25.0,
+        "confidence": "low",
+        "assumptions": [
+          "基于直尺刻度估算，该肉块边长约为2.0至2.5厘米。",
+          "假设该肉块为密度接近水的生鲜肌肉组织（约1.0-1.05 g/cm³）。",
+          "未考虑肉块内部可能存在的脂肪间隙或水分流失对密度的影响。"
+        ],
+        "scale_reference_used": true,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 471,
+        "output_tokens": 135,
+        "estimated_cost_usd": 2.808e-05
+      }
+    },
+    {
+      "id": "pair-xhs-008-p05",
+      "variant": "with_ruler",
+      "gold_food_name_zh": "鸡翅尖",
+      "gold_mass_g": 49.8,
+      "schema_valid": false,
+      "fallback_used": true,
+      "error_code": "ValidationError",
+      "latency_ms": 1423,
+      "prediction": null,
+      "usage": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "pair-xhs-008-p05",
+      "variant": "without_ruler",
+      "gold_food_name_zh": "鸡翅尖",
+      "gold_mass_g": 49.8,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1876,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生鸡翅中",
+        "portion_mass_g": 160.0,
+        "confidence": "medium",
+        "assumptions": [
+          "图中可见4个完整的生鸡翅中，按常规单只重量约35-45克估算总和。",
+          "未使用任何物理尺度参照物（如尺子、标准餐具）进行比例校准。",
+          "遮挡块区域不可见，仅基于盘中可见食物部分进行体积与密度推断。"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 439,
+        "output_tokens": 134,
+        "estimated_cost_usd": 2.708e-05
+      }
+    },
+    {
+      "id": "pair-xhs-008-p06",
+      "variant": "without_ruler",
+      "gold_food_name_zh": "牛肉",
+      "gold_mass_g": 50.1,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1897,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生肉片",
+        "portion_mass_g": 45.0,
+        "confidence": "low",
+        "assumptions": [
+          "基于常见餐盘尺寸与肉块视觉占比进行的体积密度估算。",
+          "假设该肉片厚度均匀且未包含不可见的隐藏部分。",
+          "未使用任何物理参照物进行精确标定，数值仅为保守估计。"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 439,
+        "output_tokens": 116,
+        "estimated_cost_usd": 2.508e-05
+      }
+    },
+    {
+      "id": "pair-xhs-008-p06",
+      "variant": "with_ruler",
+      "gold_food_name_zh": "牛肉",
+      "gold_mass_g": 50.1,
+      "schema_valid": false,
+      "fallback_used": true,
+      "error_code": "ValidationError",
+      "latency_ms": 1461,
+      "prediction": null,
+      "usage": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "pair-xhs-009-p01",
+      "variant": "with_ruler",
+      "gold_food_name_zh": "猪排骨",
+      "gold_mass_g": 10.3,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1736,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "西瓜块",
+        "portion_mass_g": 15.0,
+        "confidence": "low",
+        "assumptions": [
+          "基于直尺刻度估算，该食物块长度约为2厘米，宽度约1.5厘米。",
+          "假设食物为常规密度的西瓜果肉，厚度约为1至1.5厘米。",
+          "重量仅基于几何体积的粗略估算，未包含汁液流失或密度差异的影响。"
+        ],
+        "scale_reference_used": true,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 471,
+        "output_tokens": 129,
+        "estimated_cost_usd": 2.742e-05
+      }
+    },
+    {
+      "id": "pair-xhs-009-p01",
+      "variant": "without_ruler",
+      "gold_food_name_zh": "猪排骨",
+      "gold_mass_g": 10.3,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1582,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生肉块",
+        "portion_mass_g": 5.0,
+        "confidence": "low",
+        "assumptions": [
+          "该物体被识别为单块生肉（如猪肉或牛肉），基于其半透明红色质地和脂肪纹理判断。",
+          "由于缺乏参照物且食物体积微小，重量估算基于常见小块生肉的密度与尺寸比例进行保守推断。",
+          "图中可见部分可能仅为整份食物的一小部分，实际食用份量可能更大，此处仅评估可见区域。"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 439,
+        "output_tokens": 144,
+        "estimated_cost_usd": 2.819e-05
+      }
+    },
+    {
+      "id": "pair-xhs-009-p02",
+      "variant": "without_ruler",
+      "gold_food_name_zh": "鸡胸肉",
+      "gold_mass_g": 9.8,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1413,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生鸡胸肉条",
+        "portion_mass_g": 15.0,
+        "confidence": "low",
+        "assumptions": [
+          "基于常见餐盘直径（约20-22cm）与食物视觉占比进行保守比例估算。",
+          "假设该肉条为标准厚度的鸡小胸或里脊部位，密度接近标准生鲜肉类。",
+          "未计入盘子及遮挡区域可能存在的隐藏重量，仅评估可见单体食物。"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 439,
+        "output_tokens": 135,
+        "estimated_cost_usd": 2.719e-05
+      }
+    },
+    {
+      "id": "pair-xhs-009-p02",
+      "variant": "with_ruler",
+      "gold_food_name_zh": "鸡胸肉",
+      "gold_mass_g": 9.8,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1503,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生鸡胸肉条",
+        "portion_mass_g": 15.0,
+        "confidence": "low",
+        "assumptions": [
+          "食物为单块去骨生鸡胸肉，厚度约0.8-1cm。",
+          "依据直尺刻度估算食物长度约为4-5cm，宽度约1.5cm。",
+          "未包含盘子或背景遮挡物的重量，仅计算可见食物部分。"
+        ],
+        "scale_reference_used": true,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 471,
+        "output_tokens": 129,
+        "estimated_cost_usd": 2.742e-05
+      }
+    },
+    {
+      "id": "pair-xhs-009-p03",
+      "variant": "with_ruler",
+      "gold_food_name_zh": "猪排骨",
+      "gold_mass_g": 20.2,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1566,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生排骨块",
+        "portion_mass_g": 35.0,
+        "confidence": "low",
+        "assumptions": [
+          "基于直尺刻度估算该肉块长宽约为4cm x 3cm，厚度约2cm。",
+          "假设食物为生猪肉肋排，密度接近1.0-1.1 g/cm³且含骨量中等。",
+          "未包含盘子或背景物体的重量，仅针对可见单块食物进行体积到重量的换算。"
+        ],
+        "scale_reference_used": true,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 471,
+        "output_tokens": 141,
+        "estimated_cost_usd": 2.875e-05
+      }
+    },
+    {
+      "id": "pair-xhs-009-p03",
+      "variant": "without_ruler",
+      "gold_food_name_zh": "猪排骨",
+      "gold_mass_g": 20.2,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1179,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生排骨",
+        "portion_mass_g": 25.0,
+        "confidence": "low",
+        "assumptions": [
+          "基于单块小型排骨的常见体积估算，未使用物理尺子参照。",
+          "假设该块为单节带肉排骨，且肉质密度接近标准猪肉。",
+          "重量仅包含可见食物部分，不包含盘子或遮挡区域。"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 439,
+        "output_tokens": 118,
+        "estimated_cost_usd": 2.531e-05
+      }
+    },
+    {
+      "id": "pair-xhs-009-p04",
+      "variant": "without_ruler",
+      "gold_food_name_zh": "鸡胸肉",
+      "gold_mass_g": 20.2,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 4102,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生鸡肉片",
+        "portion_mass_g": 15.0,
+        "confidence": "low",
+        "assumptions": [
+          "基于常见餐盘直径（约20-22厘米）与食物视觉占比进行相对估算。",
+          "假设该肉片为常规厚度的单片生鸡胸肉或鸡腿肉。",
+          "未计入被纯色遮挡块覆盖区域可能存在的其他食物。"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 439,
+        "output_tokens": 125,
+        "estimated_cost_usd": 2.608e-05
+      }
+    },
+    {
+      "id": "pair-xhs-009-p04",
+      "variant": "with_ruler",
+      "gold_food_name_zh": "鸡胸肉",
+      "gold_mass_g": 20.2,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1536,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "鸡胸肉泥",
+        "portion_mass_g": 15.0,
+        "confidence": "low",
+        "assumptions": [
+          "食物为纯鸡胸肉泥，假设密度接近水（1.0 g/cm³）。",
+          "根据直尺刻度估算，食物长度约3.5-4cm，宽度约1cm，厚度约2mm。",
+          "未计入盘子或背景中可能存在的其他不可见分量。"
+        ],
+        "scale_reference_used": true,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 471,
+        "output_tokens": 132,
+        "estimated_cost_usd": 2.775e-05
+      }
+    },
+    {
+      "id": "pair-xhs-009-p05",
+      "variant": "with_ruler",
+      "gold_food_name_zh": "猪排骨",
+      "gold_mass_g": 50.0,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1743,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生排骨块",
+        "portion_mass_g": 60.0,
+        "confidence": "low",
+        "assumptions": [
+          "基于直尺刻度估算单块排骨长约3-4cm，宽约2.5-3cm，厚约1.5-2cm。",
+          "假设排骨为带骨生肉，密度略大于纯瘦肉，两块总重量按常规小排规格估算。",
+          "未计入盘子或背景遮挡部分的潜在食物，仅评估可见主体。"
+        ],
+        "scale_reference_used": true,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 471,
+        "output_tokens": 143,
+        "estimated_cost_usd": 2.897e-05
+      }
+    },
+    {
+      "id": "pair-xhs-009-p05",
+      "variant": "without_ruler",
+      "gold_food_name_zh": "猪排骨",
+      "gold_mass_g": 50.0,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1910,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生排骨块",
+        "portion_mass_g": 40.0,
+        "confidence": "low",
+        "assumptions": [
+          "图中可见两块带骨生肉，基于常见排骨切块尺寸（约3-4厘米见方）进行体积估算。",
+          "未使用任何物理尺度参照物（如尺子或标准餐具），重量完全基于视觉比例推断。",
+          "假设肉块密度接近普通猪肋排，包含骨头和瘦肉部分，未计入不可见遮挡区域的潜在食物。"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 439,
+        "output_tokens": 146,
+        "estimated_cost_usd": 2.842e-05
+      }
+    },
+    {
+      "id": "pair-xhs-009-p06",
+      "variant": "without_ruler",
+      "gold_food_name_zh": "鸡胸肉",
+      "gold_mass_g": 50.2,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1662,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生鸡胸肉",
+        "portion_mass_g": 80.0,
+        "confidence": "low",
+        "assumptions": [
+          "基于常见餐盘直径（约20-22cm）与食物视觉占比进行保守比例估算。",
+          "假设该块鸡肉为单片去骨鸡胸肉，厚度均匀且未包含隐藏部分。",
+          "未计入盘子或遮挡区域可能存在的其他食物，仅计算可见主体。"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 439,
+        "output_tokens": 133,
+        "estimated_cost_usd": 2.697e-05
+      }
+    },
+    {
+      "id": "pair-xhs-009-p06",
+      "variant": "with_ruler",
+      "gold_food_name_zh": "鸡胸肉",
+      "gold_mass_g": 50.2,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1815,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生鸡胸肉",
+        "portion_mass_g": 85.0,
+        "confidence": "medium",
+        "assumptions": [
+          "依据直尺刻度估算，该鸡胸肉长度约为12-13厘米，宽度约3-4厘米。",
+          "假设该部位为常规厚度的去骨鸡小胸或鸡大胸切片，密度接近标准生鲜禽肉。",
+          "未计入盘子重量，仅对可见食物部分进行体积与重量的几何估算。"
+        ],
+        "scale_reference_used": true,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 471,
+        "output_tokens": 142,
+        "estimated_cost_usd": 2.886e-05
+      }
+    },
+    {
+      "id": "pair-xhs-010-p01",
+      "variant": "with_ruler",
+      "gold_food_name_zh": "虾皮",
+      "gold_mass_g": 2.0,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1562,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "虾皮",
+        "portion_mass_g": 3.0,
+        "confidence": "low",
+        "assumptions": [
+          "食物为干燥或半干燥的虾皮，堆积密度较低且含有大量空气间隙。",
+          "直尺刻度清晰可见且与碗体处于近似同一平面，作为估算食物堆叠宽度的参考依据。",
+          "食物呈现松散的小堆状，未压实，重量主要取决于其体积和含水率。"
+        ],
+        "scale_reference_used": true,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 471,
+        "output_tokens": 132,
+        "estimated_cost_usd": 2.775e-05
+      }
+    },
+    {
+      "id": "pair-xhs-010-p01",
+      "variant": "without_ruler",
+      "gold_food_name_zh": "虾皮",
+      "gold_mass_g": 2.0,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1322,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "虾皮",
+        "portion_mass_g": 3.0,
+        "confidence": "low",
+        "assumptions": [
+          "图中食物为干燥虾皮，基于常见同类食材的堆积密度进行估算。",
+          "未使用任何物理参照物（如尺子或标准尺寸餐具）来校准比例，仅凭视觉经验判断。",
+          "遮挡区域及秤体读数不可见，重量仅为对可见食物堆体积的保守推测。"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 439,
+        "output_tokens": 132,
+        "estimated_cost_usd": 2.686e-05
+      }
+    },
+    {
+      "id": "pair-xhs-010-p02",
+      "variant": "without_ruler",
+      "gold_food_name_zh": "鲜虾仁",
+      "gold_mass_g": 9.6,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1166,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生虾仁",
+        "portion_mass_g": 5.0,
+        "confidence": "low",
+        "assumptions": [
+          "图中仅可见一只去壳的生虾仁，无头部和尾部。",
+          "基于单只中等大小生虾仁的常规重量进行保守估算。",
+          "未使用任何物理参照物（如尺子或标准餐具尺寸）来校准比例。"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 439,
+        "output_tokens": 117,
+        "estimated_cost_usd": 2.519e-05
+      }
+    },
+    {
+      "id": "pair-xhs-010-p02",
+      "variant": "with_ruler",
+      "gold_food_name_zh": "鲜虾仁",
+      "gold_mass_g": 9.6,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1391,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生虾仁",
+        "portion_mass_g": 8.0,
+        "confidence": "low",
+        "assumptions": [
+          "图中为一只去壳的生虾仁，未包含虾壳重量。",
+          "基于直尺刻度估算，该虾仁长度约为3.5厘米，属于小规格个体。",
+          "单只此类规格生虾仁的平均密度与含水量下，预估重量约为8克。"
+        ],
+        "scale_reference_used": true,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 471,
+        "output_tokens": 122,
+        "estimated_cost_usd": 2.664e-05
+      }
+    },
+    {
+      "id": "pair-xhs-010-p03",
+      "variant": "with_ruler",
+      "gold_food_name_zh": "虾皮",
+      "gold_mass_g": 5.0,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1781,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "干虾皮",
+        "portion_mass_g": 3.5,
+        "confidence": "low",
+        "assumptions": [
+          "食物为干燥的虾皮，堆积密度较低且蓬松，估算基于视觉体积与常见同类干货密度的经验值。",
+          "直尺刻度清晰可见且未被遮挡，作为主要参照物用于估算盘子直径及食物堆叠的横向跨度。",
+          "未包含盘中可能存在的微量水分或调味汁重量，仅计算可见固体物质。"
+        ],
+        "scale_reference_used": true,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 471,
+        "output_tokens": 142,
+        "estimated_cost_usd": 2.886e-05
+      }
+    },
+    {
+      "id": "pair-xhs-010-p03",
+      "variant": "without_ruler",
+      "gold_food_name_zh": "虾皮",
+      "gold_mass_g": 5.0,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1384,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "虾皮",
+        "portion_mass_g": 5.0,
+        "confidence": "low",
+        "assumptions": [
+          "基于常见干虾皮的蓬松堆积密度进行体积估算。",
+          "未使用任何物理参照物（如尺子或标准餐具）来校准尺寸。",
+          "遮挡区域及秤读数不可见，仅对盘中可见食物部分进行保守估计。"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 439,
+        "output_tokens": 118,
+        "estimated_cost_usd": 2.531e-05
+      }
+    },
+    {
+      "id": "pair-xhs-010-p04",
+      "variant": "without_ruler",
+      "gold_food_name_zh": "鲜虾仁",
+      "gold_mass_g": 29.9,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1350,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生虾仁",
+        "portion_mass_g": 15.0,
+        "confidence": "low",
+        "assumptions": [
+          "图中可见2只去壳生虾仁，按中等规格单只约7-8克估算。",
+          "未使用任何物理参照物（如尺子或标准餐具尺寸）进行校准，仅基于视觉比例保守推断。",
+          "遮挡区域及秤体读数不可见，重量仅为对可见食物实体的独立估算。"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 439,
+        "output_tokens": 136,
+        "estimated_cost_usd": 2.731e-05
+      }
+    },
+    {
+      "id": "pair-xhs-010-p04",
+      "variant": "with_ruler",
+      "gold_food_name_zh": "鲜虾仁",
+      "gold_mass_g": 29.9,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1487,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生虾仁",
+        "portion_mass_g": 25.0,
+        "confidence": "low",
+        "assumptions": [
+          "图中可见两只去壳生虾仁，基于标准中等大小虾仁单只约10-15g的常规规格进行估算。",
+          "右侧透明直尺刻度清晰且与盛放食物的盘子处于近似同平面，作为尺寸参考依据，令 scale_reference_used=true。",
+          "未包含盘中可能存在的少量冰衣或解冻水分重量，仅估算虾肉本体质量。"
+        ],
+        "scale_reference_used": true,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 471,
+        "output_tokens": 147,
+        "estimated_cost_usd": 2.942e-05
+      }
+    },
+    {
+      "id": "pair-xhs-010-p05",
+      "variant": "with_ruler",
+      "gold_food_name_zh": "虾皮",
+      "gold_mass_g": 10.0,
+      "schema_valid": false,
+      "fallback_used": true,
+      "error_code": "ValidationError",
+      "latency_ms": 1377,
+      "prediction": null,
+      "usage": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "pair-xhs-010-p05",
+      "variant": "without_ruler",
+      "gold_food_name_zh": "虾皮",
+      "gold_mass_g": 10.0,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1403,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "虾皮",
+        "portion_mass_g": 5.0,
+        "confidence": "low",
+        "assumptions": [
+          "基于常见干虾皮的密度及图中堆积体积进行保守估算。",
+          "未计入被纯色遮挡块覆盖区域可能存在的额外食物。",
+          "假设食物为干燥状态，若含水分重量会有所不同。"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 439,
+        "output_tokens": 111,
+        "estimated_cost_usd": 2.453e-05
+      }
+    },
+    {
+      "id": "pair-xhs-010-p06",
+      "variant": "without_ruler",
+      "gold_food_name_zh": "鲜虾仁",
+      "gold_mass_g": 50.0,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1709,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生虾仁",
+        "portion_mass_g": 45.0,
+        "confidence": "low",
+        "assumptions": [
+          "图中可见4只去壳生虾仁，按中等规格单只约10-12克估算。",
+          "未使用尺子或已知尺寸物体作为物理尺度参照，重量为视觉比例保守估算。",
+          "假设虾仁为常规养殖虾规格，未包含盘子或遮挡区域可能隐藏的食物。"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 439,
+        "output_tokens": 132,
+        "estimated_cost_usd": 2.686e-05
+      }
+    },
+    {
+      "id": "pair-xhs-010-p06",
+      "variant": "with_ruler",
+      "gold_food_name_zh": "鲜虾仁",
+      "gold_mass_g": 50.0,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1454,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生虾仁",
+        "portion_mass_g": 45.0,
+        "confidence": "low",
+        "assumptions": [
+          "图中可见4只去壳生虾仁，按中等规格估算单只重约10-12克。",
+          "直尺刻度清晰且与食物同平面，用于辅助确认食物尺寸符合中等规格虾仁特征。",
+          "未计入盘子或背景其他不可见食物的重量，仅评估盘中可见部分。"
+        ],
+        "scale_reference_used": true,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 471,
+        "output_tokens": 133,
+        "estimated_cost_usd": 2.786e-05
+      }
+    },
+    {
+      "id": "pair-xhs-011-p01",
+      "variant": "with_ruler",
+      "gold_food_name_zh": "鸭胗",
+      "gold_mass_g": 10.3,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1360,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "甜菜根切片",
+        "portion_mass_g": 15.0,
+        "confidence": "low",
+        "assumptions": [
+          "图中食物为单片厚度约2-3毫米的甜菜根薄片，每片重量估算约为5克。",
+          "直尺刻度清晰可见且与盘子近似同平面，作为尺寸参考依据。",
+          "未包含盘子、遮挡块及背景物体的重量。"
+        ],
+        "scale_reference_used": true,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 471,
+        "output_tokens": 126,
+        "estimated_cost_usd": 2.708e-05
+      }
+    },
+    {
+      "id": "pair-xhs-011-p01",
+      "variant": "without_ruler",
+      "gold_food_name_zh": "鸭胗",
+      "gold_mass_g": 10.3,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1689,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "金枪鱼刺身",
+        "portion_mass_g": 45.0,
+        "confidence": "low",
+        "assumptions": [
+          "基于常见刺身切片规格（约3cm x 2cm）及厚度（约0.5cm）进行体积估算。",
+          "假设三片鱼肉密度接近水，且未包含盘子或背景物体的重量。",
+          "实际重量受切片厚度和含水量影响较大，可能存在±20%的误差。"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 439,
+        "output_tokens": 137,
+        "estimated_cost_usd": 2.742e-05
+      }
+    },
+    {
+      "id": "pair-xhs-011-p02",
+      "variant": "without_ruler",
+      "gold_food_name_zh": "猪里脊",
+      "gold_mass_g": 10.3,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1372,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生肉条",
+        "portion_mass_g": 15.0,
+        "confidence": "low",
+        "assumptions": [
+          "该食物为普通生肉（如鸡肉或猪肉）条状物，密度接近水。",
+          "基于常见同类食材的视觉体积进行保守估算，未使用物理参照物。",
+          "遮挡区域不可见，仅计算盘中可见部分的重量。"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 439,
+        "output_tokens": 121,
+        "estimated_cost_usd": 2.564e-05
+      }
+    },
+    {
+      "id": "pair-xhs-011-p02",
+      "variant": "with_ruler",
+      "gold_food_name_zh": "猪里脊",
+      "gold_mass_g": 10.3,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1585,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生肉条",
+        "portion_mass_g": 15.0,
+        "confidence": "low",
+        "assumptions": [
+          "食物为普通生瘦肉，密度接近水（约1.0-1.1 g/cm³）。",
+          "根据右侧直尺刻度估算，食物长度约为4-5厘米，宽度约1厘米，厚度约0.3-0.4厘米。",
+          "未包含盘子或背景物体的重量，仅估算可见食物条的体积质量。"
+        ],
+        "scale_reference_used": true,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 471,
+        "output_tokens": 142,
+        "estimated_cost_usd": 2.886e-05
+      }
+    },
+    {
+      "id": "pair-xhs-011-p03",
+      "variant": "with_ruler",
+      "gold_food_name_zh": "鸭胗",
+      "gold_mass_g": 20.0,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 3174,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生肉块",
+        "portion_mass_g": 15.0,
+        "confidence": "low",
+        "assumptions": [
+          "基于右侧直尺刻度估算，该肉块最大直径约为2.0至2.5厘米。",
+          "假设该肉块为近似球形或椭球体，且密度接近普通生鲜猪肉（约1.05 g/cm³）。",
+          "图中食物体积较小，仅凭视觉几何估算存在较大误差，实际重量可能因肉质紧实度而异。"
+        ],
+        "scale_reference_used": true,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 471,
+        "output_tokens": 146,
+        "estimated_cost_usd": 2.931e-05
+      }
+    },
+    {
+      "id": "pair-xhs-011-p03",
+      "variant": "without_ruler",
+      "gold_food_name_zh": "鸭胗",
+      "gold_mass_g": 20.0,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1860,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生肉块",
+        "portion_mass_g": 15.0,
+        "confidence": "low",
+        "assumptions": [
+          "该物体为单块生肉，基于常见小块肉类（如宠物零食或烹饪切配）的视觉体积进行保守估算。",
+          "未利用秤盘直径作为比例尺，仅依据物体在画面中的相对大小推断重量。",
+          "假设该肉块密度接近普通肌肉组织，且无大量不可见水分流失或冰霜覆盖。"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 439,
+        "output_tokens": 142,
+        "estimated_cost_usd": 2.797e-05
+      }
+    },
+    {
+      "id": "pair-xhs-011-p04",
+      "variant": "without_ruler",
+      "gold_food_name_zh": "猪里脊",
+      "gold_mass_g": 20.0,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1556,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生肉条",
+        "portion_mass_g": 20.0,
+        "confidence": "low",
+        "assumptions": [
+          "图中可见两块粉色生肉条，形态类似鸡胸肉或鱼肉切片。",
+          "未使用物理参照物进行比例校准，重量基于视觉体积与常见食材密度的保守估算。",
+          "忽略被纯色遮挡块覆盖区域可能存在的额外食物或秤盘边缘残留。"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 439,
+        "output_tokens": 127,
+        "estimated_cost_usd": 2.631e-05
+      }
+    },
+    {
+      "id": "pair-xhs-011-p04",
+      "variant": "with_ruler",
+      "gold_food_name_zh": "猪里脊",
+      "gold_mass_g": 20.0,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1611,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生鸡胸肉条",
+        "portion_mass_g": 45.0,
+        "confidence": "low",
+        "assumptions": [
+          "食物为生鸡胸肉，密度近似水（1g/cm³）。",
+          "根据直尺参照估算单条长约6-7cm、宽约2cm、厚约0.3cm。",
+          "未计入盘子重量，仅估算可见食物质量。"
+        ],
+        "scale_reference_used": true,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 471,
+        "output_tokens": 125,
+        "estimated_cost_usd": 2.697e-05
+      }
+    },
+    {
+      "id": "pair-xhs-011-p05",
+      "variant": "with_ruler",
+      "gold_food_name_zh": "鸭胗",
+      "gold_mass_g": 50.3,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1325,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生鱼片",
+        "portion_mass_g": 25.0,
+        "confidence": "low",
+        "assumptions": [
+          "食物为单块或连体生鱼肉，密度近似于水（1g/cm³）。",
+          "依据右侧直尺刻度估算，食物最大长度约为4-5厘米，厚度较薄。",
+          "未包含盘子及背景遮挡区域的重量估算。"
+        ],
+        "scale_reference_used": true,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 471,
+        "output_tokens": 122,
+        "estimated_cost_usd": 2.664e-05
+      }
+    },
+    {
+      "id": "pair-xhs-011-p05",
+      "variant": "without_ruler",
+      "gold_food_name_zh": "鸭胗",
+      "gold_mass_g": 50.3,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1407,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生肉片",
+        "portion_mass_g": 30.0,
+        "confidence": "low",
+        "assumptions": [
+          "基于常见餐盘直径（约15-20cm）与食物占据面积的比例进行视觉估算。",
+          "假设该肉类为普通厚度的切片，未包含不可见的底层堆叠部分。",
+          "未使用任何物理参照物或秤读数，仅凭视觉经验推断重量。"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 439,
+        "output_tokens": 130,
+        "estimated_cost_usd": 2.664e-05
+      }
+    },
+    {
+      "id": "pair-xhs-011-p06",
+      "variant": "without_ruler",
+      "gold_food_name_zh": "猪里脊",
+      "gold_mass_g": 50.3,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1335,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生肉条",
+        "portion_mass_g": 120.0,
+        "confidence": "low",
+        "assumptions": [
+          "基于常见餐盘直径（约20-22cm）与肉条视觉比例进行保守体积估算。",
+          "假设肉条为中等厚度（约0.5-0.8cm）的生瘦肉或去皮禽肉，密度接近水。",
+          "未计入盘中可能存在的少量液体重量，仅计算可见固形物质量。"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 439,
+        "output_tokens": 142,
+        "estimated_cost_usd": 2.797e-05
+      }
+    },
+    {
+      "id": "pair-xhs-011-p06",
+      "variant": "with_ruler",
+      "gold_food_name_zh": "猪里脊",
+      "gold_mass_g": 50.3,
+      "schema_valid": false,
+      "fallback_used": true,
+      "error_code": "ValidationError",
+      "latency_ms": 2111,
+      "prediction": null,
+      "usage": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "pair-xhs-012-p01",
+      "variant": "with_ruler",
+      "gold_food_name_zh": "猪五花",
+      "gold_mass_g": 10.0,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1910,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生培根",
+        "portion_mass_g": 15.0,
+        "confidence": "low",
+        "assumptions": [
+          "该食物为单片标准切法的生培根，未折叠且平铺。",
+          "基于直尺参照估算长度约6-7厘米，结合常见生培根单片厚度（约2-3mm）及密度进行体积换算。",
+          "未计入盘子或背景遮挡部分的潜在重量，仅针对可见主体估算。"
+        ],
+        "scale_reference_used": true,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 471,
+        "output_tokens": 136,
+        "estimated_cost_usd": 2.819e-05
+      }
+    },
+    {
+      "id": "pair-xhs-012-p01",
+      "variant": "without_ruler",
+      "gold_food_name_zh": "猪五花",
+      "gold_mass_g": 10.0,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1223,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生培根",
+        "portion_mass_g": 15.0,
+        "confidence": "low",
+        "assumptions": [
+          "假设该条培根为标准切片规格，长度约10-12厘米。",
+          "基于生肉通常的密度（约1.05 g/cm³）及目测厚度进行体积估算。",
+          "未计入盘子或背景物体的尺寸作为参照，仅依据食物形态比例推断。"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 439,
+        "output_tokens": 129,
+        "estimated_cost_usd": 2.653e-05
+      }
+    },
+    {
+      "id": "pair-xhs-012-p02",
+      "variant": "without_ruler",
+      "gold_food_name_zh": "猪肝",
+      "gold_mass_g": 9.9,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1134,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生肉片",
+        "portion_mass_g": 15.0,
+        "confidence": "low",
+        "assumptions": [
+          "假设肉片厚度约为2-3毫米，属于常见薄切规格。",
+          "基于标准餐盘（约20-25厘米直径）与肉片的视觉比例进行估算。",
+          "未计入被遮挡区域可能存在的其他食物或液体。"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 439,
+        "output_tokens": 122,
+        "estimated_cost_usd": 2.575e-05
+      }
+    },
+    {
+      "id": "pair-xhs-012-p02",
+      "variant": "with_ruler",
+      "gold_food_name_zh": "猪肝",
+      "gold_mass_g": 9.9,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2423,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生肉片",
+        "portion_mass_g": 35.0,
+        "confidence": "low",
+        "assumptions": [
+          "基于直尺可见刻度（约10-14cm区间）及盘子直径比例，估算单片肉长约4-5cm。",
+          "假设肉片为常见瘦肉部位，厚度均匀且约为2-3mm。",
+          "总重量基于两片肉的视觉体积与标准生肉密度（约1.05g/cm³）的乘积估算。"
+        ],
+        "scale_reference_used": true,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 471,
+        "output_tokens": 146,
+        "estimated_cost_usd": 2.931e-05
+      }
+    },
+    {
+      "id": "pair-xhs-012-p03",
+      "variant": "with_ruler",
+      "gold_food_name_zh": "猪五花",
+      "gold_mass_g": 20.2,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2042,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生五花肉片",
+        "portion_mass_g": 45.0,
+        "confidence": "low",
+        "assumptions": [
+          "图中可见两片生五花肉，基于直尺参照估算单片长约10-12cm，宽约6-8cm。",
+          "假设肉片为未经烹饪的生鲜状态，且厚度均匀约为3-4mm。",
+          "总重量基于常见生鲜五花肉片密度（约1.05g/cm³）及视觉体积估算，未包含盘子重量。"
+        ],
+        "scale_reference_used": true,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 471,
+        "output_tokens": 147,
+        "estimated_cost_usd": 2.942e-05
+      }
+    },
+    {
+      "id": "pair-xhs-012-p03",
+      "variant": "without_ruler",
+      "gold_food_name_zh": "猪五花",
+      "gold_mass_g": 20.2,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1893,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生五花肉片",
+        "portion_mass_g": 45.0,
+        "confidence": "low",
+        "assumptions": [
+          "假设每片肉为常规厨房切片厚度，单片重量约10-12克。",
+          "图中可见两片肉平铺，未重叠部分按标准生肉密度估算。",
+          "未计入盘子或遮挡区域可能存在的其他食物，仅计算可见主体。"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 439,
+        "output_tokens": 126,
+        "estimated_cost_usd": 2.619e-05
+      }
+    },
+    {
+      "id": "pair-xhs-012-p04",
+      "variant": "without_ruler",
+      "gold_food_name_zh": "猪肝",
+      "gold_mass_g": 20.2,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1307,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生肉片",
+        "portion_mass_g": 45.0,
+        "confidence": "low",
+        "assumptions": [
+          "基于常见餐盘直径（约20-22cm）与肉片占据面积的比例进行视觉估算。",
+          "假设肉片厚度均匀且为普通生肉密度，未包含盘子重量。",
+          "因缺乏物理参照物及遮挡区域，无法确认实际尺寸，数值仅为保守推测。"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 439,
+        "output_tokens": 132,
+        "estimated_cost_usd": 2.686e-05
+      }
+    },
+    {
+      "id": "pair-xhs-012-p04",
+      "variant": "with_ruler",
+      "gold_food_name_zh": "猪肝",
+      "gold_mass_g": 20.2,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 2857,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生肉片",
+        "portion_mass_g": 85.0,
+        "confidence": "low",
+        "assumptions": [
+          "基于直尺刻度估算单片肉长约6-8厘米，结合常见生肉片厚度（约2-3毫米）及密度（约1.05 g/cm³）推算总重。",
+          "假设肉片为均匀厚度的扁平状，未考虑折叠或卷曲部分对体积的额外贡献。",
+          "图中可见4片肉，总估算重量基于视觉尺寸与标准生肉密度的乘积近似值。"
+        ],
+        "scale_reference_used": true,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 471,
+        "output_tokens": 161,
+        "estimated_cost_usd": 3.097e-05
+      }
+    },
+    {
+      "id": "pair-xhs-012-p05",
+      "variant": "with_ruler",
+      "gold_food_name_zh": "猪五花",
+      "gold_mass_g": 30.0,
+      "schema_valid": false,
+      "fallback_used": true,
+      "error_code": "ValidationError",
+      "latency_ms": 3744,
+      "prediction": null,
+      "usage": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "pair-xhs-012-p05",
+      "variant": "without_ruler",
+      "gold_food_name_zh": "猪五花",
+      "gold_mass_g": 30.0,
+      "schema_valid": true,
+      "fallback_used": false,
+      "error_code": null,
+      "latency_ms": 1631,
+      "prediction": {
+        "is_food": true,
+        "food_name_zh": "生五花肉片",
+        "portion_mass_g": 60.0,
+        "confidence": "low",
+        "assumptions": [
+          "基于常见生五花肉片的平均厚度（约2-3毫米）和单片面积进行体积估算。",
+          "图中可见约3至4片重叠摆放的肉片，假设其总展开面积约为150-200平方厘米。",
+          "未计入盘子重量，且因缺乏刻度参照，重量为基于视觉密度的保守推测值。"
+        ],
+        "scale_reference_used": false,
+        "needs_user_correction": true
+      },
+      "usage": {
+        "input_tokens": 439,
+        "output_tokens": 143,
+        "estimated_cost_usd": 2.808e-05
+      }
+    },
+    {
+      "id": "pair-xhs-012-p06",
+      "variant": "without_ruler",
+      "gold_food_name_zh": "猪肝",
+      "gold_mass_g": 50.3,
+      "schema_valid": false,
+      "fallback_used": true,
+      "error_code": "ValidationError",
+      "latency_ms": 1254,
+      "prediction": null,
+      "usage": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    {
+      "id": "pair-xhs-012-p06",
+      "variant": "with_ruler",
+      "gold_food_name_zh": "猪肝",
+      "gold_mass_g": 50.3,
+      "schema_valid": false,
+      "fallback_used": true,
+      "error_code": "ValidationError",
+      "latency_ms": 1729,
+      "prediction": null,
+      "usage": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "estimated_cost_usd": 0.0
+      }
+    }
+  ]
+}

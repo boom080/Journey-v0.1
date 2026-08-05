@@ -1,0 +1,122 @@
+[
+  {
+    "id": "failure-001",
+    "failure": "timeout",
+    "capability": "food_text_parse",
+    "schema": "food"
+  },
+  {
+    "id": "failure-002",
+    "failure": "invalid_json",
+    "capability": "activity_text_parse",
+    "schema": "activity"
+  },
+  {
+    "id": "failure-003",
+    "failure": "timeout",
+    "capability": "food_text_parse",
+    "schema": "food"
+  },
+  {
+    "id": "failure-004",
+    "failure": "invalid_json",
+    "capability": "activity_text_parse",
+    "schema": "activity"
+  },
+  {
+    "id": "failure-005",
+    "failure": "timeout",
+    "capability": "food_text_parse",
+    "schema": "food"
+  },
+  {
+    "id": "failure-006",
+    "failure": "invalid_json",
+    "capability": "activity_text_parse",
+    "schema": "activity"
+  },
+  {
+    "id": "failure-007",
+    "failure": "timeout",
+    "capability": "food_text_parse",
+    "schema": "food"
+  },
+  {
+    "id": "failure-008",
+    "failure": "invalid_json",
+    "capability": "activity_text_parse",
+    "schema": "activity"
+  },
+  {
+    "id": "failure-009",
+    "failure": "timeout",
+    "capability": "food_text_parse",
+    "schema": "food"
+  },
+  {
+    "id": "failure-010",
+    "failure": "invalid_json",
+    "capability": "activity_text_parse",
+    "schema": "activity"
+  },
+  {
+    "id": "failure-011",
+    "failure": "timeout",
+    "capability": "food_text_parse",
+    "schema": "food"
+  },
+  {
+    "id": "failure-012",
+    "failure": "invalid_json",
+    "capability": "activity_text_parse",
+    "schema": "activity"
+  },
+  {
+    "id": "failure-013",
+    "failure": "timeout",
+    "capability": "food_text_parse",
+    "schema": "food"
+  },
+  {
+    "id": "failure-014",
+    "failure": "invalid_json",
+    "capability": "activity_text_parse",
+    "schema": "activity"
+  },
+  {
+    "id": "failure-015",
+    "failure": "timeout",
+    "capability": "food_text_parse",
+    "schema": "food"
+  },
+  {
+    "id": "failure-016",
+    "failure": "invalid_json",
+    "capability": "activity_text_parse",
+    "schema": "activity"
+  },
+  {
+    "id": "failure-017",
+    "failure": "timeout",
+    "capability": "food_text_parse",
+    "schema": "food"
+  },
+  {
+    "id": "failure-018",
+    "failure": "invalid_json",
+    "capability": "activity_text_parse",
+    "schema": "activity"
+  },
+  {
+    "id": "failure-019",
+    "failure": "timeout",
+    "capability": "food_text_parse",
+    "schema": "food"
+  },
+  {
+    "id": "failure-020",
+    "failure": "invalid_json",
+    "capability": "activity_text_parse",
+    "schema": "activity"
+  }
+]
