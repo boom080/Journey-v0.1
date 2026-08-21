@@ -71,6 +71,7 @@ def test_external_agent_requires_key_and_positive_budget(monkeypatch) -> None:
 def test_openai_compatible_provider_requires_base_url(monkeypatch) -> None:
     monkeypatch.setenv("AGENT_PROVIDER", "openai_compatible")
     monkeypatch.setenv("AGENT_API_KEY", "test-placeholder")
+    monkeypatch.setenv("AGENT_DEFAULT_MODEL", "test-compatible-model")
     monkeypatch.setenv("AGENT_DAILY_BUDGET_USD", "1")
     monkeypatch.setenv("AGENT_API_BASE_URL", "")
     get_settings.cache_clear()
