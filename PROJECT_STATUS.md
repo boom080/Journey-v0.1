@@ -1,6 +1,6 @@
 # Journey 项目交接状态
 
-> 更新时间：2026-08-13
+> 更新时间：2026-08-21
 > 用途：新对话的仓库现场快照，不替代 `AGENTS.md`、`docs/JOURNEY_REFACTOR_PLAN.md`、
 > `docs/ARCHITECTURE_DECISIONS.md` 或 `docs/EXECUTION_LOG.md`。若内容冲突，以代码核查和上述
 > 单一事实源为准。
@@ -64,14 +64,14 @@ production 运行、Web HTTPS export 和 Caddy 配置均已验证；Docker Hub �
 | 项目 | 当前事实 |
 |---|---|
 | 当前分支 | `codex/journey-migration-baseline` |
-| 远程仓库 | `journey-v1` → private `boom080/journey_v1`；旧 `origin` 仍为 `boom080/fitness` |
-| 当前 HEAD | `2654c4308279a95f9fd8d45109807373b518202d`，迁移基线提交 |
-| 工作区状态 | 2026-08-13 本轮收口检查时共 120 项变化：90 项已跟踪修改、30 项未跟踪；均尚未提交 |
-| 主要原因 | 阶段 8 production、阶段 12 local-first/生活灵感及阶段 13 Demo 封板实现与证据 |
-| 远程状态 | 迁移基线已推送；本轮变更未 commit、未 push、未创建 PR |
+| 远程仓库 | `portfolio` → public `boom080/Journey-v0.1`；`journey-v1` → private 备份；旧 `origin` 仍为 `boom080/fitness` |
+| 当前 HEAD | 封板实现、公开发布修复与发布记录均已提交；本地分支保留完整迁移历史 |
+| 工作区状态 | 2026-08-21 封板代码、CI 修复与发布记录均已形成提交 |
+| 主要原因 | 阶段 8/12/13 Demo 封板实现已形成 Git 基线，并以干净快照发布为作品集 |
+| 远程状态 | 公开仓库 `main` 已推送；GitHub Actions run `32452754248` 的 backend/mobile/web-e2e 全部通过；未创建 PR |
 
-迁移基线风险已解除；当前 production、local-first 与生活灵感改动仍属于用户工作区，后续严禁执行
-`git reset --hard`、`git clean`、强制 checkout 或任何未授权清理。commit/push 仍需用户单独授权。
+迁移基线风险已解除；production、local-first、生活灵感与阶段 13 变更已提交。后续仍严禁执行
+`git reset --hard`、`git clean`、强制 checkout 或任何未授权清理；新的 commit/push 仍需用户授权。
 
 敏感与生成文件状态：
 
@@ -285,8 +285,8 @@ Journey Theme 已固定浅色。应用主体保持浅色，但原生系统弹窗
 
 | 命令/检查 | 结果 |
 |---|---|
-| `pwd`、`git status --short`、`ls -la` | 当前为 Journey 根目录；最终 115 项未提交变化，无目录切换或清理 |
-| `git branch --show-current`、`git log -1`、`git remote -v` | `codex/journey-migration-baseline`；HEAD `2654c43`；迁移基线远端不变 |
+| `pwd`、`git status --short`、`ls -la` | 当前为 Journey 根目录；封板代码已形成提交，无目录切换或清理 |
+| `git branch --show-current`、`git log -1`、`git remote -v` | 本地为 `codex/journey-migration-baseline`；新增 public `portfolio` remote 指向 `boom080/Journey-v0.1` |
 | `docker compose ps` | 本机 API/db 已用临时宿主 PostgreSQL 端口 55432 恢复；API healthy |
 | `GET /health/live`、`GET /health/ready` | 均正常；ready 的 database/rag=`ok`，明确显示 REAL DeepSeek |
 | Alembic `downgrade 0006` → `upgrade 0007` + `check` | PASS；当前 `0007_life_inspirations (head)`，无待生成操作 |
@@ -301,7 +301,8 @@ Journey Theme 已固定浅色。应用主体保持浅色，但原生系统弹窗
 | Web/iOS/Android Expo export | Web 14 条静态路由、iOS/Android Hermes bundle 均成功 |
 | `docker compose config --quiet` + production config | PASS；production 生活灵感自动预览为 `false` |
 | Android/iOS Development Build | Pixel_9 与 iPhone 17 Pro 构建、安装并加载当前 JS bundle；无业务 fatal |
-| 敏感信息检查 | `.env` 被忽略；交接文档不含真实 Key；未读取或输出 `.env` 内容 |
+| 敏感信息检查 | 工作树与全部待发布 Git blob 的高置信 Key/Token/私钥扫描为 0；`.env` 被忽略且未上传，未读取或输出其值 |
+| GitHub Actions `32452754248` | backend、mobile、web-e2e 三个 job 全部通过；CI 固定 Mock、空 API Key、零预算 |
 
 最新机器报告：`reports/backend/junit.xml`、`reports/backend/coverage.xml`、
 `reports/backend/blackbox-junit.xml`、`reports/evals/latest.json`、
@@ -331,8 +332,8 @@ Journey Theme 已固定浅色。应用主体保持浅色，但原生系统弹窗
 
 ## 10. 尚未完成的任务与风险
 
-1. **当前阶段尚未形成新 Git 基线**：历史迁移基线已在 `codex/journey-migration-baseline`
-   提交；阶段 8/12/13 的当前 115 项变化仍未提交、未 push、未创建 PR。
+1. **公开源码不等于应用上线**：阶段 8/12/13 已形成 Git 基线并发布到公开作品集仓库，但没有
+   公网服务器、Web 域名、App Store/TestFlight 或生产 SLA 证据。
 2. **local-first 发布加固未完成**：第一批范围已经实现，但 1000 条长离线故障注入、5 人盲测、
    真实设备密钥取证和公网多设备同步仍未执行；Web 只提供进程内副本，刷新后不保证保留。
 3. **小红书账号绑定/Web Research 未实现**：ADR-037 的主动分享收藏已完成，但当前 Agent 仍
@@ -347,12 +348,12 @@ Journey Theme 已固定浅色。应用主体保持浅色，但原生系统弹窗
 8. **主题发布复核**：代码主题已固定为浅色；正式商店包仍需在真实设备复核系统外观、加密密钥、
    锁屏恢复和卸载/重装行为。
 9. **本机磁盘占用**：原生生成目录约 9.1 GB；只能在明确授权和可重建验证后清理。
-10. **远端发布边界**：当前只有私有源码备份，不等于公网部署、商店发布或生产验收。
-11. **未提交工作区**：阶段 8 production、ADR-036/037、ADR-039、Eval 与文档合计 115 项
-    变化尚未形成新 Git 基线；不得在未审查时 reset/clean，也不得自动 push。
+10. **远端发布边界**：公开仓库用于源码作品集与 CI 展示，不等于公网部署、商店发布或生产验收。
+11. **历史边界**：公开仓库使用从已审计树生成的干净快照，不公开旧迁移提交中的历史邮箱元数据；
+    私有 `journey-v1` 与旧 `fitness` 仓库未被改名或破坏。
 
 ## 11. 下一步最合理的工作
 
-阶段 13 已完成。下一步最合理的工作不是继续加功能，而是在用户单独授权后，对当前 115 项阶段
-8/12/13 变更做最终差异、敏感信息、生成文件、迁移和测试证据复核，然后创建一个本地 Git 提交。
-默认不 push、不创建 PR；若用户不授权提交，则保持工作区现状并停止。
+阶段 13 和作品集发布已完成。下一步最合理的工作不是继续加功能，而是由用户选择是否进行低成本
+服务器 Web Demo 部署；若暂不部署，则保持当前公开源码 + 全绿 CI + 本机模拟器 Demo 基线，只做
+缺陷修复、依赖风险复核和求职材料维护。不得自动启动新产品阶段或创建公网资源。

@@ -2716,3 +2716,45 @@
   量化数字均附事实源或明确引用执行日志快照。
 - 知识库不能作为已上线、生产 SLA、商店发布、图片质量通过、医疗准确性或 Future 功能已实现的
   证明。
+
+## 2026-08-21：公开 GitHub 作品集发布与云端 CI 收口
+
+### 授权与发布边界
+
+- 用户明确授权将 Journey 上传 GitHub 作为公开作品集，并指定仓库名为 `Journey v0.1`；按 GitHub
+  合法仓库名落为 public `boom080/Journey-v0.1`，默认分支为 `main`。
+- 开始前执行并展示 `pwd`、`git status`、`ls -la`，确认只在 Journey 根目录操作；没有 reset、
+  clean、全局 Docker 清理、PR 或对其他项目的停止/修改。
+- 旧 `boom080/fitness` 保持不变，私有 `boom080/journey_v1` 保持为迁移备份。公开仓库使用已审计
+  当前树生成的干净快照，不公开旧迁移历史中的邮箱元数据。
+
+### 敏感信息与仓库体积审计
+
+- `.env` 已被 Git 忽略且未跟踪；没有读取或打印其中的值。对待发布工作树及完整 Git blob 执行
+  高置信 API Key、GitHub Token、AWS Key 与私钥头扫描，命中 0。
+- `.env.example`、`.env.production.example` 只保留空值或显式占位；`reports/`、原始图片评测集、
+  Expo/原生构建目录、`node_modules` 与缓存未发布。
+- 待发布 Git 文件没有超大文件，最大文件约 799 KB；公开仓库添加项目描述与 AI Agent、RAG、
+  Expo、FastAPI、PostgreSQL、Docker、Pytest 等 Topics。
+
+### 发布前与云端验收
+
+- Docker 后端/评测全量 **100/100 PASS**，覆盖率 **90.69%**；26 项 Agent 门禁及 `rag-v1`、
+  `rag-v2-candidate` 两组固定 60 题 Mock Eval 通过。Requests + Pytest + Allure 网络黑盒 **2/2**。
+- 移动端逻辑 **5/5**、Jest **48/48**、TypeScript 通过；Expo lint 为 0 error、1 个既有未使用参数
+  warning；Web/iOS/Android JS export 通过，Web 共 14 路由。
+- 独立 Compose Project 使用单独端口与临时 Volume 验证 Web E2E **2/2**；第一次图片用例因 Compose
+  自动读取本机 `.env` 而误用真实图片 Provider，随后显式覆盖为 Mock 后通过，未停止其他项目。
+- GitHub Actions 前三轮分别暴露 Ruff 格式、Python `app/evals` 模块路径和测试依赖本机默认模型
+  三类环境一致性问题；失败记录全部保留。通过代码格式化、`python -m pytest` +
+  `PYTHONPATH=.:..`、测试内显式无敏感占位模型修复。
+- 最终应用代码快照 run
+  [`32452754248`](https://github.com/boom080/Journey-v0.1/actions/runs/32452754248) 的 backend、
+  mobile、web-e2e 三个 job 全部通过；CI 固定 Mock、空 API Key、零预算，不能冒充真实模型质量。
+
+### 结论与回退
+
+- 公开源码作品集已可访问：`https://github.com/boom080/Journey-v0.1`。这只证明源码、构建契约、
+  测试和 CI 可复现，不代表 Web 已公网部署、App 已上架或已形成生产 SLA。
+- `portfolio` remote 专用于公开干净快照，本地 `codex/journey-migration-baseline` 保留完整迁移历史；
+  如需撤回公开发布，应只针对 `boom080/Journey-v0.1` 操作，不影响旧仓库与私有备份。
