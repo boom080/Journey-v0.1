@@ -57,6 +57,7 @@ class FoodRecordResponse(BaseModel):
     fat_g: float | None
     source: str
     source_ref: str | None
+    version: int
     created_at: datetime
     updated_at: datetime
 
@@ -103,6 +104,7 @@ class ActivityRecordResponse(BaseModel):
     note: str | None
     source: str
     source_ref: str | None
+    version: int
     created_at: datetime
     updated_at: datetime
 
@@ -135,5 +137,6 @@ class WeightRecordResponse(BaseModel):
     weight_kg: float
     note: str | None
     source: str
+    version: int
     created_at: datetime
     updated_at: datetime

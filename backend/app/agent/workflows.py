@@ -54,9 +54,15 @@ def _citations(chunks: list[RetrievedChunk], cited_ids: list[str]) -> list[Agent
     ]
 
 
-def run_knowledge(db: Session, model_router: ModelRouter, question: str) -> WorkflowResult:
+def run_knowledge(
+    db: Session,
+    model_router: ModelRouter,
+    question: str,
+    *,
+    chunks_override: list[RetrievedChunk] | None = None,
+) -> WorkflowResult:
     started = time.perf_counter()
-    chunks = retrieve(db, question)
+    chunks = chunks_override if chunks_override is not None else retrieve(db, question)
     node_traces = [
         {
             "name": "knowledge.retrieve",
@@ -65,11 +71,39 @@ def run_knowledge(db: Session, model_router: ModelRouter, question: str) -> Work
         }
     ]
 
-    def fallback() -> KnowledgeGenerated:
-        if not chunks:
-            return KnowledgeGenerated(
-                answer="受控知识库中没有足够相关资料。你可以改写问题，或咨询合格专业人员。"
+    if not chunks:
+        output = KnowledgeGenerated(
+            answer=(
+                "insufficient_context：受控知识库中没有足够相关资料。"
+                "你可以改写问题，或咨询合格专业人员。"
             )
+        )
+        invocation = ModelInvocation(
+            output=output,
+            provider=model_router.adapter.provider,
+            model=model_router.model_for("knowledge_answer"),
+            input_tokens=0,
+            output_tokens=0,
+            retries=0,
+            latency_ms=0,
+            estimated_cost_usd=0,
+            fallback_used=False,
+            error_code="insufficient_context",
+        )
+        node_traces.append(
+            {
+                "name": "knowledge.generate",
+                "latency_ms": 0,
+                "output_summary": {
+                    "citation_count": 0,
+                    "generation_skipped": "insufficient_context",
+                },
+                "error_code": None,
+            }
+        )
+        return WorkflowResult(output.answer, [], invocation, None, node_traces)
+
+    def fallback() -> KnowledgeGenerated:
         answer = chunks[0].text
         if any(word in question for word in ("疾病", "药", "处方", "胸痛", "晕厥", "孕期")):
             answer = (
@@ -179,13 +213,30 @@ def _run_graph(
                     summary=summary,
                     cited_chunk_ids=[chunk.chunk_id for chunk in chunks[:2]],
                 )
+            weight_change = recent.get("weight_change_kg")
+            weight_sentence = (
+                f"体重变化 {weight_change} kg。"
+                if weight_change is not None
+                else "体重记录不足，暂不判断变化。"
+            )
             summary = (
-                f"最近记录覆盖 {recent.get('days_with_records', 0)} 天，"
+                f"近 {recent.get('range_days', 7)} 天记录覆盖 "
+                f"{recent.get('days_with_records', 0)} 天，"
                 f"饮食 {recent.get('food_count', 0)} 条、"
                 f"运动 {recent.get('activity_count', 0)} 条、"
                 f"体重 {recent.get('weight_count', 0)} 条；"
                 f"累计摄入 {recent.get('intake_kcal', 0)} kcal，"
                 f"运动消耗 {recent.get('activity_kcal', 0)} kcal。"
+                + (
+                    f"静息消耗估算 {recent.get('resting_energy_kcal_per_day')} kcal/天，"
+                    f"扣除静息与已记录运动后的记录口径估算余量 "
+                    f"{recent.get('estimated_energy_balance_kcal')} kcal；"
+                    "该值不等于 TDEE，漏记饮食也会使结果失真。"
+                    if recent.get("resting_energy_kcal_per_day") is not None
+                    else f"静息消耗暂不可估算：{recent.get('energy_estimate_note', '画像信息不足')}"
+                )
+                + weight_sentence
+                +
                 "这是基于结构化数据的确定性总结，可继续观察记录完整性和趋势。"
             )
             return WeeklySummaryGenerated(

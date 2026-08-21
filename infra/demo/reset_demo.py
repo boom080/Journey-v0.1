@@ -23,18 +23,24 @@ def call(
     token: str | None = None,
     payload: dict | None = None,
     idempotency_key: str | None = None,
+    expected_version: int | None = None,
+    allow_not_found: bool = False,
 ) -> dict | None:
     headers = {"Content-Type": "application/json"}
     if token:
         headers["Authorization"] = f"Bearer {token}"
     if idempotency_key:
         headers["Idempotency-Key"] = idempotency_key
+    if expected_version is not None:
+        headers["If-Match-Version"] = str(expected_version)
     body = json.dumps(payload).encode() if payload is not None else None
     request = urllib.request.Request(f"{BASE_URL}{path}", body, headers, method=method)
     try:
         with urllib.request.urlopen(request, timeout=30) as response:
             return json.load(response) if response.status != 204 else None
     except urllib.error.HTTPError as error:
+        if allow_not_found and error.code == 404:
+            return None
         detail = error.read().decode(errors="replace")[:500]
         raise RuntimeError(f"{method} {path} returned HTTP {error.code}: {detail}") from error
 
@@ -48,7 +54,12 @@ def delete_records(token: str, resource: str) -> int:
         if not items:
             return deleted
         for item in items:
-            call(f"/api/v1/{resource}/{item['id']}", method="DELETE", token=token)
+            call(
+                f"/api/v1/{resource}/{item['id']}",
+                method="DELETE",
+                token=token,
+                expected_version=item["version"],
+            )
             deleted += 1
 
 
@@ -67,10 +78,13 @@ deleted = sum(
     for resource in ("food-records", "activity-records", "weight-records")
 )
 
+profile = call("/api/v1/profile", token=token)
+assert profile is not None
 call(
     "/api/v1/profile",
     method="PATCH",
     token=token,
+    expected_version=profile["version"],
     payload={
         "display_name": "Journey 演示用户",
         "timezone": "Asia/Shanghai",
@@ -82,10 +96,12 @@ call(
     },
 )
 today = datetime.now(timezone.utc)
+goal = call("/api/v1/goals/current", token=token, allow_not_found=True)
 call(
     "/api/v1/goals/current",
     method="PUT",
     token=token,
+    expected_version=goal["version"] if goal else 0,
     payload={
         "kind": "lose_fat",
         "target_weight_kg": 63,

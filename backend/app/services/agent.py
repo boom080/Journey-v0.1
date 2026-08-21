@@ -21,6 +21,7 @@ from app.agent.model_router import (
 from app.agent.planner import create_plan, deterministic_plan, redacted_plan
 from app.agent.policy import validate_plan
 from app.agent.replanner import choose_recovery
+from app.agent.specialists import selected_specialists, specialist_for_tool
 from app.agent.tool_registry import ToolRuntime, execute_registered_tool
 from app.agent.tools import (
     add_tool_trace,
@@ -117,6 +118,54 @@ def _confirmation_progress(db: Session, run: AgentRun) -> AgentConfirmationProgr
 
 def _public_intents(intent_names: list[str]) -> list[IntentItem]:
     return [IntentItem(intent=name, confidence=1, segment="") for name in intent_names]
+
+
+def _agents_for_intents(intent_names: list[str]) -> list[str]:
+    tools: list[str] = []
+    for intent in intent_names:
+        if intent in {"food", "activity", "weight"}:
+            tools.append(f"{intent}.parse_candidate")
+        elif intent == "knowledge":
+            tools.append("knowledge.answer")
+        elif intent in {"recommendation", "weekly_summary"}:
+            tools.extend(["context.load", "knowledge.retrieve", f"{intent}.generate"])
+        elif intent == "profile":
+            tools.append("profile.read")
+        elif intent == "history":
+            tools.append("journey.read")
+    return selected_specialists(tools)
+
+
+def _add_orchestrator_traces(
+    db: Session,
+    run: AgentRun,
+    *,
+    intents: list[str],
+    plan: AgentPlan,
+    route_invocation: ModelInvocation,
+    planner_invocation: ModelInvocation,
+) -> None:
+    agents = selected_specialists([step.tool for step in plan.steps])
+    add_tool_trace(
+        db,
+        run_id=run.id,
+        tool_name="orchestrator.router",
+        started=time.perf_counter(),
+        input_summary={"input_length": run.input_length},
+        output_summary={"intents": intents, "selected_agents": agents},
+        error_code=route_invocation.error_code,
+        latency_ms=route_invocation.latency_ms,
+    )
+    add_tool_trace(
+        db,
+        run_id=run.id,
+        tool_name="orchestrator.planner",
+        started=time.perf_counter(),
+        input_summary={"intent_count": len(intents)},
+        output_summary={"step_count": len(plan.steps), "selected_agents": agents},
+        error_code=planner_invocation.error_code,
+        latency_ms=planner_invocation.latency_ms,
+    )
 
 
 def _run_agent_v1(
@@ -312,6 +361,7 @@ def _run_agent_v1(
         fallback_used=fallback_used,
         safety_notice=SAFETY_NOTICE,
         usage=usage.model_copy(update={"latency_ms": run.latency_ms}),
+        selected_agents=_agents_for_intents(run.intents),
     )
 
 
@@ -357,6 +407,14 @@ def _run_agent_v2(
     )
     invocations = [route_invocation, planner_invocation]
     run.intents = [item.intent for item in intent_plan.intents]
+    _add_orchestrator_traces(
+        db,
+        run,
+        intents=run.intents,
+        plan=plan,
+        route_invocation=route_invocation,
+        planner_invocation=planner_invocation,
+    )
 
     policy_started = time.perf_counter()
     decision = validate_plan(plan)
@@ -440,6 +498,8 @@ def _run_agent_v2(
                 status=execution.status,
                 message=execution.message,
                 error_code=execution.error_code,
+                specialist=execution.specialist,
+                duration_ms=execution.latency_ms,
             )
         )
         event_type = (
@@ -459,6 +519,7 @@ def _run_agent_v2(
                 step_id=execution.step_id,
                 tool=execution.tool,
                 status=execution.status,
+                specialist=execution.specialist,
             )
         )
         sequence += 1
@@ -518,6 +579,7 @@ def _run_agent_v2(
         fallback_used=fallback_used,
         safety_notice=SAFETY_NOTICE,
         usage=usage.model_copy(update={"latency_ms": run.latency_ms}),
+        selected_agents=selected_specialists([step.tool for step in plan.steps]),
     )
 
 
@@ -587,6 +649,8 @@ def _collect_v3_executions(
                 status=execution.status,
                 message=execution.message,
                 error_code=execution.error_code,
+                specialist=execution.specialist,
+                duration_ms=execution.latency_ms,
             )
         )
         event_type = (
@@ -606,6 +670,7 @@ def _collect_v3_executions(
                 step_id=execution.step_id,
                 tool=execution.tool,
                 status=execution.status,
+                specialist=execution.specialist,
             )
         )
         sequence += 1
@@ -657,6 +722,14 @@ def _run_agent_v3(
     )
     invocations = [route_invocation, planner_invocation]
     run.intents = [item.intent for item in intent_plan.intents]
+    _add_orchestrator_traces(
+        db,
+        run,
+        intents=run.intents,
+        plan=plan,
+        route_invocation=route_invocation,
+        planner_invocation=planner_invocation,
+    )
 
     policy_started = time.perf_counter()
     decision = validate_plan(plan)
@@ -795,6 +868,7 @@ def _run_agent_v3(
         fallback_used=fallback_used,
         safety_notice=SAFETY_NOTICE,
         usage=usage.model_copy(update={"latency_ms": run.latency_ms}),
+        selected_agents=selected_specialists([step.tool for step in plan.steps]),
     )
 
 
@@ -922,6 +996,7 @@ def resume_agent_run(
             latency_ms=run.latency_ms,
             estimated_cost_usd=float(run.estimated_cost_usd),
         ),
+        selected_agents=selected_specialists([step.tool for step in plan.steps]),
     )
 
 
@@ -974,6 +1049,8 @@ def get_run_trace(db: Session, user: User, run_id: uuid.UUID) -> AgentRunTrace:
         and run.checkpoint_expires_at <= datetime.now(UTC)
     ):
         checkpoint_status = "expired"
+    progress = _confirmation_progress(db, run)
+    confirmation_progress = progress if progress.total else None
     return AgentRunTrace(
         run_id=run.id,
         thread_id=run.thread_id,
@@ -999,7 +1076,16 @@ def get_run_trace(db: Session, user: User, run_id: uuid.UUID) -> AgentRunTrace:
         error_code=run.error_code,
         created_at=run.created_at,
         completed_at=run.completed_at,
-        tools=[AgentToolTrace.model_validate(tool) for tool in tools],
+        tools=[
+            AgentToolTrace.model_validate(tool).model_copy(
+                update={"specialist": specialist_for_tool(tool.tool_name)}
+            )
+            for tool in tools
+        ],
+        selected_agents=selected_specialists(
+            [step.get("tool", "") for step in (run.plan or {}).get("steps", [])]
+        ),
+        confirmation_progress=confirmation_progress,
     )
 
 

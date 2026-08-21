@@ -415,24 +415,22 @@
   `knowledge.safe_summary`、`recommendation.rules_fallback` 两条确定性替代路径。
 - `AGENT_V3_ENABLED=false` 可回退 v2；候选确认与核心业务表不受影响。系统仍是单 Agent
   模块化单体，不是后台长任务、多 Agent 对话或医疗决策系统。
-- 当前全量基线为 85 条测试、90.49% 后端覆盖率、362 条样本和 26 项门禁；Requests +
+- 阶段 11 当时的全量基线为 85 条测试、90.49% 后端覆盖率、362 条样本和 26 项门禁；Requests +
   Pytest + Allure 隔离网络黑盒 1/1、移动端 31+5、Web E2E 2/2 和三端 JS 构建通过。
 - 真实 DeepSeek v3 固定门禁验证 4 个 checkpoint 计划和 2 个恢复选择，10 次调用总费用
   `$0.00171864`，全部门禁通过。图片质量 No-Go、公网/商店未发布等既有边界不变。
 
-## 19. 浏览器权限与离线现状补充（2026-08-04）
+## 19. 浏览器权限与阶段 12 前离线基线（2026-08-04）
 
 - Journey App 的 Agent 工具注册表当前只包含饮食、运动、体重、画像、Journey、知识检索、
   建议和周总结等受控业务工具；共享契约中也没有 `browser`、`web.search` 或小红书工具。
 - `knowledge.retrieve` 只检索项目受控知识库，模型 Provider 只负责模型调用；当前 Agent 不能
   打开通用浏览器、使用登录态、搜索小红书或把网页自动写入 RAG。
-- 当前移动端使用 SecureStore 保存会话和加密密钥，用 AsyncStorage 保存加密待同步队列；
+- 当时移动端使用 SecureStore 保存会话和加密密钥，用 AsyncStorage 保存加密待同步队列；
   离线可以排队新增饮食、运动、体重，也能使用确定性本地意图和内置常识。
-- 画像/目标当前仍以在线 API 查询为主，离线编辑被禁用；Journey 只能读取已有 React Query
+- 画像/目标当时仍以在线 API 查询为主，离线编辑被禁用；Journey 只能读取已有 React Query
   缓存。编辑/删除的离线排队、完整本地数据副本、版本冲突和退出账号彻底清理尚未实现。
-- 因此当前产品只能称为“部分离线可记录”，不能称为 local-first。目标矩阵与 UI 改造提案见
-  `docs/product/LOCAL_FIRST_AI_UI_PROPOSAL.md`。其中方案 C 视觉子项已经实现，但本地数据目标仍
-  为 Proposed，不能据此宣称代码已经 local-first。
+- 因此这是 ADR-036 实现前的“部分离线可记录”基线；当前实现结论以第 21 节为准。
 
 ## 20. 阶段 12 暖白薄荷首页现状补充（2026-08-04）
 
@@ -445,8 +443,67 @@
   待同步和内置常识，不承诺离线 Agent、图片或完整画像/历史编辑。
 - 320 × 844 和 390 × 844 本地 Web 手机视口视觉核对通过；修正了首轮实现中标题末字孤行、
   320 pt 标题省略和指标数字截断问题。
-- 移动端当前为 33 条 Jest 组件/契约测试与 5 条逻辑测试；新增首页组件进入覆盖率统计后，全局
+- 移动端当时为 33 条 Jest 组件/契约测试与 5 条逻辑测试；新增首页组件进入覆盖率统计后，全局
   statements 75.56%、branches 65.16%、functions 72.09%、lines 77.77%。核心 Web E2E 2/2、
   Web/iOS/Android Expo export 均通过。
 - E2E 临时强制 API 为 Mock、空模型 Key和零预算；测试后已恢复 `.env` 选择的 DeepSeek
   Provider并确认 API healthy。没有产生真实模型调用、修改数据库 schema 或改动 Agent/RAG。
+
+## 21. 阶段 12 ADR-036 当前实现（2026-08-05）
+
+- 原生移动端已实现每账户 AES-256-GCM 加密副本，账户密钥存入 SecureStore；范围为画像、目标、
+  最近 90 天饮食/运动/体重及 Journey。Web 明确只使用进程内副本。
+- 离线记录新增/编辑/删除、画像/目标变更先进入 1000 条上限的 Outbox；创建使用幂等键，连续
+  动作合并，联网时拉取并同步，不把离线规则冒充在线 Agent。
+- Alembic `0006_local_first` 为五类资源增加正整数版本；更新/删除以 `If-Match-Version` 做乐观
+  并发控制，过期版本返回 `409 sync_conflict`，客户端显示字段级本机/云端选择。
+- 退出、账户切换和会话失效清除密文、副本、Outbox、冲突、账户密钥、旧队列和查询缓存，并
+  阻止在途同步写回。
+- 当前全量基线为 87 条后端/评测测试、90.94% 覆盖率、362 条样本/26 项门禁、41 条移动 Jest、
+  5 条逻辑测试和 2 条 Web E2E；Android 16 与 iOS 26.5 当前 Debug Development Build 均已
+  构建、安装并运行 JS bundle。1000 条故障注入、真实设备密钥取证和公网多设备仍属发布加固。
+
+## 22. 阶段 12 ADR-037 生活灵感当前实现（2026-08-10）
+
+- 新增认证后的 `/api/v1/inspirations/preview`、create/list/delete 契约和 Alembic
+  `0007_life_inspirations`。数据按用户隔离，保存 URL、来源、标题、短摘要、日期、标签和固定
+  `inspiration_only` 证据级别；同一用户不能重复保存同一规范化 URL。
+- 自动预览不是通用浏览器：只接受小红书公开 HTTPS 白名单，逐次校验 DNS 和重定向，拒绝私网、
+  自定义端口和凭据 URL；无 Cookie、8 秒超时、3 次重定向、256 KB 上限，只解析 HTML
+  title/description 元数据。失败或出现 Prompt Injection 标记时回退手动填写。
+- 移动端新增“我的 → 生活灵感”，支持用户主动粘贴、预览/手动摘要、标签编辑、显式确认、来源
+  打开和两步删除；离线不发起预览或保存请求。该页面不改变首页三个一级入口。
+- 生活灵感不注册为 Agent 工具，不写入 RAG 或健康事实表，也不参与营养数值与健康建议；
+  production 默认关闭自动预览。账号绑定、Cookie、自动登录、批量/后台抓取和通用 Web
+  Research 均未实现。
+- 全量基线更新为 93 条后端/评测测试、90.72% 覆盖率、362 条样本/26 项门禁、45 条移动 Jest、
+  5 条逻辑测试、1 条 Requests + Pytest + Allure 网络黑盒和 2 条 Mock Web E2E；Web 14 路由、
+  iOS/Android Hermes export 与 `0007` 可逆迁移均通过。本轮真实模型调用为 0。
+
+## 23. 阶段 13 秋招 Demo 封板当前实现（2026-08-10）
+
+- Agent v3 的执行状态机未被推翻。新增 `agent/specialists.py`，由一个 Orchestrator 把已注册
+  工具映射到 Record、Health Knowledge、Journey Summary 三个职责受限的 Specialist；三者
+  不互相聊天、不持有独立数据库连接、不绕过 Policy Guard 和 Confirmation Gate。
+- 真实数据流为 Router → Planner → Specialist allowlist → Tool → Observation → Verifier /
+  Replanner → Confirmation / Resume → Orchestrator 汇总。Run、Step、Observation 和 Trace
+  记录已选 Agent、工具、状态、候选数、检索文档/分数、数据范围和耗时，不记录隐藏思维过程。
+- 固定复合场景“今天中午吃了一份牛肉面，晚上跑了5公里，我这周减脂情况怎么样？”可同时
+  产生两条待确认记录并读取 7 天画像/目标/饮食/运动/体重；只有逐条确认后才写入 PostgreSQL，
+  Resume 会重新读取最新事实。
+- RAG 仍使用 PostgreSQL 内嵌知识表与本地确定性 96 维字符哈希 embedding，没有新增外部向量
+  服务。v1 为 `top_k=3`、threshold `0.16`、无 rerank；v2 为 `top_k=5`、threshold `0.10`，
+  增加可审计的 topic/alias/semantic hybrid rerank。当前受控知识源为 4 个 source slug，摄取
+  chunk size 420、overlap 0；无检索结果时直接返回 `insufficient_context`，不调用模型编造。
+- `evals/datasets/rag_eval_v1.json` 固定 60 题（40 个有答案、20 个拒答/困难负例）。脚本分层
+  输出 Recall/Precision@1/3/5、MRR、nDCG@5、Groundedness、Answer Relevance、Citation
+  Correctness、Abstention Accuracy、p50/p95、Token、费用、Provider、Model 与配置哈希。
+- 最终真实 DeepSeek RAG v2 报告：Recall@1=0.7083、Recall@3/5=1.0、MRR=0.9625、
+  Groundedness/Answer Relevance=0.9625、Citation Correctness=0.9083、Abstention=1.0；
+  41 次真实生成、19 次确定性拒答，费用 `$0.00624232`。第一轮 Abstention 0.6833 的失败报告
+  保留，不能只展示成功结果。
+- Journey 页面在原有多日记录上增加 7/30 天选择、摄入/运动/体重趋势、目标、AI 总结与建议；
+  未改成今日 Timeline。图片能力仍是 Development 实验性候选，正式质量门禁仍为 No-Go。
+- 当前全量基线为后端 100 条、覆盖率 90.60%、移动 Jest 46 条 + 逻辑 5 条、Mock/真实网络
+  黑盒、Web E2E 2 条、三端 export 与 iOS/Android Debug 模拟器；Docker `demo_up.sh` 已从
+  `down` 后完成 preflight、build、health、RAG ready 和 Alembic head 验收。

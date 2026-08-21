@@ -753,7 +753,7 @@ Agent/RAG 核心路径可测且轨迹可见后，执行阶段 7 量化评测和�
 
 ## 阶段 8：staging、构建与秋招展示
 
-**Status: Completed**
+**Status: Completed / Revalidated**
 
 ### 阶段目标
 
@@ -784,6 +784,20 @@ Agent/RAG 核心路径可测且轨迹可见后，执行阶段 7 量化评测和�
 - [x] 验证本机端口、CORS、网络策略和环境隔离；公网真机访问与 HTTPS 证书明确延期到未来
   服务器发布任务，不作为阶段 8 验收项。
 - [x] 为离线健康记录队列确定并验证本地加密、保留期限、注销清除和设备备份策略。
+
+#### 单服务器 Docker production 复验（2026-08-05）
+
+- [x] 新增独立 `compose.production.yaml`：PostgreSQL、FastAPI、Expo Web 和 Caddy HTTPS 网关
+  使用同一 Compose 编排；只有 80/443 对公网发布，数据库/API 端口不映射到宿主机。
+- [x] production 强制关闭测试账号播种和真实图片识别；Agent 默认 Mock/零预算，真实文字模型
+  仍需单独满足供应商、Key、价格和正预算门禁。
+- [x] API/PostgreSQL 隔离 production project 启动、live/ready 与环境安全值通过；初次验证为
+  `0005_agent_v3`，ADR-036 后已重新构建并确认自动迁移到 `0006_local_first (head)`；Web 13
+  路由 HTTPS production export 通过；Caddy 2.11.4 官方二进制配置验证通过。
+- [x] 补充服务器初始化、`.env.production`、DNS/HTTPS、防火墙、备份、升级、回退和移动端 HTTPS
+  接入手册；明确 Docker 不替代 iOS/Android 签名与商店交付。
+- [ ] 本机四容器整栈启动仍被 Docker Hub anonymous token 网络超时阻塞；需在可正常访问 Docker
+  Hub 的服务器执行 `up -d --build --wait` 和 HTTPS smoke 后，才能形成真实公网部署证据。
 
 #### 构建
 
@@ -894,12 +908,11 @@ Agent/RAG 核心路径可测且轨迹可见后，执行阶段 7 量化评测和�
 ### 下一阶段如何开始
 
 当前没有自动下一阶段。MVP 和秋招展示完成后，用户可以单独授权本地 Git 提交、服务器部署、
-签名发布或上游依赖升级；当前范围只包含文字与食物图片候选，其他阶段 9 能力仍须从 Backlog
-中逐项立项，不批量启动。
+签名发布或上游依赖升级；封板外能力统一进入 Post-Demo / Future，后续必须逐项立项，不批量启动。
 
 ---
 
-## 阶段 9：后续多模态与平台集成
+## 阶段 9：食物图片实验与 Post-Demo / Future 多模态
 
 **Status: Closed / No-Go（仅获授权的食物图片单项执行完毕；估重与 ADR-031 识别门禁均失败；2026-07-31）**
 
@@ -920,7 +933,7 @@ Agent/RAG 核心路径可测且轨迹可见后，执行阶段 7 量化评测和�
 - 对象存储/异步任务配置（仅有真实需求时）
 - 专项 `evals/` 数据集与隐私文档
 
-### Backlog Checklist
+### Post-Demo / Future Checklist
 
 - [ ] 食物图片识别、份量估算和用户校正（当前唯一获授权单项；真实视觉质量门禁通过后勾选）。
   - [x] Proposed ADR、隐私边界、量化标准和回退矩阵先于实现固化。
@@ -990,6 +1003,11 @@ Agent/RAG 核心路径可测且轨迹可见后，执行阶段 7 量化评测和�
 - [ ] 手机号身份绑定和安全找回。
 - [ ] HealthKit/Health Connect 授权、同步和撤销。
 - [ ] 通知、提醒和用户可控频率。
+
+以上未勾选能力全部为 Post-Demo / Future，不是近期计划，也不构成后续 Codex 的默认授权。
+其中语音输入/转文字、视频动作识别、微信登录、Apple/Google/第三方 OAuth、手机验证码、手机号
+绑定、邮箱验证码/验证/找回密码、HealthKit、Health Connect、Push、自动抓取小红书、通用浏览器、
+自由网页搜索和复杂社交均暂停。已存在的兼容数据字段不得仅为计划收口而破坏性删除。
 
 ### 验收标准
 
@@ -1196,19 +1214,21 @@ Allure 报告，但继续保留 HTTPX/TestClient、JUnit 和 Coverage。
 
 ## 阶段 12：本地优先与 AI 原生体验
 
-**Status: In Progress（方案 C 视觉子项已实现；本地数据与小红书仍待确认）**
+**Status: Completed（ADR-036、ADR-037 均已 Accepted）**
 
 ### 阶段目标
 
 针对用户指出的离线能力割裂和首页复古、方正、不够智能的问题，完成离线能力矩阵、同步边界、
 首页信息架构、视觉提案和量化标准；同时核对当前 Agent 浏览器权限及小红书可行接入路径。
-用户确认方案 C 后，本阶段范围仅扩展到首页视觉子项；本地数据、数据库/API、Agent 工具和
-小红书接入仍不得自动实施。
+用户确认方案 C 后已完成首页视觉；2026-08-05 完成 ADR-036 本地数据、数据库/API 版本控制
+和同步冲突基线；2026-08-10 完成 ADR-037“用户主动分享公开链接 + 受限预览 + 显式确认”的
+生活灵感最小闭环。账号绑定、后台抓取和通用 Web Research 仍不在本阶段范围。
 
 ### 前置条件
 
 - 阶段 11 已完成，现有 Agent、核心业务 API 和移动端页面作为事实基线；
-- ADR-036/037 在各自完整实现验收前保持 Proposed；方案 C 的视觉子决策已单独确认；
+- ADR-036 已完成并转 Accepted；用户已用“执行下一步计划”确认 `NEXT_TASK.md` 中 ADR-037 的
+  四项保守边界，专项实现与验收完成后转 Accepted；
 - 任何小红书或通用网页能力都不能使用账号密码、Cookie、自动登录或未经确认的抓取方式。
 
 ### 涉及目录
@@ -1220,8 +1240,12 @@ Allure 报告，但继续保留 HTTPX/TestClient、JUnit 和 Coverage。
 - `apps/mobile/src/app/(tabs)/index.tsx`
 - `apps/mobile/src/components/home-overview.tsx`、`screen-shell.tsx`
 - `apps/mobile/src/theme/theme-provider.tsx`
+- `apps/mobile/src/lib/local-replica.ts`、`providers/sync-provider.tsx`、`providers/auth-provider.tsx`
+- `apps/mobile/src/app/inspirations.tsx`、`apps/mobile/src/lib/api.ts`
 - `apps/mobile/tests/`、`apps/mobile/e2e/core-flow.spec.ts`、`apps/mobile/package.json`
-- 不涉及 `backend/`、`packages/`、API 契约或数据库 migration
+- `backend/app/`、`backend/alembic/versions/0006_local_first_versions.py`、
+  `backend/alembic/versions/0007_life_inspirations.py`、`backend/tests/`
+- `packages/contracts/`、`docs/API.md`、`docs/deployment/PRIVACY_AND_SECURITY.md`
 
 ### Checklist
 
@@ -1234,46 +1258,62 @@ Allure 报告，但继续保留 HTTPX/TestClient、JUnit 和 Coverage。
 - [x] 为首屏、无障碍、离线读写、同步一致性和 Web Research 建立量化验收标准。
 - [x] 核对当前 Agent 工具白名单，确认没有浏览器或通用网页搜索能力。
 - [x] 调研小红书当前公开平台能力、数据使用边界及用户主动分享链接的合规候选路径。
-- [x] 新建 ADR-036/037，全部保持 Proposed，未把方案推测写成已实现事实。
+- [x] 定义阶段新建 ADR-036/037，并在未实现时全部保持 Proposed，未把方案推测写成事实。
 - [x] 用户确认方案 C“暖白薄荷 Journey”并授权继续完成首页视觉子项。
 - [x] 落地固定暖白＋明亮薄荷浅色主题，复用原版叶子角色，不恢复已否决的暗色 A/B 方向。
 - [x] 把统一输入、快捷提示、今日指标和轻量 Agent 状态落到首页，保留现有确认写入与三个一级入口。
 - [x] 准确区分在线 Agent 与离线手动记录，不把尚未实现的完整 local-first 能力写入 UI。
 - [x] 更新移动单测、布局契约、覆盖率范围和 Web E2E 首页断言。
 - [x] 完成 320/390 pt 视觉核对、TypeScript、lint、33+5 条移动测试、2 条 Web E2E 与三端 export。
-- [ ] 用户确认本地保存全部规范化记录、退出清理和显式冲突策略。
-- [ ] 用户确认小红书近期采用“主动分享链接”，或仅保留未来官方 API 规划。
-- [ ] 用户单独授权后再把剩余两项拆为实现任务；不得由视觉子项自动扩大范围。
+- [x] 用户确认第一批保存画像、目标、最近 90 天规范化记录/Journey，退出清理和字段级显式冲突。
+- [x] 原生端实现按账户 AES-256-GCM 副本，密钥存 SecureStore；Web 明确只保留进程内副本。
+- [x] 实现离线新增/编辑/删除/画像/目标 Outbox、连续动作合并、1000 条显式上限和幂等恢复。
+- [x] 新增 `0006_local_first` 和资源 `version`/`If-Match-Version`/`409 sync_conflict` 契约。
+- [x] 在“我的”实现字段级本机/云端冲突选择；退出与会话失效清除副本、Outbox、密钥和查询缓存。
+- [x] 完成迁移循环、87 条后端测试、41+5 条移动测试、2 条 Web E2E、三端 export 和双模拟器
+  Debug 构建/安装/运行。
+- [x] 用户确认小红书近期采用“主动分享公开链接”，不绑定账号、不使用 Cookie、不后台抓取。
+- [x] 实现认证后的生活灵感 preview/create/list/delete API、`0007_life_inspirations` 和共享契约。
+- [x] 实现“我的 → 生活灵感”入口、手动回退、显式确认、来源展示和两步删除。
+- [x] 完成白名单、DNS/重定向 SSRF、无 Cookie、超时、256 KB 上限、恶意元数据隔离和审计门禁。
+- [x] 明确 `inspiration_only` 不进入 Agent/RAG/健康事实层，production 默认关闭自动预览。
+- [x] 完成迁移循环、93 条后端测试、45+5 条移动测试、1 条网络黑盒、2 条 Mock Web E2E 和
+  Web/iOS/Android export；未调用真实模型。
 
 ### 验收标准
 
 - 产品文档能明确回答哪些能力离线可用、哪些必须联网、冲突和退出时如何处理；
 - 已确认方案 C 在 320 pt 以上主标题、输入和指标不截断，统一输入位于首屏，在线/离线文案准确；
 - 小红书结论有当前公开来源依据，且明确区分 Codex 的浏览工具与 Journey App Agent 的工具；
-- ADR、计划、文档索引、审计与执行日志保持同一状态：视觉子项已实现，local-first 与小红书仍 Proposed；
-- 首页视觉以外的业务代码、依赖、数据库、真实 Provider、远程仓库均无变化。
+- ADR、计划、文档索引与执行日志保持同一状态：ADR-036、ADR-037 均为 Accepted；
+- 本地副本按账户隔离和加密，退出后不可被在途任务恢复；冲突静默覆盖率为 0；
+- 数据库通过可逆 migration 增加版本列与生活灵感表，现有 Agent、RAG、真实 Provider 边界和
+  远程仓库不变；生活灵感自动进入健康事实层的记录数为 0。
 
 ### 测试方式
 
 - Markdown 链接和标题检查、`git diff --check`；
 - 对话稿与实际 App 在 390 × 844、320 × 844 视口人工核对；
-- `npm --workspace @journey/mobile run typecheck`、`lint`、`test:logic`、`test:ci`；
+- `npm --workspace @journey/mobile run typecheck`、`lint`、`test:logic`、`test:components`；
 - `npm run mobile:e2e:web`，并在执行前强制 Mock/零模型 Key、执行后恢复本机 Provider；
 - Web、iOS、Android Expo export；
-- 代码只读核对工具注册表、共享契约和移动端离线存储实现；
+- Alembic `upgrade → downgrade → upgrade`、`alembic check`、后端全量测试与 OpenAPI snapshot；
+- Android/iOS Development Build 原生构建、安装和当前 JS bundle 运行；
 - 对小红书官方/平台文档进行日期、能力和数据边界复核。
 
 ### 风险
 
-- 把已实现首页误解为完整 local-first；文案和状态必须继续基于真实离线能力；
-- 本地副本若无加密、账户隔离和冲突处理会扩大健康数据风险；
+- 把原生 local-first 误解为 Web 等价持久化；Web 当前刷新后不保证保留进程内副本；
+- 把本机工程验收误解为 1000 条故障注入、真实设备安全取证或公网多设备生产验收；
 - 小红书平台能力和协议可能变化，实施时必须重新调研；
 - 社交内容新颖但可信度不稳定，不能进入健康事实层或替代受控 RAG。
 
 ### 回退方式
 
-若首页视觉回归失败，只回退 `home-overview.tsx`、首页装配和固定浅色主题，不回退现有 API、
-Agent、数据模型或用户记录；ADR-036/037 继续 Proposed。
+若首页视觉回归失败，只回退视觉层。若同步客户端失败，可回退到在线 API；`0006_local_first`
+只有在确认没有新客户端并发写入后才可 downgrade。若生活灵感预览不稳定，关闭
+`LIFE_INSPIRATION_FETCH_ENABLED` 后保留手动标题/摘要路径；`0007_life_inspirations` 可独立
+downgrade 到 `0006_local_first`，但会删除生活灵感表，执行前必须备份并确认数据处理方式。
 
 ### 预计新增或修改的文件
 
@@ -1283,18 +1323,139 @@ Agent、数据模型或用户记录；ADR-036/037 继续 Proposed。
 - 新增对话内可视化 `journey-home-concepts.html` 与 `journey-warm-mint-home.html`
 - 新增 `apps/mobile/src/components/home-overview.tsx`
 - 修改首页、ScreenShell、主题、移动测试、E2E 和覆盖率配置
+- 新增生活灵感模型/Schema/API/服务、`0007_life_inspirations`、共享契约、移动页面和专项测试
+- 新增根目录 `qiuzhaomianshi.md`，并在 `AGENTS.md` 固化每次更新同步面试案例的规则
 
 ### 本阶段明确不做
 
-- 不实现完整本地数据副本、编辑/删除 Outbox、冲突 UI、数据库或 API 变更；
-- 不实现小红书账号绑定、自动登录、Cookie 复用、网页抓取或 Web Research；
+- 不实现小红书账号绑定、自动登录、Cookie 复用、批量/后台抓取、任意域名浏览器或 Agent
+  Web Research；仅实现用户触发的白名单元数据预览；
 - 不安装框架、不调用真实模型、不进行图片复评；
 - 不提交、push、创建 PR、公网部署或商店签名。
 
 ### 下一阶段如何开始
 
-首页视觉子项到此停止。下一步只等待用户选择：是否实施完整本地数据副本，以及小红书近期
-是否只做主动分享链接。任一选择都必须先拆为新的单一实现任务并再次确认，不自动开始。
+阶段 12 到此停止。下一步优先处理当前大批未提交的阶段 8/12 工作区变更：先由用户单独授权
+是否建立本地 Git 提交，再做完整敏感信息与差异复核；不得自动 push、创建 PR 或启动新功能。
+
+---
+
+## 阶段 13：秋招 Demo 封板——真实 LLM、Multi-Agent、RAG Eval 与交付收口
+
+**Status: Completed（2026-08-10，ADR-039 Accepted）**
+
+### 阶段目标
+
+在不推翻现有架构、不新增外围产品功能的前提下，把 Journey 收口为可稳定演示、架构清晰、
+Agent/RAG 可量化评测的 AI 健康记录 App。主演示是复合记录、确认、入库、Home/Journey 更新与
+7 天总结；Mock、真实 Provider、失败降级和 Docker 边界必须清晰可见。
+
+### 前置条件
+
+- 阶段 4 API、阶段 11 Agent v3、阶段 12 local-first 与现有 UI 均保持稳定；
+- 当前 DeepSeek Provider、预算与数据政策已经配置，Key 只存在于被忽略的 `.env`；
+- 核心服务继续由 Docker Compose 管理，移动端 Metro/Simulator 可在宿主机运行；
+- 另一 Compose Project 使用宿主 5432，Journey 不得停止它，数据库 Host Port 使用 55432。
+
+### 涉及目录
+
+- `backend/app/agent/`、`backend/app/knowledge/`、Agent API/Schema/Service/Tests；
+- `evals/datasets/rag_eval_v1.json`、`evals/run_rag_eval.py`、报告与 CI；
+- `apps/mobile/src/app/(tabs)/`、共享契约、移动测试与 Playwright；
+- `compose.yaml`、`infra/demo/`、`.github/workflows/ci.yml`；
+- README、ADR、API、架构、演示、执行日志与面试材料。
+
+### Checklist
+
+- [x] 先审计当前 Agent、RAG、evals、Provider、Trace、前端展示和 Docker 端口，不先写代码。
+- [x] 把现有 Run State 收口为 Orchestrator + Record/Knowledge/Journey Summary 三个有界 Specialist。
+- [x] 为 Specialist 建立工具 allowlist、结构化输入输出、Policy 校验和 `selected_agents` Trace。
+- [x] 精确支持主演示复合输入，生成 food/activity 两个候选并在全部确认前暂停 Summary。
+- [x] 确认后显式 Resume、重新读取数据库，返回 7 天总结、知识引用和结构化执行轨迹。
+- [x] `/health/ready` 和启动日志明确 REAL/MOCK、Provider、Model，不打印 Key。
+- [x] 审计 RAG 参数并保留 420 字符 chunk、96 维本地 embedding、PostgreSQL 向量事实。
+- [x] 建立 60 题版本化 RAG Eval Dataset，覆盖单/多文档、干扰、模糊、缺失和拒答。
+- [x] 增加 Recall@1/3/5、Precision、MRR、nDCG、Groundedness、Relevance、Citation、Abstention、
+  p50/p95、Token、Provider、Model、配置和成本报告。
+- [x] 使用同一 Dataset/bundle 对比 rag-v1 与 rag-v2-candidate；禁止 Mock 冒充 Generation 质量。
+- [x] 运行真实 DeepSeek RAG Eval，保留首轮拒答失败报告与修正后的不可覆盖报告。
+- [x] Journey 页面增加 7/30 天选择、摄入/运动/体重趋势、目标与 AI 总结，不改变多日语义。
+- [x] 图片保持“真实模型/Mock → 候选 → 用户校正 → 确认 → 保存”，不允许模型直接写库；
+  继续标记 Experimental，质量 No-Go 不变。
+- [x] 增加 Requests + Pytest + Allure 复合 Multi-Agent 黑盒与 Playwright 主链路。
+- [x] 增加断网新增 → Outbox → 恢复网络 → 自动推送 → 服务端快照一致的移动测试。
+- [x] Host Port 配置化并新增 Demo preflight/一键启动，检测端口归属而不停止其他项目。
+- [x] 完成 Docker 全量、移动端、Web E2E、三端 export、iOS/Android Debug 安装运行。
+- [x] 完成 `docker compose down → ./infra/demo/demo_up.sh`，核心服务、health、RAG 与 migration 正常。
+- [x] 更新 README、ADR、架构、Eval、API、演示、执行日志和 `qiuzhaomianshi.md` 后停止。
+
+### 验收标准
+
+- 精确复合输入的真实 DeepSeek 网络黑盒通过；未确认自动写入为 0；
+- Trace 能按 Orchestrator/Specialist 展示工具、状态、候选数、文档、范围和时延，但无思维链；
+- RAG 固定 Dataset 真实报告包含 Retrieval/Generation/工程指标，Mock Generation 明确跳过；
+- 7/30 天 Journey 使用真实业务 API；Home/Journey 在确认后更新；
+- 离线 Outbox 恢复同步测试通过；图片仍需用户校正确认；
+- Compose 一键启动 REAL/MOCK 可见、端口无冲突、API/PostgreSQL/RAG healthy、migration 为 head；
+- README 区分 Implemented、Demo Ready、Experimental、Future，不把未实现或 No-Go 写成完成。
+
+### 测试方式
+
+- Docker Pytest/TestClient、Requests/Pytest/Allure、60 题 RAG Eval、Coverage/JUnit；
+- Jest/RNTL、TypeScript、Expo lint、Playwright 真浏览器；
+- Web/iOS/Android export，以及 iPhone 17 Pro / Pixel 9 Debug 构建安装与 Metro bundle；
+- Demo preflight、Compose config、`down/up --build --wait`、live/ready、Alembic head；
+- Git diff、密钥/私钥/Key 高置信扫描和 Markdown 链接检查。
+
+### 风险
+
+- 真实 Provider 存在延迟/限流波动；30 秒有限超时和降级不等于生产 SLA；
+- RAG 知识集规模小，Citation Correctness 仍为 0.9083；不把项目级 Eval 表述为医学认证；
+- Specialist 是职责受限的协作架构，不是多个自治模型自由讨论；
+- 图片真实模型质量门禁失败，只能作为 Development 实验性候选；
+- 本机模拟器与 Compose 通过不等于公网、商店签名或真实用户生产验收。
+
+### 回退方式
+
+- `AGENT_PROVIDER=mock` 回退确定性 Demo；`AGENT_V3_ENABLED=false` 回退 v2；
+- RAG v1 配置与报告继续保留，可关闭 v2 rerank 回退；
+- Journey 7/30 UI 可回退旧默认 7 天，不改数据库；
+- 图片关闭 Feature Flag 后回到手动记录；
+- Compose 只操作 Journey Project，不删除卷、不停止其他项目。
+
+### 预计新增或修改的文件
+
+- Agent Specialist/Router/Planner/Policy/Trace/Context/Workflow 与对应 Schema、测试；
+- RAG Retriever、60 题 Dataset、Eval Runner/Tests/Reports；
+- 首页、Journey、API/Sync Provider、共享契约与 E2E；
+- Compose/CI/preflight/demo 启动脚本；
+- README、ADR、架构图、RAG 报告、演示与面试文档。
+
+### 本阶段明确不做
+
+- 不实现语音、视频、微信登录、第三方 OAuth、手机/邮箱验证码、找回密码、健康平台、Push、
+  自动小红书、通用浏览器、自由网页搜索或复杂社交；
+- 不新增微服务、独立 Vector DB、Agent 群聊、无限循环或未经确认写库；
+- 不公网部署、不商店签名、不提交、push 或创建 PR。
+
+### 下一阶段如何开始
+
+阶段 13 到此停止。后续默认只做 bug fix、演示数据、录屏和文档维护；任何新产品能力必须由用户
+单独提出并新增 Proposed ADR。若需要交付代码，下一步只能在用户明确授权后复核敏感信息并创建
+本地 Git 提交，不自动 push 或创建 PR。
+
+### 2026-08-13 封板维护记录
+
+- [x] 修复真实 Agent 超过移动端统一 10 秒阈值造成的假网络错误；Run/Resume 使用 120 秒客户端
+  窗口，确认/续跑响应不确定时通过脱敏 Run Trace 对账，不降低幂等与 Confirmation Gate。
+- [x] 清理已完成 Run 的过期“继续执行”状态；候选此前已经写入时不重复保存，明确引导编辑已有记录。
+- [x] 保留 `net_kcal` 兼容字段但 UI 改名“记录差值”；新增完整画像驱动的静息能量预测与记录口径
+  余量，资料不完整时拒绝默认估算，明确不等于完整 TDEE 或医学测量。
+- [x] Docker 后端/评测 100/100、覆盖率 90.69%，移动 Jest 48/48 + 逻辑 5/5；真实 DeepSeek
+  v4 Pro 周总结 20.4 秒返回 HTTP 200、3 条引用、无降级；ADR-040 Accepted。
+
+本记录属于阶段 13 后 bug fix 与指标语义修正，不创建阶段 14，也不改变“封板后不扩展外围功能”
+的边界。
 
 ---
 

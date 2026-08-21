@@ -12,6 +12,7 @@ from sqlalchemy import (
     Numeric,
     String,
     Text,
+    text,
 )
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column
@@ -31,6 +32,7 @@ class ActivityRecord(Base):
         CheckConstraint(
             "source IN ('manual', 'agent', 'image', 'import')", name="ck_activity_source"
         ),
+        CheckConstraint("version >= 1", name="ck_activity_records_version_positive"),
         Index("ix_activity_records_user_date", "user_id", "record_date"),
         Index("ix_activity_records_user_created", "user_id", "created_at"),
     )
@@ -49,6 +51,9 @@ class ActivityRecord(Base):
     note: Mapped[str | None] = mapped_column(Text)
     source: Mapped[str] = mapped_column(String(20), default="manual", nullable=False)
     source_ref: Mapped[str | None] = mapped_column(String(120))
+    version: Mapped[int] = mapped_column(
+        Integer, default=1, server_default=text("1"), nullable=False
+    )
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utc_now, nullable=False
     )

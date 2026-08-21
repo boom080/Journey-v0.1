@@ -42,6 +42,13 @@ AgentVerifierDecision = Literal[
     "stop",
 ]
 
+AgentSpecialist = Literal[
+    "orchestrator",
+    "record_agent",
+    "health_knowledge_agent",
+    "journey_summary_agent",
+]
+
 
 class AgentRunRequest(BaseModel):
     message: str = Field(min_length=1, max_length=500)
@@ -67,6 +74,7 @@ class AgentPlanStep(BaseModel):
     segment: str | None = Field(default=None, max_length=500)
     depends_on: list[str] = Field(default_factory=list, max_length=5)
     requires_confirmation: bool = False
+    specialist: AgentSpecialist | None = None
 
 
 class AgentPlan(BaseModel):
@@ -83,6 +91,8 @@ class AgentPlanStepResult(BaseModel):
     status: Literal["completed", "failed", "skipped", "awaiting_confirmation"]
     message: str = Field(max_length=500)
     error_code: str | None = Field(default=None, max_length=80)
+    specialist: AgentSpecialist = "orchestrator"
+    duration_ms: int = Field(default=0, ge=0)
 
 
 class AgentVerification(BaseModel):
@@ -105,6 +115,7 @@ class AgentObservation(BaseModel):
     recoverable: bool = False
     output_summary: dict[str, Any] = Field(default_factory=dict)
     allowed_alternatives: list[AgentToolName] = Field(default_factory=list, max_length=3)
+    specialist: AgentSpecialist = "orchestrator"
 
 
 class AgentRecoveryDecision(BaseModel):
@@ -223,6 +234,7 @@ class AgentRunResponse(BaseModel):
     fallback_used: bool = False
     safety_notice: str
     usage: AgentUsage
+    selected_agents: list[AgentSpecialist] = Field(default_factory=list, max_length=4)
 
 
 class AgentConfirmationRequest(BaseModel):
@@ -252,6 +264,7 @@ class AgentToolTrace(BaseModel):
     latency_ms: int
     error_code: str | None
     created_at: datetime
+    specialist: AgentSpecialist = "orchestrator"
 
 
 class AgentRunTrace(BaseModel):
@@ -280,6 +293,8 @@ class AgentRunTrace(BaseModel):
     created_at: datetime
     completed_at: datetime | None
     tools: list[AgentToolTrace]
+    selected_agents: list[AgentSpecialist] = Field(default_factory=list, max_length=4)
+    confirmation_progress: AgentConfirmationProgress | None = None
 
 
 class RecommendationGenerated(BaseModel):

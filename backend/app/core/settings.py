@@ -68,6 +68,7 @@ class Settings:
     food_image_external_upload_confirmed: bool
     food_image_max_bytes: int
     food_image_max_dimension: int
+    life_inspiration_fetch_enabled: bool
     seed_builtin_knowledge: bool
 
 
@@ -334,7 +335,7 @@ def get_settings() -> Settings:
         agent_default_model=agent_default_model,
         agent_model_map=agent_model_map,
         agent_model_pricing=agent_model_pricing,
-        agent_timeout_seconds=_positive_int("AGENT_TIMEOUT_SECONDS", 12),
+        agent_timeout_seconds=_positive_int("AGENT_TIMEOUT_SECONDS", 30),
         agent_max_retries=_positive_int("AGENT_MAX_RETRIES", 1),
         agent_max_output_tokens=_positive_int("AGENT_MAX_OUTPUT_TOKENS", 2048),
         agent_daily_budget_usd=agent_daily_budget_usd,
@@ -351,5 +352,8 @@ def get_settings() -> Settings:
         food_image_external_upload_confirmed=food_image_external_upload_confirmed,
         food_image_max_bytes=_positive_int("FOOD_IMAGE_MAX_BYTES", 5 * 1024 * 1024),
         food_image_max_dimension=_positive_int("FOOD_IMAGE_MAX_DIMENSION", 4096),
+        life_inspiration_fetch_enabled=_boolean(
+            "LIFE_INSPIRATION_FETCH_ENABLED", environment in {"local", "test"}
+        ),
         seed_builtin_knowledge=_boolean("SEED_BUILTIN_KNOWLEDGE", environment in {"local", "test"}),
     )

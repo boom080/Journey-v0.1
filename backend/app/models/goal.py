@@ -29,6 +29,7 @@ class Goal(Base):
             "target_weight_kg IS NULL OR (target_weight_kg >= 25 AND target_weight_kg <= 400)",
             name="ck_goals_target_weight",
         ),
+        CheckConstraint("version >= 1", name="ck_goals_version_positive"),
         CheckConstraint(
             "daily_energy_target_kcal IS NULL OR "
             "(daily_energy_target_kcal >= 800 AND daily_energy_target_kcal <= 10000)",
@@ -48,6 +49,9 @@ class Goal(Base):
     starts_on: Mapped[date] = mapped_column(Date, nullable=False)
     target_date: Mapped[date | None] = mapped_column(Date)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+    version: Mapped[int] = mapped_column(
+        Integer, default=1, server_default=text("1"), nullable=False
+    )
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utc_now, nullable=False
     )

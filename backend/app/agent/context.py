@@ -1,5 +1,7 @@
 import json
 from dataclasses import dataclass
+from datetime import UTC, datetime, timedelta
+from zoneinfo import ZoneInfo
 
 from sqlalchemy.orm import Session
 
@@ -24,20 +26,62 @@ def build_context(
     user: User,
     *,
     token_budget: int = DEFAULT_CONTEXT_TOKEN_BUDGET,
+    range_days: int = 7,
 ) -> ContextSnapshot:
+    range_days = max(1, min(range_days, 30))
     profile = get_profile(db, user)
     goal = get_active_goal(db, user.id)
     today = home_today(db, user, None)
-    recent = journey(db, user, start_date=None, end_date=None, cursor=None, limit=7)
+    today_date = datetime.now(UTC).astimezone(ZoneInfo(profile.timezone)).date()
+    recent = journey(
+        db,
+        user,
+        start_date=today_date - timedelta(days=range_days - 1),
+        end_date=today_date,
+        cursor=None,
+        limit=range_days,
+    )
+    weights = sorted(
+        [record for day in recent.items for record in day.weight_records],
+        key=lambda record: record.measured_at,
+    )
+    first_weight = float(weights[0].weight_kg) if weights else None
+    latest_weight = float(weights[-1].weight_kg) if weights else None
+    weight_change = (
+        round(latest_weight - first_weight, 2)
+        if first_weight is not None and latest_weight is not None
+        else None
+    )
+    total_intake = round(sum(item.intake_kcal for item in recent.items), 2)
+    total_activity = round(sum(item.activity_kcal for item in recent.items), 2)
+    daily_resting = today.resting_energy.kcal_per_day
+    range_resting = round(daily_resting * range_days, 2) if daily_resting is not None else None
     recent_totals = {
         "days_with_records": len(recent.items),
-        "intake_kcal": round(sum(item.intake_kcal for item in recent.items), 2),
-        "activity_kcal": round(sum(item.activity_kcal for item in recent.items), 2),
+        "range_days": range_days,
+        "intake_kcal": total_intake,
+        "activity_kcal": total_activity,
+        "recorded_balance_kcal": round(total_intake - total_activity, 2),
+        "resting_energy_kcal_per_day": daily_resting,
+        "estimated_resting_energy_kcal": range_resting,
+        "estimated_energy_balance_kcal": (
+            round(total_intake - total_activity - range_resting, 2)
+            if range_resting is not None
+            else None
+        ),
+        "energy_estimate_status": today.resting_energy.status,
+        "energy_estimate_note": today.resting_energy.note,
+        "average_daily_intake_kcal": round(total_intake / range_days, 2),
+        "average_daily_activity_kcal": round(total_activity / range_days, 2),
         "food_count": sum(len(item.food_records) for item in recent.items),
         "activity_count": sum(len(item.activity_records) for item in recent.items),
         "weight_count": sum(len(item.weight_records) for item in recent.items),
+        "first_weight_kg": first_weight,
+        "latest_weight_kg": latest_weight,
+        "weight_change_kg": weight_change,
     }
     data = {
+        "range_days": range_days,
         "profile": {
             "timezone": profile.timezone,
             "sex": profile.sex,

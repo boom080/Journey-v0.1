@@ -13,6 +13,7 @@ from app.models.weight_record import WeightRecord
 from app.schemas.aggregates import HomeTodayResponse, JourneyDay, JourneyResponse, RecordCounts
 from app.schemas.profile import GoalResponse
 from app.schemas.records import ActivityRecordResponse, FoodRecordResponse, WeightRecordResponse
+from app.services.energy import estimate_resting_energy
 from app.services.profile import get_active_goal
 
 
@@ -49,6 +50,13 @@ def home_today(db: Session, user: User, requested_date: date | None) -> HomeToda
     )
     intake = _sum(item.energy_kcal for item in food)
     burned = _sum(item.energy_kcal for item in activity)
+    resting_energy = estimate_resting_energy(
+        sex=user.profile.sex,
+        birth_date=user.profile.birth_date,
+        height_cm=float(user.profile.height_cm) if user.profile.height_cm is not None else None,
+        weight_kg=float(latest_weight) if latest_weight is not None else None,
+        on_date=day,
+    )
     goal = get_active_goal(db, user.id)
     return HomeTodayResponse(
         date=day,
@@ -56,6 +64,12 @@ def home_today(db: Session, user: User, requested_date: date | None) -> HomeToda
         intake_kcal=intake,
         activity_kcal=burned,
         net_kcal=round(intake - burned, 2),
+        resting_energy=resting_energy,
+        estimated_energy_balance_kcal=(
+            round(intake - burned - resting_energy.kcal_per_day, 2)
+            if resting_energy.kcal_per_day is not None
+            else None
+        ),
         counts=RecordCounts(food=len(food), activity=len(activity), weight=len(weight)),
         latest_weight_kg=float(latest_weight) if latest_weight is not None else None,
         active_goal=GoalResponse.model_validate(goal) if goal else None,

@@ -9,9 +9,15 @@ RUN npm ci
 
 COPY apps/mobile apps/mobile
 COPY packages packages
-ARG EXPO_PUBLIC_API_BASE_URL=http://127.0.0.1:8000
-ENV EXPO_PUBLIC_API_BASE_URL=${EXPO_PUBLIC_API_BASE_URL} \
+ARG APP_VARIANT=production
+ARG EXPO_PUBLIC_API_BASE_URL
+ENV APP_VARIANT=${APP_VARIANT} \
+    EXPO_PUBLIC_API_BASE_URL=${EXPO_PUBLIC_API_BASE_URL} \
     EXPO_NO_TELEMETRY=1
+RUN test -n "${EXPO_PUBLIC_API_BASE_URL}" && \
+    if [ "${APP_VARIANT}" = "production" ]; then \
+      case "${EXPO_PUBLIC_API_BASE_URL}" in https://*) ;; *) exit 1 ;; esac; \
+    fi
 RUN npm run mobile:web:build
 
 FROM nginx:1.29.5-alpine

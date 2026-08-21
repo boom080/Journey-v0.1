@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -12,6 +14,12 @@ from app.core.settings import get_settings
 def create_app() -> FastAPI:
     settings = get_settings()
     configure_app_logging()
+    logging.getLogger("journey").info(
+        "Agent Provider: %s | provider=%s | model=%s",
+        "MOCK" if settings.agent_provider == "mock" else "REAL",
+        settings.agent_provider,
+        settings.agent_default_model,
+    )
 
     application = FastAPI(title="Journey API", version="1.0.0")
     application.add_middleware(RequestContextMiddleware)
@@ -20,7 +28,13 @@ def create_app() -> FastAPI:
         allow_origins=list(settings.cors_origins),
         allow_credentials=False,
         allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-        allow_headers=["Authorization", "Content-Type", "Idempotency-Key", "X-Request-ID"],
+        allow_headers=[
+            "Authorization",
+            "Content-Type",
+            "Idempotency-Key",
+            "If-Match-Version",
+            "X-Request-ID",
+        ],
         expose_headers=["X-Request-ID", "X-Response-Time-Ms"],
     )
     application.include_router(health_router)

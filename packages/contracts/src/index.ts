@@ -5,6 +5,10 @@ export type ApiHealthResponse = {
   service: 'journey-api';
   environment: string;
   database?: 'ok' | 'unavailable';
+  rag?: 'ok' | 'empty' | 'unavailable';
+  agent_mode?: 'MOCK' | 'REAL';
+  agent_provider?: string;
+  agent_model?: string;
 };
 
 export type UUID = string;
@@ -56,6 +60,7 @@ export type JourneyProfile = {
   height_cm: number | null;
   preferred_unit: 'metric' | 'imperial';
   latest_weight_kg: number | null;
+  version: number;
   updated_at: ISODateTime;
 };
 
@@ -94,6 +99,7 @@ export type Goal = {
   starts_on: ISODate;
   target_date: ISODate | null;
   is_active: boolean;
+  version: number;
   updated_at: ISODateTime;
 };
 
@@ -127,6 +133,7 @@ export type FoodRecord = FoodRecordCreate & {
   id: UUID;
   record_date: ISODate;
   source: RecordSource;
+  version: number;
   created_at: ISODateTime;
   updated_at: ISODateTime;
 };
@@ -147,6 +154,7 @@ export type ActivityRecord = ActivityRecordCreate & {
   id: UUID;
   record_date: ISODate;
   source: RecordSource;
+  version: number;
   created_at: ISODateTime;
   updated_at: ISODateTime;
 };
@@ -162,11 +170,47 @@ export type WeightRecord = WeightRecordCreate & {
   id: UUID;
   record_date: ISODate;
   source: RecordSource;
+  version: number;
   created_at: ISODateTime;
   updated_at: ISODateTime;
 };
 
 export type Page<T> = { items: T[]; meta: PageMeta };
+
+export type InspirationPreviewRequest = { source_url: string };
+
+export type InspirationPreview = {
+  status: 'preview' | 'manual_required';
+  source_url: string;
+  source_name: '小红书';
+  title: string | null;
+  summary: string | null;
+  source_checked_at: ISODateTime;
+  safety_flags: string[];
+  message: string;
+};
+
+export type InspirationCreate = {
+  source_url: string;
+  title: string;
+  summary?: string | null;
+  tags: string[];
+  source_checked_at: ISODateTime;
+  confirmed: true;
+};
+
+export type LifeInspiration = {
+  id: UUID;
+  source_url: string;
+  source_name: string;
+  title: string;
+  summary: string | null;
+  tags: string[];
+  evidence_level: 'inspiration_only';
+  source_checked_at: ISODateTime;
+  created_at: ISODateTime;
+  updated_at: ISODateTime;
+};
 
 export type HomeToday = {
   date: ISODate;
@@ -174,6 +218,15 @@ export type HomeToday = {
   intake_kcal: number;
   activity_kcal: number;
   net_kcal: number;
+  resting_energy: {
+    status: 'available' | 'missing_profile' | 'unsupported_profile';
+    kcal_per_day: number | null;
+    formula: 'mifflin-st-jeor-1990';
+    age_years: number | null;
+    missing_fields: string[];
+    note: string;
+  };
+  estimated_energy_balance_kcal: number | null;
   counts: { food: number; activity: number; weight: number };
   latest_weight_kg: number | null;
   active_goal: Goal | null;
@@ -239,6 +292,12 @@ export type AgentToolName =
   | 'knowledge.safe_summary'
   | 'recommendation.rules_fallback';
 
+export type AgentSpecialist =
+  | 'orchestrator'
+  | 'record_agent'
+  | 'health_knowledge_agent'
+  | 'journey_summary_agent';
+
 export type AgentPlanStep = {
   id: string;
   tool: AgentToolName;
@@ -246,6 +305,7 @@ export type AgentPlanStep = {
   segment: string | null;
   depends_on: string[];
   requires_confirmation: boolean;
+  specialist: AgentSpecialist | null;
 };
 
 export type AgentPlan = {
@@ -262,6 +322,8 @@ export type AgentPlanStepResult = {
   status: 'completed' | 'failed' | 'skipped' | 'awaiting_confirmation';
   message: string;
   error_code: string | null;
+  specialist: AgentSpecialist;
+  duration_ms: number;
 };
 
 export type AgentVerification = {
@@ -284,6 +346,7 @@ export type AgentObservation = {
   recoverable: boolean;
   output_summary: Record<string, unknown>;
   allowed_alternatives: AgentToolName[];
+  specialist: AgentSpecialist;
 };
 
 export type AgentConfirmationProgress = {
@@ -352,6 +415,7 @@ export type AgentRunResponse = {
   fallback_used: boolean;
   safety_notice: string;
   usage: AgentUsage;
+  selected_agents: AgentSpecialist[];
 };
 
 export type AgentConfirmationRequest = {
@@ -369,6 +433,14 @@ export type AgentConfirmationResponse = {
   run_status: string | null;
   confirmation_progress: AgentConfirmationProgress | null;
   resume_available: boolean;
+};
+
+export type AgentRunTrace = {
+  run_id: UUID;
+  thread_id: UUID | null;
+  status: 'completed' | 'degraded' | 'clarification_required' | 'waiting_for_user';
+  checkpoint_status: 'none' | 'waiting' | 'ready' | 'expired' | 'consumed';
+  confirmation_progress: AgentConfirmationProgress | null;
 };
 
 export type FoodImageScaleReferenceType =

@@ -8,7 +8,7 @@ import type { JourneyProfile } from '@journey/contracts';
 import { journeySpacing, journeyTypography } from '@journey/design-tokens';
 
 import { Button, Card, Chip, Field, LoadingState, Notice, SectionTitle } from '@/components/ui';
-import { ApiError, fetchProfile, updateProfile } from '@/lib/api';
+import { useSync } from '@/providers/sync-provider';
 import { useJourneyTheme } from '@/theme/theme-provider';
 
 type Sex = NonNullable<JourneyProfile['sex']>;
@@ -19,7 +19,8 @@ const sexes: { value: Sex; label: string }[] = [
 
 export default function ProfileSettingsScreen() {
   const theme = useJourneyTheme();
-  const profile = useQuery({ queryKey: ['profile'], queryFn: fetchProfile });
+  const sync = useSync();
+  const profile = useQuery({ queryKey: ['profile'], queryFn: sync.fetchProfile });
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: theme.colors.background }]}>
       <KeyboardAvoidingView style={styles.safe} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
@@ -34,6 +35,7 @@ export default function ProfileSettingsScreen() {
 
 function ProfileForm({ initial }: { initial: JourneyProfile }) {
   const theme = useJourneyTheme();
+  const sync = useSync();
   const queryClient = useQueryClient();
   const [displayName, setDisplayName] = useState(initial.display_name);
   const [height, setHeight] = useState(initial.height_cm == null ? '' : String(initial.height_cm));
@@ -41,7 +43,14 @@ function ProfileForm({ initial }: { initial: JourneyProfile }) {
   const [sex, setSex] = useState<Sex>(initial.sex ?? 'undisclosed');
   const [unit, setUnit] = useState<'metric' | 'imperial'>(initial.preferred_unit);
   const [error, setError] = useState('');
-  const save = useMutation({ mutationFn: updateProfile, onSuccess: async () => { await queryClient.invalidateQueries({ queryKey: ['profile'] }); router.back(); } });
+  const save = useMutation({
+    mutationFn: (payload: Parameters<typeof sync.saveProfile>[1]) => sync.saveProfile(initial, payload),
+    onSuccess: async (result) => {
+      if (result === 'conflict') { setError('云端已有新版本，请到“我的”选择保留本机或使用云端。'); return; }
+      await queryClient.invalidateQueries({ queryKey: ['profile'] });
+      router.back();
+    },
+  });
 
   function submit() {
     const heightValue = height ? Number(height) : null;
@@ -49,10 +58,10 @@ function ProfileForm({ initial }: { initial: JourneyProfile }) {
     if (heightValue != null && (heightValue < 80 || heightValue > 250)) { setError('身高需在 80—250 cm 之间'); return; }
     if (birthDate && !/^\d{4}-\d{2}-\d{2}$/.test(birthDate)) { setError('生日格式应为 YYYY-MM-DD'); return; }
     setError('');
-    save.mutate({ display_name: displayName.trim(), height_cm: heightValue, birth_date: birthDate || null, sex, preferred_unit: unit, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Shanghai', locale: 'zh-CN' }, { onError: (reason) => setError(reason instanceof ApiError ? reason.message : '保存失败') });
+    save.mutate({ display_name: displayName.trim(), height_cm: heightValue, birth_date: birthDate || null, sex, preferred_unit: unit, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Shanghai', locale: 'zh-CN' }, { onError: (reason) => setError(reason instanceof Error ? reason.message : '保存失败') });
   }
 
-  return <Card><SectionTitle>基础资料</SectionTitle><Field label="昵称" value={displayName} onChangeText={setDisplayName} /><Text style={[styles.label, { color: theme.colors.text }]}>性别</Text><View style={styles.chips}>{sexes.map((item) => <Chip key={item.value} label={item.label} selected={sex === item.value} onPress={() => setSex(item.value)} />)}</View><Field label="生日" hint="YYYY-MM-DD，可留空" value={birthDate} onChangeText={setBirthDate} keyboardType="numbers-and-punctuation" /><Field label="身高（cm）" value={height} onChangeText={setHeight} keyboardType="decimal-pad" /><Text style={[styles.label, { color: theme.colors.text }]}>显示单位</Text><View style={styles.chips}><Chip label="公制" selected={unit === 'metric'} onPress={() => setUnit('metric')} /><Chip label="英制" selected={unit === 'imperial'} onPress={() => setUnit('imperial')} /></View>{!!error && <Notice tone="error">{error}</Notice>}<Button loading={save.isPending} onPress={submit}>保存画像</Button></Card>;
+  return <Card><SectionTitle>基础资料</SectionTitle>{!sync.isOnline && <Notice tone="info">修改将加密保存在本机，联网后同步。</Notice>}<Field label="昵称" value={displayName} onChangeText={setDisplayName} /><Text style={[styles.label, { color: theme.colors.text }]}>性别</Text><View style={styles.chips}>{sexes.map((item) => <Chip key={item.value} label={item.label} selected={sex === item.value} onPress={() => setSex(item.value)} />)}</View><Field label="生日" hint="YYYY-MM-DD，可留空" value={birthDate} onChangeText={setBirthDate} keyboardType="numbers-and-punctuation" /><Field label="身高（cm）" value={height} onChangeText={setHeight} keyboardType="decimal-pad" /><Text style={[styles.label, { color: theme.colors.text }]}>显示单位</Text><View style={styles.chips}><Chip label="公制" selected={unit === 'metric'} onPress={() => setUnit('metric')} /><Chip label="英制" selected={unit === 'imperial'} onPress={() => setUnit('imperial')} /></View>{!!error && <Notice tone="error">{error}</Notice>}<Button loading={save.isPending} onPress={submit}>保存画像</Button></Card>;
 }
 
 function Header({ title }: { title: string }) {

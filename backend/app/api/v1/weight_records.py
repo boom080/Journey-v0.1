@@ -72,18 +72,22 @@ def update_record(
     record_id: uuid.UUID,
     payload: WeightRecordUpdate,
     request: Request,
+    expected_version: int | None = Header(default=None, alias="If-Match-Version", ge=1),
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    return record_service.update_weight(db, user, record_id, payload, request.state.request_id)
+    return record_service.update_weight(
+        db, user, record_id, payload, request.state.request_id, expected_version
+    )
 
 
 @router.delete("/{record_id}", response_model=MessageResponse)
 def delete_record(
     record_id: uuid.UUID,
     request: Request,
+    expected_version: int | None = Header(default=None, alias="If-Match-Version", ge=1),
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    record_service.delete_weight(db, user, record_id, request.state.request_id)
+    record_service.delete_weight(db, user, record_id, request.state.request_id, expected_version)
     return MessageResponse(message="Weight record deleted")

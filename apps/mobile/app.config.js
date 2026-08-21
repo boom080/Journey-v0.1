@@ -23,6 +23,11 @@ if (!Object.hasOwn(variants, variant)) {
 
 const selected = variants[variant];
 const isDevelopment = variant === 'development';
+const apiBaseUrl = process.env.EXPO_PUBLIC_API_BASE_URL?.trim();
+
+if (!isDevelopment && (!apiBaseUrl || !apiBaseUrl.startsWith('https://'))) {
+  throw new Error('Preview and production require an HTTPS EXPO_PUBLIC_API_BASE_URL');
+}
 
 module.exports = {
   name: selected.name,

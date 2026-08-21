@@ -1,4 +1,5 @@
-import { createContext, type PropsWithChildren, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, type PropsWithChildren, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 
 import type { LoginRequest, RegisterRequest, TokenPair } from '@journey/contracts';
 
@@ -10,6 +11,7 @@ import {
   subscribeToSession,
 } from '@/lib/api';
 import { clearPendingMutationsForUser } from '@/lib/pending-storage';
+import { purgeLocalReplica } from '@/lib/local-replica';
 
 type AuthContextValue = {
   session: TokenPair | null;
@@ -22,17 +24,32 @@ type AuthContextValue = {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: PropsWithChildren) {
+  const queryClient = useQueryClient();
   const [session, setSession] = useState<TokenPair | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const ownerUserIdRef = useRef<string | undefined>(undefined);
 
   useEffect(() => {
-    const unsubscribe = subscribeToSession(setSession);
+    const unsubscribe = subscribeToSession((value) => {
+      const previousOwner = ownerUserIdRef.current;
+      const nextOwner = value?.user.id;
+      ownerUserIdRef.current = nextOwner;
+      setSession(value);
+      if (previousOwner && previousOwner !== nextOwner) {
+        queryClient.clear();
+        void Promise.all([
+          clearPendingMutationsForUser(previousOwner),
+          purgeLocalReplica(previousOwner),
+        ]);
+      }
+    });
     void restoreSession().then((value) => {
+      ownerUserIdRef.current = value?.user.id;
       setSession(value);
       setIsLoading(false);
     });
     return unsubscribe;
-  }, []);
+  }, [queryClient]);
 
   const value = useMemo<AuthContextValue>(() => ({
     session,
@@ -42,10 +59,16 @@ export function AuthProvider({ children }: PropsWithChildren) {
     signOut: async () => {
       const ownerUserId = session?.user.id;
       await logoutRequest();
-      if (ownerUserId) await clearPendingMutationsForUser(ownerUserId);
+      if (ownerUserId) {
+        await Promise.all([
+          clearPendingMutationsForUser(ownerUserId),
+          purgeLocalReplica(ownerUserId),
+        ]);
+      }
+      queryClient.clear();
       setSession(null);
     },
-  }), [isLoading, session]);
+  }), [isLoading, queryClient, session]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

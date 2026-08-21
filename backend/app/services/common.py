@@ -40,6 +40,30 @@ def add_audit(
     )
 
 
+def require_resource_version(
+    *,
+    resource_type: str,
+    resource_id: uuid.UUID,
+    expected_version: int | None,
+    actual_version: int,
+    server: dict[str, Any],
+) -> None:
+    if expected_version == actual_version:
+        return
+    raise APIError(
+        status_code=409,
+        code="sync_conflict",
+        message="The resource changed on another client; choose which values to keep",
+        details={
+            "resource_type": resource_type,
+            "resource_id": str(resource_id),
+            "expected_version": expected_version,
+            "actual_version": actual_version,
+            "server": server,
+        },
+    )
+
+
 def _payload_hash(payload: dict[str, Any]) -> str:
     canonical = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()

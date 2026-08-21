@@ -4,13 +4,13 @@ import { useCallback, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { journeySpacing, journeyTypography } from '@journey/design-tokens';
-import type { AgentCandidate, AgentRunResponse } from '@journey/contracts';
+import type { AgentCandidate, AgentRunResponse, AgentSpecialist } from '@journey/contracts';
 
 import { AgentStatusStrip, WarmHomeHero, WarmHomeMetrics, warmHomeColors } from '@/components/home-overview';
 import { ScreenShell } from '@/components/screen-shell';
 import { Button, Card, EmptyState, ErrorState, LoadingState, Notice, SectionTitle } from '@/components/ui';
 import { isFoodImageAnalysisEnabled } from '@/config/environment';
-import { ApiError, ApiNetworkError, fetchHomeToday, resumeAgentRun, runAgent } from '@/lib/api';
+import { ApiError, ApiNetworkError, fetchAgentRunTrace, resumeAgentRun, runAgent } from '@/lib/api';
 import { classifyMockInput, type MockCandidate } from '@/lib/mock-intent';
 import { useSync } from '@/providers/sync-provider';
 import { useJourneyTheme } from '@/theme/theme-provider';
@@ -28,6 +28,24 @@ function agentCandidateParams(candidate: AgentCandidate, runId: string, resumeRe
   return { ...common, kind: 'weight', weight: String(candidate.payload.weight_kg), timestamp: candidate.payload.measured_at };
 }
 
+const specialistLabels: Record<AgentSpecialist, string> = {
+  orchestrator: 'Orchestrator',
+  record_agent: 'Record Agent',
+  health_knowledge_agent: 'Knowledge Agent',
+  journey_summary_agent: 'Summary Agent',
+};
+
+function observationDetail(summary: Record<string, unknown>): string {
+  if (typeof summary.candidate_count === 'number') return `候选 ${summary.candidate_count} 条`;
+  if (typeof summary.chunk_count === 'number') {
+    const score = typeof summary.retrieval_score === 'number' ? ` · 最高相关度 ${summary.retrieval_score.toFixed(3)}` : '';
+    return `检索 ${summary.chunk_count} 个片段${score}`;
+  }
+  if (typeof summary.data_range_days === 'number') return `读取近 ${summary.data_range_days} 天结构化数据`;
+  if (typeof summary.citation_count === 'number') return `引用 ${summary.citation_count} 条`;
+  return '结构化结果已记录';
+}
+
 export default function HomeScreen() {
   const theme = useJourneyTheme();
   const sync = useSync();
@@ -39,13 +57,28 @@ export default function HomeScreen() {
   const [agentPending, setAgentPending] = useState(false);
   const [agentError, setAgentError] = useState('');
   const [resumeRunId, setResumeRunId] = useState<string>();
-  const home = useQuery({ queryKey: ['home'], queryFn: fetchHomeToday });
+  const home = useQuery({ queryKey: ['home'], queryFn: sync.fetchHome });
 
   useFocusEffect(useCallback(() => {
     const continuation = queryClient.getQueryData<AgentRunResponse>(['agent-continuation']);
     if (continuation) {
       setAgentResult(continuation);
       queryClient.removeQueries({ queryKey: ['agent-continuation'], exact: true });
+    }
+    const confirmationUpdate = queryClient.getQueryData<{
+      runId: string;
+      candidateId: string;
+      progress: AgentRunResponse['confirmation_progress'];
+    }>(['agent-confirmation-update']);
+    if (confirmationUpdate) {
+      setAgentResult((current) => current?.run_id === confirmationUpdate.runId ? {
+        ...current,
+        candidates: current.candidates.filter(
+          (item) => item.candidate_id !== confirmationUpdate.candidateId,
+        ),
+        confirmation_progress: confirmationUpdate.progress,
+      } : current);
+      queryClient.removeQueries({ queryKey: ['agent-confirmation-update'], exact: true });
     }
     setResumeRunId(queryClient.getQueryData<string>(['agent-resume-needed']));
   }, [queryClient]));
@@ -59,7 +92,15 @@ export default function HomeScreen() {
       queryClient.removeQueries({ queryKey: ['agent-resume-needed'], exact: true });
       setResumeRunId(undefined);
     } catch (reason) {
-      setAgentError(reason instanceof ApiError || reason instanceof ApiNetworkError ? reason.message : '继续执行失败，请稍后重试');
+      const trace = await fetchAgentRunTrace(resumeRunId).catch(() => null);
+      if (trace && trace.status !== 'waiting_for_user') {
+        queryClient.removeQueries({ queryKey: ['agent-resume-needed'], exact: true });
+        setResumeRunId(undefined);
+        setAgentError('该 Run 已在后台完成。记录已同步，可到 Journey 生成最新总结。');
+        await home.refetch();
+      } else {
+        setAgentError(reason instanceof ApiError || reason instanceof ApiNetworkError ? reason.message : '继续执行失败，请稍后重试');
+      }
     } finally { setAgentPending(false); }
   }
 
@@ -110,6 +151,8 @@ export default function HomeScreen() {
       {agentResult && (
         <Card>
           <SectionTitle>处理结果</SectionTitle>
+          <Text style={[styles.explanation, { color: theme.colors.primaryStrong }]}>协作链路：{agentResult.selected_agents.map((item) => specialistLabels[item]).join(' → ')}</Text>
+          <Text style={[styles.explanation, { color: theme.colors.textMuted }]}>运行模式：{agentResult.usage.provider === 'mock' ? 'MOCK' : 'REAL'} · {agentResult.usage.provider}/{agentResult.usage.model}</Text>
           {agentResult.plan && (
             <View style={styles.planBlock}>
               <Text style={[styles.planTitle, { color: theme.colors.text }]}>Agent 执行计划</Text>
@@ -121,8 +164,8 @@ export default function HomeScreen() {
                       {result?.status === 'completed' ? '✓' : result?.status === 'awaiting_confirmation' ? '待确认' : result?.status === 'failed' ? '失败' : result?.status === 'skipped' ? '跳过' : '计划'}
                     </Text>
                     <View style={styles.planCopy}>
-                      <Text style={[styles.explanation, { color: theme.colors.text }]}>{step.tool}</Text>
-                      <Text style={[styles.explanation, { color: theme.colors.textMuted }]}>{result?.message ?? step.reason}</Text>
+                      <Text style={[styles.explanation, { color: theme.colors.text }]}>{specialistLabels[result?.specialist ?? step.specialist ?? 'orchestrator']} · {step.tool}</Text>
+                      <Text style={[styles.explanation, { color: theme.colors.textMuted }]}>{result?.message ?? step.reason}{result ? ` · ${result.duration_ms} ms` : ''}</Text>
                     </View>
                   </View>
                 );
@@ -134,6 +177,10 @@ export default function HomeScreen() {
                   {item.step_id.startsWith('recovery-') ? '降级工具' : '可恢复异常'}：{item.tool} · {item.status}
                 </Text>
               ))}
+              {agentResult.observations.filter((item) => !item.recoverable && !item.step_id.startsWith('recovery-')).map((item) => (
+                <Text key={`trace-${item.step_id}-${item.status}`} style={[styles.explanation, { color: theme.colors.textMuted }]}>Trace · {specialistLabels[item.specialist]} · {item.tool} · {observationDetail(item.output_summary)}</Text>
+              ))}
+              {agentResult.confirmation_progress && <Text style={[styles.explanation, { color: theme.colors.textMuted }]}>Confirmation · 已确认 {agentResult.confirmation_progress.confirmed}/{agentResult.confirmation_progress.total} · 待确认 {agentResult.confirmation_progress.pending}</Text>}
               {!!agentThreadId && <Text style={[styles.explanation, { color: theme.colors.textMuted }]}>当前为连续对话线程；后续输入会复用结构化摘要。</Text>}
             </View>
           )}

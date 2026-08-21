@@ -18,10 +18,15 @@ iOS Simulator 和 Production profile。Preview/Production 均禁止 Android clea
 
 ```bash
 EXPO_PUBLIC_API_BASE_URL=https://example.invalid npm run mobile:web:build
-docker build -f infra/web/Dockerfile -t journey-web:0.1.0 .
+docker build -f infra/web/Dockerfile \
+  --build-arg APP_VARIANT=production \
+  --build-arg EXPO_PUBLIC_API_BASE_URL=https://example.invalid \
+  -t journey-web:0.1.0 .
 ```
 
 静态产物位于 `apps/mobile/dist/`。Web 只用于补充展示，不是主演示。
+单服务器的 Web/API/PostgreSQL/HTTPS 一体化部署见
+[`SERVER_DOCKER.md`](SERVER_DOCKER.md)。
 
 ## Android Emulator 与 APK
 

@@ -17,6 +17,7 @@ COPY backend/requirements-dev.lock /tmp/requirements-dev.lock
 RUN pip install --require-hashes -r /tmp/requirements-dev.lock
 
 WORKDIR /app
+COPY backend/pyproject.toml ./pyproject.toml
 COPY backend/alembic.ini ./alembic.ini
 COPY backend/alembic ./alembic
 COPY backend/app ./app

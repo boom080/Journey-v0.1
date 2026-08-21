@@ -31,6 +31,15 @@ def test_agent_multi_intent_candidates_require_confirmation(
     assert body["usage"]["provider"] == "mock"
     assert body["usage"]["estimated_cost_usd"] == 0
 
+    trace = client.get(f"/api/v1/agent/runs/{body['run_id']}", headers=auth(account))
+    assert trace.status_code == 200
+    assert trace.json()["confirmation_progress"] == {
+        "total": 2,
+        "confirmed": 0,
+        "pending": 2,
+        "resume_available": False,
+    }
+
     with Session(engine) as db:
         assert db.query(FoodRecord).count() == 0
         run = db.scalar(select(AgentRun).where(AgentRun.id == body["run_id"]))
@@ -97,8 +106,13 @@ def test_knowledge_citations_and_owner_only_trace(
     trace_body = trace.json()
     assert trace_body["prompt_version"]
     assert trace_body["knowledge_version"]
-    assert trace_body["tools"][0]["tool_name"] == "policy.guard"
-    assert trace_body["tools"][0]["input_summary"] == {"step_count": 1}
+    assert [item["tool_name"] for item in trace_body["tools"][:3]] == [
+        "orchestrator.router",
+        "orchestrator.planner",
+        "policy.guard",
+    ]
+    policy_trace = next(item for item in trace_body["tools"] if item["tool_name"] == "policy.guard")
+    assert policy_trace["input_summary"] == {"step_count": 1}
     assert any(item["tool_name"] == "knowledge.answer" for item in trace_body["tools"])
     assert "睡眠对训练恢复有什么影响" not in trace.text
     denied = client.get(f"/api/v1/agent/runs/{body['run_id']}", headers=auth(stranger))

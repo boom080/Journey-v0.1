@@ -1184,8 +1184,9 @@ Agent v2 已具备结构化规划、工具白名单、策略校验和执行结�
 
 ## ADR-036：采用本地优先的数据副本与 AI 原生首页
 
-**Status: Proposed**
+**Status: Accepted**
 **Date: 2026-08-04**
+**Accepted: 2026-08-05**
 
 ### 背景
 
@@ -1193,11 +1194,23 @@ Agent v2 已具备结构化规划、工具白名单、策略校验和执行结�
 编辑和删除受限；首页用大面积 Hero 和警告卡表达离线状态，统一输入在常见手机首屏不够突出，
 角色贴图与卡片层次也未达到用户期望的年轻、智能和轻盈感。
 
-### Proposed 决策
+### 决策
 
-- PostgreSQL 保持跨设备同步事实源，移动端建立按账户隔离的本地规范化数据副本；
-- 首次成功登录后同步画像、目标和全部健康记录，离线可读写，联网后通过 Outbox、幂等键和
-  版本冲突检测同步；退出时清除该账户本地数据和队列；
+- PostgreSQL 保持跨设备同步事实源。原生移动端为每个账户建立画像、目标、最近 90 天饮食/
+  运动/体重和 Journey 历史的本地规范化副本；超过 90 天的数据继续在线按需读取；
+- 原生副本以 AES-256-GCM 加密后写入 AsyncStorage，每账户密钥单独保存在 SecureStore，并使用
+  `WHEN_UNLOCKED_THIS_DEVICE_ONLY`；Web 只保留进程内副本，不把 localStorage 密钥包装成安全
+  持久化能力；
+- 离线新增、编辑、删除和画像/目标变更先写本地 Outbox，再在联网时同步；创建沿用
+  `Idempotency-Key`，同实体的连续本地动作会合并，队列达到 1000 条时明确拒绝继续写入而不
+  静默丢弃；
+- 画像、目标、饮食、运动和体重资源增加正整数 `version`。更新/删除通过
+  `If-Match-Version` 做乐观并发控制，服务端锁定目标行；版本过期返回 `409 sync_conflict` 和
+  当前服务端快照；
+- 冲突暂停该项同步，在“我的”展示字段级本机/云端差异，由用户选择保留本机或使用云端；
+  不使用静默 last-write-wins。服务端已删除而本机保留的记录可在用户选择后重新创建；
+- 显式退出、401 会话失效或账户切换会清除该账户的密文副本、Outbox、冲突、SecureStore
+  密钥、旧待同步队列和 React Query 缓存；在途同步不能在退出后写回；
 - 首次登录、找回密码、在线 Agent、图片和 Web Research 继续要求联网；离线确定性归类和
   内置常识不得冒充 Agent；
 - 首页保持“首页 / Journey / 我的”三个一级入口和薄荷绿叶子品牌，但把统一输入提升为首屏
@@ -1211,31 +1224,42 @@ Agent v2 已具备结构化规划、工具白名单、策略校验和执行结�
 
 ### 风险与回退
 
-- 本地健康数据增加设备丢失、串号和同步冲突风险，必须使用设备级密钥、账户隔离和显式冲突
-  处理；在这些门禁未完成前保持当前部分缓存方案；
-- 完整本地副本可能随数据增长，需要后续用真实容量决定保留策略；当前个人使用规模下先优先
-  可用性；
-- UI 方向未确认前不得修改完整页面。若新首页可用性测试失败，保留当前页面路由和 API，仅
-  回退视觉层，不回退离线数据完整性目标。
+- 本地健康数据扩大设备丢失风险；当前用设备级账户密钥和退出清理降低风险，但真实设备取证、
+  MDM/越狱环境和正式隐私政策仍属于发布前门禁；
+- 第一批只保留最近 90 天并设置 1000 条 Outbox 上限。后续若真实容量或长时间离线证明不足，
+  必须以新 ADR 调整，不得静默截断；
+- Web 没有安全密钥库，因此只提供当前进程内离线副本；刷新页面后不保证保留，不能宣称与
+  iOS/Android 等价；
+- 关闭客户端本地副本调用即可回退到在线 API；迁移 `0006_local_first` 可 downgrade 到
+  `0005_agent_v3`，但会丢弃并发版本列，因此只能在确认没有新客户端写入后执行。
 
-### 已确认的视觉子决策（2026-08-04）
+### 视觉子决策（2026-08-04）
 
 - 用户明确接受方案 C，并授权继续实现首页视觉；该子决策视为已确认，不再回到已否决的暗色
   A/B 方向；
 - 移动端采用固定暖白＋明亮薄荷浅色主题，首页复用 `journey-leaf-home.png`，保留三个一级
   入口；统一输入置于 Hero 下沿，在线/离线只改变状态和能力文案，不把页面整体变暗；
-- 本次没有实现完整本地副本、冲突处理、数据库/API 或 Agent 工具，因此 ADR-036 整体继续
-  `Proposed`，不能据此宣称 Journey 已经 local-first。
+- 2026-08-05 完成本地副本后，首页、Journey、我的、画像/目标和记录页均接入同一 Sync
+  Provider；离线能力文案现在与实际副本/Outbox 一致。
 
-### 转为 Accepted 的条件
+### 验收证据（2026-08-05）
 
-视觉方向已确认；仍需用户确认本地数据范围和冲突策略。后续实现阶段完成迁移、加密/隔离、离线/同步
-故障测试、双模拟器及可用性门禁后，才能转为 Accepted。
+- 用户接受推荐范围：画像、目标、最近 90 天记录/Journey、字段级显式冲突和退出彻底清理；
+  本轮不启动 ADR-037、小红书或 Web Research；
+- 新增 Alembic `0006_local_first`，完成 `upgrade → downgrade → upgrade` 与 `alembic check`；
+  后端全量 **87 passed**、覆盖率 **90.94%**，362 条样本/26 项门禁继续 PASS；
+- 原生加密/账户隔离/退出清理、Outbox 合并、离线 CRUD、幂等重试、404 收敛和 409 字段冲突由
+  41 条移动 Jest 测试及 5 条逻辑测试覆盖；TypeScript、Expo lint、2 条 Web E2E 和三端 export
+  通过；
+- Android 16 `Pixel_9` 与 iOS 26.5 `iPhone 17 Pro` 均完成当前 Debug 原生构建、安装和 JS
+  bundle 运行，`expo-crypto`/`expo-secure-store` 在两端实际链接；
+- 320/390 pt 视觉门禁沿用已确认方案 C。1000 条故障注入、5 人盲测、真实设备密钥取证和公网
+  多设备测试尚未执行，属于生产发布加固，不把本 ADR 的本机工程验收表述为已上线。
 
-## ADR-037：生活内容采用受控 Web Research 与用户主动分享，不直接绑定小红书账号
+## ADR-037：生活灵感采用用户主动分享与受限预览，不直接绑定小红书账号
 
-**Status: Proposed**
-**Date: 2026-08-04**
+**Status: Accepted**
+**Date: 2026-08-04；Accepted: 2026-08-10**
 
 ### 背景
 
@@ -1244,14 +1268,19 @@ Agent v2 已具备结构化规划、工具白名单、策略校验和执行结�
 能力集中在商家/电商、小程序和笔记发布等场景，尚未确认存在可任意检索消费者笔记或推荐流的
 公共 API。
 
-### Proposed 决策
+### 决策
 
 - 不收集小红书账号、密码、Cookie、验证码，不代理自动登录，也不驱动用户登录态浏览器后台
   抓取、互动或发布；
-- 近期只考虑用户逐次主动分享公开链接到 Journey，由用户确认后保存最小元数据、短摘要和
-  来源链接，不批量复制正文或图片；
-- 通用信息获取另建受控 `Web Research Tool`，必须使用公开页面、域名白名单、SSRF 防护、
-  无 Cookie、超时/响应体上限、引用、日期、审计和 Prompt Injection 防护；
+- 第一版只允许用户逐次主动粘贴小红书公开链接到 Journey；后端受限预览只提取页面标题与
+  description 元数据，不保存正文、HTML 或图片，用户编辑并显式确认后才保存 URL、来源、
+  标题、短摘要、日期和标签；
+- 该能力是独立的“生活灵感收藏”，不是 Agent 工具、RAG 数据源或通用 `Web Research Tool`。
+  内容固定标记为 `inspiration_only`，不能进入营养数值、健康风险或医疗结论的事实层；
+- 自动预览仅允许 HTTPS 的 `xiaohongshu.com`/`xhslink.com` 白名单，逐次校验 DNS 与重定向，
+  拒绝私网地址、自定义端口和凭据 URL；不发送 Cookie，设置 8 秒超时、最多 3 次重定向和
+  256 KB 响应体上限；发现 Prompt Injection 标记、网络失败或不可公开读取时回退到手动摘要；
+- production 默认关闭自动预览，仍可保留用户手动填写与确认路径；
 - 如果未来获得小红书正式应用、OAuth 及明确包含所需内容的 Scope，先复核最新平台协议、
   数据用途与删除义务，再通过官方 API 接入；
 - 社交内容只能作为生活灵感和偏好候选。营养数值、健康风险和建议依据必须来自受控知识库或
@@ -1273,7 +1302,170 @@ Agent v2 已具备结构化规划、工具白名单、策略校验和执行结�
   链接，不进入健康事实库；
 - 若不存在合规稳定的读取方式，则回退为用户手动保存链接和自写备注，不实现自动抓取。
 
-### 转为 Accepted 的条件
+### 实现与验收证据
 
-用户确认近期采用“主动分享链接”还是仅保留规划；后续专项完成法律/平台复核、威胁模型、
-Schema、引用与安全测试并通过量化门禁后，才能转为 Accepted。
+- 新增 Alembic `0007_life_inspirations`、认证后的 preview/create/list/delete API、共享契约和
+  移动端“我的 → 生活灵感”入口；每条保存必须携带显式确认，可查看来源并执行两步删除；
+- 6 条后端专项测试覆盖认证、白名单/HTTPS、私网 DNS 与跨域重定向、超时、响应体上限、
+  Prompt Injection、Cookie 不转发、确认、去重与用户隔离；4 条移动专项测试覆盖预览、手动
+  回退、离线禁止请求和两步删除；
+- 全量后端/评测 **93 passed**、覆盖率 **90.72%**；移动 Jest **45/45** + 逻辑 **5/5**，
+  Requests + Pytest + Allure 黑盒 **1/1**，强制 Mock Web E2E **2/2**；Web 14 路由及
+  iOS/Android Hermes export 通过；
+- `0007` 完成 `downgrade 0006 → upgrade head` 和 `alembic check`。验收没有真实模型调用，
+  没有使用账号、Cookie、登录态浏览器或后台抓取。
+
+### 未包含与后续重启条件
+
+小红书账号绑定、OAuth、推荐流搜索、批量采集、后台抓取、通用浏览器和 Agent Web Research
+均未实现。若未来需要其中任何一项，必须新建 Proposed ADR，重新复核当日官方能力、协议、
+数据删除义务和威胁模型，不能用本 ADR 自动扩大权限。
+
+## ADR-038：单服务器 production 采用 Docker Compose 与容器化 HTTPS 网关
+
+**Status: Accepted**
+**Date: 2026-08-05**
+
+### 背景
+
+用户希望未来上线时可直接把同一仓库用 Docker 部署到服务器。既有 `compose.yaml` 与
+`compose.staging.yaml` 主要服务本机开发/演示：API/PostgreSQL 已容器化，Web Dockerfile 已有，
+但缺少 production 独立编排、统一 HTTPS 入口、必填 secret、端口隔离和服务器操作手册。
+
+### 决策
+
+- 单服务器 production 使用独立 `compose.production.yaml`，一次编排 PostgreSQL、FastAPI、
+  Expo Web 静态站点和 Caddy；不引入 Kubernetes 或微服务拆分；
+- Caddy 是唯一公网入口，只发布 TCP 80/443 和 UDP 443，自动管理 HTTPS；`/api/*`、`/health/*`
+  转发 API，其余路径转发 Web；证书状态使用持久卷；
+- PostgreSQL 只接入 internal backend network；FastAPI 和 Web 仅 `expose` 容器端口，不映射宿主；
+- production 必须显式提供域名 Origin、数据库密码和应用密钥，禁止本地 secret、测试账号播种和
+  明文 Preview/Production API；图片真实识别继续关闭；
+- Agent 默认 Mock/零预算。启用真实文字 Provider 不因服务器上线自动获得授权，仍必须满足既有
+  Key、模型、价格、预算、隐私和契约门禁；
+- iOS/Android 不是服务器容器：仍通过 Expo/EAS/Xcode/Gradle 生成签名制品，只把 HTTPS API
+  Origin 注入 Preview/Production 构建。
+
+### 实现与证据
+
+- `compose.production.yaml`、`.env.production.example`、`infra/caddy/Caddyfile` 和
+  `docs/deployment/SERVER_DOCKER.md` 已建立；Web Dockerfile 在 production 构建时强制 HTTPS；
+- Compose 必填环境、端口/网络隔离、production API/PostgreSQL 启动、Alembic head、live/ready、
+  Mock/图片/测试账号安全值、Web production export 和 Caddyfile 均已本机验证；
+- 本机 Docker Hub token 网络超时阻塞 Node/Nginx/Caddy 镜像拉取，所以尚无四容器同机启动和
+  真实公网证书签发证据；实际服务器上线前必须补齐该 smoke、外部备份恢复和跨网络移动端验收。
+
+### 后果与回退
+
+- 好处是服务器只需 Docker Engine、Compose、域名和生产 secrets，即可从仓库构建并启动统一栈；
+- 单机仍存在主机、磁盘和数据库单点，不承诺高可用或零停机迁移；
+- 若 Caddy/公网不可用，保留本机 `compose.yaml` + Mock 演示回退；不得为了上线暴露 5432/8000、
+  关闭 HTTPS 或把模型 Key 放入客户端。
+
+## ADR-039：Demo 封板采用有界 Orchestrator + Specialist Multi-Agent 与分层 RAG Eval
+
+**Status: Accepted**
+**Date: 2026-08-10**
+
+### 背景
+
+阶段 11 的单 Agent 闭环已经有 Planner、Policy、Executor、Observation、Verifier、确认恢复和
+有限重规划，但工具职责没有用明确 Specialist 命名；现有 RAG 评测主要只有 Recall@3、引用支持
+和无答案准确率，不能回答不同检索配置是否真的更好。秋招 Demo 需要一个真实、稳定、可解释、
+可量化的完整场景，而不是继续扩展外围功能。
+
+### 决策
+
+- 保留现有 Agent v3 Run State 和模块化单体，用一个 Orchestrator 协调 `record_agent`、
+  `health_knowledge_agent`、`journey_summary_agent`；不做 Agent 群聊、独立微服务或无限循环；
+- Specialist 只是一层明确职责、结构化输入输出和工具 allowlist。Orchestrator 负责路由、拆分、
+  Policy、共享状态与汇总，不把所有业务细节继续塞进一个角色；
+- ADR-035 的确认 checkpoint、最多 6 步/2 次重规划、同 Provider 恢复和禁止自动写库仍有效；
+  其中“后续不得自动扩展多 Agent”这一阶段边界被本次用户明确授权替代，但只替代为上述三个
+  有界 Specialist，不授权自由协作或新增更多 Agent；
+- 记录类操作只能生成 food/activity/weight 候选，真正写入继续经过 Confirmation Gate；
+- 前端只展示结构化 Execution Trace，不展示模型隐藏推理或 Chain-of-Thought；
+- RAG v1/v2 使用同一 60 题固定 Dataset、相同知识 bundle 进行 Recall@1/3/5、MRR、Precision、
+  nDCG、拒答、Groundedness、Relevance、Citation、延迟、Token 和成本分层评测；
+- Mock 只评确定性 Retrieval 和工程契约，Generation 必须标记 `SKIPPED_REAL_MODEL`；真实质量
+  只有显式外部 Provider 报告可以证明；
+- 文本 Demo 使用当前已支持的 DeepSeek，不新增 Provider 抽象；启动和 `/health/ready` 明确
+  显示 REAL/MOCK、Provider 与 Model；
+- 图片继续是 Development 实验性候选，必须用户校正确认，ADR-030/031 No-Go 结论不因本 ADR
+  改变；
+- 语音、视频、第三方 OAuth、手机/邮箱验证码、找回密码、HealthKit/Health Connect、Push、
+  自动小红书、通用浏览器和自由网页搜索统一转入 Post-Demo / Future，不进入封板范围。
+
+### 实现与验收
+
+- 精确复合输入“今天中午吃了一份牛肉面，晚上跑了5公里，我这周减脂情况怎么样？”由
+  Orchestrator 拆成 Record + Summary + Knowledge，两个候选全部确认后 Resume；真实 DeepSeek
+  Requests 黑盒 1/1 通过，28.02 秒；Mock 黑盒 2/2、Web E2E 2/2；
+- 新增 60 题 RAG Dataset 和不可覆盖报告。v2 Retrieval Recall@3/5 均为 1.0、MRR 0.9625；
+  DeepSeek Generation Groundedness 0.9625、Relevance 0.9625、Citation Correctness 0.9083、
+  Abstention Accuracy 1.0，41 次模型调用、19 次确定性拒答、费用 `$0.00624232`；
+- 第一份真实报告的拒答准确率为 0.6833，修正无 Context 控制流与评分器后生成第二份报告；失败
+  报告继续保留，未覆盖或伪造；
+- Docker 全量 100 条后端/评测测试、覆盖率 90.60%，46 条移动 Jest + 5 条逻辑测试、三端
+  export、iOS/Android Debug 安装运行均通过；
+- Journey 主 Compose 完成 `down → demo_up.sh`，REAL DeepSeek、PostgreSQL、RAG、API health 和
+  Alembic `0007` 均正常；Host 端口 8000/55432 与另一 Compose Project 隔离。
+
+### 风险与回退
+
+- Specialist 命名不等于多个自治模型实例；其价值是职责/工具/Trace 可测试，面试时不得包装成
+  十几个 Agent 自由协作；
+- DeepSeek 周总结存在外部延迟波动，默认超时从 12 秒调整到 30 秒、最多重试 1 次并保留确定性
+  降级；不承诺生产 SLA；
+- RAG 当前只有四份小型知识文档、420 字符无 overlap 和 96 维本地哈希 embedding；数据扩容前
+  需要重新实验，不以“用了向量”代替质量证明；
+- 关闭 `AGENT_V3_ENABLED` 可回到 v2；Mock 保留离线开发/CI；RAG v1 报告保留为回退比较基线，
+  不删除业务数据或既有接口。
+
+## ADR-040：真实 Agent 客户端长任务恢复与静息能量估算口径
+
+**Status: Accepted**
+**Date: 2026-08-13**
+
+### 背景
+
+真实手机体验中出现三个相互关联的现象：周总结显示“网络不可用”、确认过的候选再次提交时报
+`Idempotency-Key was already used with a different payload`、首页残留“继续执行”并在点击后返回
+`Run is not waiting`。数据库证据显示复合 Run 实际已完成且两个候选均已写入，真实周总结通常
+超过移动端统一的 10 秒请求上限。与此同时，Home 的 `net_kcal` 实际只计算“摄入－已记录运动”，
+却被 UI 标为“净结余”，没有显示静息消耗，容易造成产品语义误读。
+
+### 决策
+
+- 普通 API 继续使用 10 秒客户端超时；Agent Run/Resume 单独使用 120 秒客户端窗口。服务端模型
+  调用仍为 30 秒/次、最多重试 1 次并可降级，两层超时职责不同；
+- 不放松现有 Idempotency-Key 和 Confirmation Gate。确认或 Resume 响应不确定时，客户端读取
+  本人可见的脱敏 Run Trace；Trace 增加确认总数、已确认数、待确认数和 `resume_available`；
+- Run 已 `completed/degraded` 时清除客户端过期 Resume 状态，不重复调用 Resume；候选已经写入
+  但用户又修改并重提时，明确提示“此前内容已保存，请编辑既有记录”，不把新 Payload 冒充成功；
+- 兼容字段 `net_kcal` 不改名、不破坏现有调用，但 UI 统一标为“记录差值”，定义仍为
+  `intake_kcal - activity_kcal`；
+- 服务端新增 Mifflin–St Jeor 1990 静息能量消耗预测。只使用本人画像中的生日、身高、最新体重
+  和女性/男性公式系数；不完整、不适用或超出原始健康成人 19—78 岁样本范围时不套默认值；
+- `estimated_energy_balance_kcal` 只表示“摄入－已记录运动－静息估算”。UI 与 Agent Context 必须
+  说明它不包含全部日常活动与食物热效应，不等于 TDEE，也不是代谢测量或医疗结论；
+- 原生离线副本使用同一纯函数生成静息估算，避免服务端/离线端出现两个计算口径。
+
+### 依据与验收
+
+- Mifflin 等 1990 年原始研究基于 498 名 19—78 岁健康成人建立 REE 预测公式：
+  [PubMed PMID 2305711](https://pubmed.ncbi.nlm.nih.gov/2305711/)；
+- 2026-08-13 数据库核对：问题复合 Run 为 `completed/consumed`，候选确认 2/2；原始工具累计
+  latency 24,756 ms，随后独立周总结工具累计 21,939 ms，均超过旧 10 秒客户端限制；
+- 更新后真实 DeepSeek v4 Pro 周总结 smoke 在 20.4 秒内返回 HTTP 200、3 条引用、无降级；
+- 测试账号完整画像返回静息估算 1,591.5 kcal/天、记录差值 300 kcal，并单独返回记录口径估算
+  余量 −1,291.5 kcal；
+- Docker 后端/评测 100/100、覆盖率 90.69%，移动 Jest 48/48 + 逻辑 5/5，TypeScript 通过。
+
+### 风险与回退
+
+- 120 秒是客户端等待窗口，不是 Provider SLA；后台真实 Run 仍可能超时或降级，UI 不应伪装成功；
+- 预测方程存在个体误差，不能替代间接测热或专业评估；`other/undisclosed` 不强制映射公式系数；
+- 用户漏记饮食或运动会使记录口径余量失真，不能据此诊断或自动调整目标；
+- 可将 Agent 客户端窗口回退为较短配置，但必须保留 Run Trace 对账；静息估算可由响应状态关闭，
+  不删除画像、记录或兼容 `net_kcal` 字段。

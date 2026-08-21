@@ -34,7 +34,11 @@ python3 infra/staging/smoke.py --base-url http://127.0.0.1:18000 \
 docker compose -p journey-stage8 -f compose.yaml -f compose.staging.yaml down
 ```
 
-## 未来自租服务器发布门禁（本阶段不执行）
+## 自租服务器发布门禁
+
+单服务器 production Compose、Web 容器和 Caddy HTTPS 网关已形成可复验基线，完整操作见
+[`SERVER_DOCKER.md`](SERVER_DOCKER.md)。当前仍未租用服务器或执行公网发布；以下外部门禁
+保持有效。
 
 1. 用户单独授权租用或接入服务器，并确认供应商、区域、期限和预算。
 2. 配置域名、HTTPS 证书、反向代理、防火墙、服务端 secrets、日志和最小监控。

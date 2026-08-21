@@ -67,6 +67,7 @@ class ProfileResponse(BaseModel):
     height_cm: float | None
     preferred_unit: str
     latest_weight_kg: float | None
+    version: int
     updated_at: datetime
 
 
@@ -94,4 +95,5 @@ class GoalResponse(BaseModel):
     starts_on: date
     target_date: date | None
     is_active: bool
+    version: int
     updated_at: datetime

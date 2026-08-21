@@ -88,6 +88,69 @@ def test_mixed_write_plan_pauses_confirms_and_resumes_with_fresh_data(
 
 
 @allure_epic
+@allure.feature("Demo multi-agent collaboration")
+def test_demo_compound_input_delegates_to_specialists_and_updates_journey(
+    client, register_user, seeded_knowledge
+) -> None:
+    account = register_user()
+    response = client.post(
+        "/api/v1/agent/runs",
+        headers=auth(account),
+        json={"message": "今天中午吃了一份牛肉面，晚上跑了5公里，我这周减脂情况怎么样？"},
+    )
+    assert response.status_code == 200, response.text
+    body = response.json()
+    assert body["status"] == "waiting_for_user"
+    assert body["selected_agents"] == [
+        "orchestrator",
+        "record_agent",
+        "journey_summary_agent",
+        "health_knowledge_agent",
+    ]
+    assert [item["tool"] for item in body["plan"]["steps"]] == [
+        "food.parse_candidate",
+        "activity.parse_candidate",
+        "context.load",
+        "knowledge.retrieve",
+        "weekly_summary.generate",
+    ]
+    assert [item["specialist"] for item in body["step_results"]] == [
+        "record_agent",
+        "record_agent",
+    ]
+    assert len(body["candidates"]) == 2
+
+    for index, candidate in enumerate(body["candidates"]):
+        confirmed = client.post(
+            f"/api/v1/agent/confirmations/{candidate['candidate_id']}",
+            headers=auth(account, f"demo-multi-agent-{index}"),
+            json={
+                "confirmation_token": candidate["confirmation_token"],
+                "kind": candidate["kind"],
+                "payload": candidate["payload"],
+            },
+        )
+        assert confirmed.status_code == 201, confirmed.text
+
+    resumed = client.post(
+        f"/api/v1/agent/runs/{body['run_id']}/resume",
+        headers=auth(account),
+    )
+    assert resumed.status_code == 200, resumed.text
+    resumed_body = resumed.json()
+    assert resumed_body["status"] == "completed"
+    assert resumed_body["answer"]
+    assert [item["specialist"] for item in resumed_body["step_results"]] == [
+        "journey_summary_agent",
+        "health_knowledge_agent",
+        "journey_summary_agent",
+    ]
+    home = client.get("/api/v1/home/today", headers=auth(account)).json()
+    assert home["counts"]["food"] == 1
+    assert home["counts"]["activity"] == 1
+
+
+@allure_epic
 @allure.feature("Checkpoint authorization")
 def test_resume_rejects_pending_foreign_and_expired_checkpoints(
     client, register_user, seeded_knowledge

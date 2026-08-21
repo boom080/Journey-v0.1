@@ -2,7 +2,18 @@ import uuid
 from datetime import date, datetime
 from decimal import Decimal
 
-from sqlalchemy import CheckConstraint, Date, DateTime, ForeignKey, Index, Numeric, String, Text
+from sqlalchemy import (
+    CheckConstraint,
+    Date,
+    DateTime,
+    ForeignKey,
+    Index,
+    Integer,
+    Numeric,
+    String,
+    Text,
+    text,
+)
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -17,6 +28,7 @@ class WeightRecord(Base):
         CheckConstraint(
             "source IN ('manual', 'agent', 'image', 'import')", name="ck_weight_source"
         ),
+        CheckConstraint("version >= 1", name="ck_weight_records_version_positive"),
         Index("ix_weight_records_user_date", "user_id", "record_date"),
         Index("ix_weight_records_user_measured", "user_id", "measured_at"),
     )
@@ -30,6 +42,9 @@ class WeightRecord(Base):
     weight_kg: Mapped[Decimal] = mapped_column(Numeric(5, 2), nullable=False)
     note: Mapped[str | None] = mapped_column(Text)
     source: Mapped[str] = mapped_column(String(20), default="manual", nullable=False)
+    version: Mapped[int] = mapped_column(
+        Integer, default=1, server_default=text("1"), nullable=False
+    )
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utc_now, nullable=False
     )

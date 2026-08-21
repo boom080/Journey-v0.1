@@ -8,8 +8,9 @@ import type { ActivityIntensity, FoodRecordCreate, MealType, WeightRecordCreate 
 import { journeySpacing, journeyTypography } from '@journey/design-tokens';
 
 import { Button, Card, Chip, Field, Notice, SectionTitle } from '@/components/ui';
-import { ApiError, confirmAgentCandidate, deleteRecord, resumeAgentRun, updateRecord, type RecordKind } from '@/lib/api';
+import { ApiError, confirmAgentCandidate, fetchAgentRunTrace, resumeAgentRun, type RecordKind } from '@/lib/api';
 import { intensityLabels, mealLabels } from '@/lib/format';
+import type { ReplicaRecord } from '@/lib/local-replica';
 import { useSync } from '@/providers/sync-provider';
 import { useJourneyTheme } from '@/theme/theme-provider';
 
@@ -36,6 +37,7 @@ export default function RecordFormScreen() {
   const isAgentCandidate = Boolean(candidateId && confirmationToken);
   const isImageCandidate = isAgentCandidate && candidateSource === 'image';
   const isEditing = Boolean(id);
+  const version = Number(first(params.version) ?? 1);
   const [name, setName] = useState(first(params.name) ?? '');
   const [energy, setEnergy] = useState(first(params.energy) ?? '');
   const [detail, setDetail] = useState(first(params.detail) ?? '');
@@ -97,6 +99,20 @@ export default function RecordFormScreen() {
     } satisfies WeightRecordCreate;
   }
 
+  function editableRecord(): ReplicaRecord {
+    if (!id) throw new Error('记录 ID 缺失');
+    const body = payload();
+    const timestamp = first(params.timestamp) ?? new Date().toISOString();
+    return {
+      ...body,
+      id,
+      record_date: timestamp.slice(0, 10),
+      version: Number.isInteger(version) && version >= 0 ? version : 1,
+      created_at: first(params.createdAt) ?? timestamp,
+      updated_at: first(params.updatedAt) ?? timestamp,
+    } as ReplicaRecord;
+  }
+
   async function invalidate() {
     await Promise.all([
       queryClient.invalidateQueries({ queryKey: ['home'] }),
@@ -117,15 +133,18 @@ export default function RecordFormScreen() {
   async function save() {
     if (validation) { setError(validation); return; }
     if (isAgentCandidate && !sync.isOnline) { setError('Agent 候选确认需要联网；请恢复网络后重试。'); return; }
-    if (isEditing && !sync.isOnline) { setError('编辑记录需要联网；离线时可新增记录。'); return; }
     setPending(true); setError('');
     try {
       if (isEditing && id) {
         const body = payload() as unknown as Record<string, unknown>;
         delete body.source;
-        await updateRecord(kind, id, body);
+        const result = await sync.updateRecord(kind, editableRecord(), body);
+        if (result === 'conflict') {
+          setError('云端已有新版本，请到“我的”选择保留本机或使用云端。');
+          return;
+        }
         await invalidate();
-        Alert.alert('已更新', `${title}已同步。`, [{ text: '完成', onPress: () => router.back() }]);
+        Alert.alert(result === 'saved' ? '已更新' : '已保存到本机', result === 'saved' ? `${title}已同步。` : '联网后会自动同步。', [{ text: '完成', onPress: () => router.back() }]);
       } else if (isAgentCandidate && candidateId && confirmationToken) {
         const body = payload();
         const confirmation = await confirmAgentCandidate(candidateId, {
@@ -134,6 +153,13 @@ export default function RecordFormScreen() {
           payload: body,
         }, `agent-${candidateId}`);
         await invalidate();
+        if (runId) {
+          queryClient.setQueryData(['agent-confirmation-update'], {
+            runId,
+            candidateId,
+            progress: confirmation.confirmation_progress,
+          });
+        }
         if (confirmation.resume_available && runId) {
           queryClient.setQueryData(['agent-resume-needed'], runId);
           try {
@@ -141,8 +167,14 @@ export default function RecordFormScreen() {
             queryClient.setQueryData(['agent-continuation'], continuation);
             queryClient.removeQueries({ queryKey: ['agent-resume-needed'], exact: true });
             notifyAndReturn('已确认并继续', `${title}已同步，Agent 已基于最新数据完成后续步骤。`, '查看结果');
-          } catch {
-            notifyAndReturn('记录已保存', 'Agent 后续步骤暂未完成，可返回首页点击“继续执行”。', '返回首页');
+          } catch (reason) {
+            const trace = await fetchAgentRunTrace(runId).catch(() => null);
+            if (trace && trace.status !== 'waiting_for_user') {
+              queryClient.removeQueries({ queryKey: ['agent-resume-needed'], exact: true });
+              notifyAndReturn('已确认并完成', `${title}已同步，Agent 已在后台完成；可到 Journey 查看并重新生成总结。`, '返回首页');
+            } else {
+              notifyAndReturn('记录已保存', 'Agent 后续步骤暂未完成，可返回首页点击“继续执行”。', '返回首页');
+            }
           }
         } else {
           const pendingCount = confirmation.confirmation_progress?.pending ?? 0;
@@ -153,18 +185,43 @@ export default function RecordFormScreen() {
         Alert.alert(result === 'saved' ? '已保存' : '已加入待同步', result === 'saved' ? `${title}已同步。` : '联网后会自动上传，不需要重复提交。', [{ text: '完成', onPress: () => router.back() }]);
       }
     } catch (reason) {
-      setError(reason instanceof ApiError ? reason.message : '保存失败，请稍后重试');
+      if (isAgentCandidate && runId && reason instanceof ApiError &&
+          (reason.code === 'idempotency_conflict' || reason.code === 'confirmation_already_used')) {
+        const trace = await fetchAgentRunTrace(runId).catch(() => null);
+        await invalidate();
+        if (trace?.confirmation_progress) {
+          queryClient.setQueryData(['agent-confirmation-update'], {
+            runId,
+            candidateId,
+            progress: trace.confirmation_progress,
+          });
+        }
+        if (trace && trace.status !== 'waiting_for_user') {
+          queryClient.removeQueries({ queryKey: ['agent-resume-needed'], exact: true });
+        }
+        notifyAndReturn(
+          '候选此前已保存',
+          '为避免重复记录，本次没有再次写入。若你刚修改了字段，请到 Journey 打开已保存记录后编辑。',
+          '返回',
+        );
+      } else {
+        setError(reason instanceof ApiError ? reason.message : '保存失败，请稍后重试');
+      }
     } finally { setPending(false); }
   }
 
   function confirmDelete() {
     if (!id) return;
-    if (!sync.isOnline) { setError('删除记录需要联网。'); return; }
-    Alert.alert('删除这条记录？', '删除后首页和 Journey 会同步更新。', [
+    Alert.alert('删除这条记录？', sync.isOnline ? '删除后首页和 Journey 会同步更新。' : '将先从本机移除，联网后同步删除。', [
       { text: '取消', style: 'cancel' },
       { text: '删除', style: 'destructive', onPress: () => void (async () => {
         setPending(true); setError('');
-        try { await deleteRecord(kind, id); await invalidate(); router.back(); }
+        try {
+          const result = await sync.deleteRecord(kind, editableRecord());
+          if (result === 'conflict') { setError('云端已有新版本，请到“我的”处理冲突。'); return; }
+          await invalidate();
+          router.back();
+        }
         catch (reason) { setError(reason instanceof ApiError ? reason.message : '删除失败'); }
         finally { setPending(false); }
       })() },
@@ -180,7 +237,7 @@ export default function RecordFormScreen() {
           <View style={styles.headerSpacer} />
         </View>
         <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={styles.content}>
-          {!sync.isOnline && <Notice tone="warning">当前离线：新增记录会进入安全待同步队列；编辑和删除不可用。</Notice>}
+          {!sync.isOnline && <Notice tone="info">当前离线：新增、编辑和删除都会加密保存在本机，联网后同步。</Notice>}
           <Card>
             {kind === 'food' && <>
               <SectionTitle>这餐吃了什么</SectionTitle>

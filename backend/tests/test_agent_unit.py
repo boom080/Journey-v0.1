@@ -43,6 +43,13 @@ class SuccessfulProviderAdapter(ModelAdapter):
         return kwargs["fallback_factory"](), 1_000_000, 1_000_000
 
 
+class FailIfCalledAdapter(ModelAdapter):
+    provider = "deepseek"
+
+    def invoke_structured(self, **kwargs):
+        raise AssertionError("no-context retrieval must not call a model")
+
+
 def test_deepseek_v4_uses_official_endpoint_and_model_specific_thinking(monkeypatch) -> None:
     router_calls: list[dict] = []
     chat_calls: list[dict] = []
@@ -284,9 +291,15 @@ def test_model_specific_pricing_is_used_for_pro_capability() -> None:
 
 def test_rag_no_answer_does_not_generate_without_evidence(seeded_knowledge) -> None:
     with Session(engine) as db:
-        result = run_knowledge(db, ModelRouter(db), "法国首都是什么？")
+        result = run_knowledge(
+            db,
+            ModelRouter(db, adapter=FailIfCalledAdapter()),
+            "法国首都是什么？",
+        )
     assert "没有足够相关资料" in result.answer
     assert result.citations == []
+    assert result.invocation.error_code == "insufficient_context"
+    assert result.invocation.input_tokens == result.invocation.output_tokens == 0
 
 
 def test_knowledge_ingestion_is_idempotent_and_keeps_chunk_ids(seeded_knowledge) -> None:

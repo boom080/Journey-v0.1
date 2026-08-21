@@ -23,13 +23,16 @@
 
 ## 1:10—2:20：统一输入、人工检查点与恢复
 
-在首页输入：“加餐吃香蕉 99 千卡，然后根据今天记录给我建议”。讲解：
+在首页输入：“今天中午吃了一份牛肉面，晚上跑了5公里，我这周减脂情况怎么样？”。讲解：
 
-1. Intent Router 识别“记录饮食 + 个性化建议”的组合意图；
-2. Planner 生成饮食候选、上下文、知识和建议计划，Policy Guard 校验工具白名单与依赖；
-3. Executor 只生成候选，Run 进入 `waiting_for_user`；此时建议步骤未执行，数据库也未变化；
-4. 用户校正并确认后幂等写入，客户端显式 Resume；Agent 重新读取最新记录再生成建议；
-5. 展示 Observation、Verifier 和 `0/2` 重规划。可选用失败演示展示模型超时后选择规则建议，
+1. Orchestrator 识别复合意图并选择 Record、Journey Summary、Health Knowledge Specialist；
+2. Planner 生成饮食/运动候选、7 天上下文、知识和周总结计划，Policy Guard 校验每个
+   Specialist 的工具 allowlist 与依赖；
+3. Record Agent 只生成两个候选，Run 进入 `waiting_for_user`；此时 Summary 未执行，数据库未变化；
+4. 用户逐条校正并确认后幂等写入，客户端显式 Resume；Summary Agent 重新读取最新记录、目标和
+   体重趋势，必要时调用 Knowledge Agent/RAG；
+5. 展示 `selected_agents`、候选数、检索文档、范围、Observation、Verifier 和 `0/2` 重规划。
+   可选用失败演示展示模型超时后选择规则建议，
    不可恢复错误则停止，不会无限循环或自动改投另一供应商。
 
 主演示使用 DeepSeek `deepseek-v4-flash`；候选卡的 usage/trace 应显示真实 Provider、模型、
@@ -42,16 +45,19 @@ Token、延迟和估算费用。普通 CI 仍使用确定性 Mock，不能把 Mo
 
 ## 2:55—3:30：建议、周报与 RAG 证据
 
-触发个性化建议或周总结，打开引用和 trace：展示画像、近期记录、受控营养知识库、Prompt/
+展示自动生成的 7 天总结，再切换 Journey 的 30 天视图；打开引用和 trace：展示画像、目标、
+摄入/运动/体重趋势、受控营养知识库、Prompt/
 Schema/Knowledge 版本、执行节点、耗时、Token 与真实估算成本。解释无相关知识时拒绝伪造
 引用；切换 Mock 回退时成本才为 0。
 
 ## 3:30—4:15：量化质量闭环
 
-打开测试报告：362 条版本化样本和 26 项门禁覆盖意图、计划 Schema、工具序列、参数、确认
-Policy、checkpoint、Observation 恢复、RAG、图片契约、降级、安全和时延；同时展示 85 条
-后端/评测测试（后端覆盖率 90.49%）、Requests + Pytest + Allure 网络黑盒 1 条、31 条移动
-组件测试、5 条逻辑测试、2 条核心 Web E2E，以及 Allure/JUnit/Coverage 并存。说明阈值失败
+打开测试报告：362 条既有版本化样本和 26 项门禁覆盖意图、计划 Schema、工具序列、参数、确认
+Policy、checkpoint、Observation 恢复、RAG、图片契约、降级、安全和时延；同时展示 100 条
+后端/评测测试（覆盖率 90.60%）、Requests + Pytest + Allure Mock 黑盒 2 条、
+真实复合黑盒 1 条、46 条移动组件测试、5 条逻辑测试、2 条核心 Web E2E，以及
+Allure/JUnit/Coverage 并存。另展示固定 60 题 RAG Eval：v2 Recall@3/5 1.0、MRR 0.9625，
+真实 Groundedness/Relevance 0.9625、Citation 0.9083、Abstention 1.0。说明阈值失败
 会阻断 CI，Prompt/Schema/知识库改动必须更新版本并对比基线。随后展示 Agent v2 的失败修正
 报告和 Agent v3 真实报告：DeepSeek 对 4 个 checkpoint 计划、2 个恢复选择共 10 次调用全部
 通过，费用 `$0.00171864`。这是“评测发现问题 → 修改 Prompt/状态机 → 全量回归”的证据。旧文字门禁

@@ -40,7 +40,10 @@ import HomeScreen from '@/app/(tabs)/index';
 
 const emptyHome: HomeToday = {
   date: '2026-07-20', timezone: 'Asia/Shanghai', intake_kcal: 0, activity_kcal: 0,
-  net_kcal: 0, counts: { food: 0, activity: 0, weight: 0 }, latest_weight_kg: null, active_goal: null,
+  net_kcal: 0,
+  resting_energy: { status: 'missing_profile', kcal_per_day: null, formula: 'mifflin-st-jeor-1990', age_years: null, missing_fields: ['sex', 'birth_date', 'height_cm', 'weight_kg'], note: '补充资料后可估算。' },
+  estimated_energy_balance_kcal: null,
+  counts: { food: 0, activity: 0, weight: 0 }, latest_weight_kg: null, active_goal: null,
 };
 
 const agentResponse: AgentRunResponse = {
@@ -48,10 +51,10 @@ const agentResponse: AgentRunResponse = {
   intents: [{ intent: 'food', confidence: 0.99, segment: '午餐吃苹果 88 千卡' }],
   plan: {
     schema_version: '3', goal: '执行已校验的工具计划：food.parse_candidate',
-    steps: [{ id: 'step-1', tool: 'food.parse_candidate', reason: '解析饮食候选', segment: null, depends_on: [], requires_confirmation: true }],
+    steps: [{ id: 'step-1', tool: 'food.parse_candidate', reason: '解析饮食候选', segment: null, depends_on: [], requires_confirmation: true, specialist: 'record_agent' }],
     needs_clarification: false, clarification_question: null,
   },
-  step_results: [{ step_id: 'step-1', tool: 'food.parse_candidate', status: 'awaiting_confirmation', message: '等待用户确认', error_code: null }],
+  step_results: [{ step_id: 'step-1', tool: 'food.parse_candidate', status: 'awaiting_confirmation', message: '等待用户确认', error_code: null, specialist: 'record_agent', duration_ms: 2 }],
   verification: { passed: true, completed_steps: 1, failed_steps: 0, skipped_steps: 0, replan_count: 0, reason: '所有计划步骤已完成或进入用户确认', decision: 'wait_for_user', waiting_for_user: true, pending_confirmations: 1 },
   observations: [], confirmation_progress: { total: 1, confirmed: 0, pending: 1, resume_available: false }, resumable: false,
   events: [],
@@ -63,6 +66,7 @@ const agentResponse: AgentRunResponse = {
   answer: null, citations: [], fallback_used: true,
   safety_notice: '不提供医疗诊断或治疗建议。',
   usage: { provider: 'mock', model: 'journey-deterministic-v1', input_tokens: 10, output_tokens: 12, retries: 0, latency_ms: 5, estimated_cost_usd: 0 },
+  selected_agents: ['orchestrator', 'record_agent'],
 };
 
 describe('Home page states and Agent candidate', () => {
@@ -91,7 +95,8 @@ describe('Home page states and Agent candidate', () => {
     await fireEvent.press(screen.getByRole('button', { name: '理解并处理' }));
     await waitFor(() => expect(screen.getByText('苹果')).toBeTruthy());
     expect(screen.getByText('Agent 执行计划')).toBeTruthy();
-    expect(screen.getByText('food.parse_candidate')).toBeTruthy();
+    expect(screen.getByText(/Orchestrator → Record Agent/)).toBeTruthy();
+    expect(screen.getByText(/food\.parse_candidate/)).toBeTruthy();
     expect(screen.getByText(/连续对话线程/)).toBeTruthy();
     expect(screen.getByText(/当前使用 Mock/)).toBeTruthy();
     await fireEvent.press(screen.getByRole('button', { name: '打开并确认候选' }));

@@ -22,7 +22,7 @@ def test_profile_goal_agent_records_home_journey_recommendation_and_weekly_summa
 
     profile = client.patch(
         "/api/v1/profile",
-        headers=headers,
+        headers={**headers, "If-Match-Version": "1"},
         json={
             "display_name": "Stage 7 E2E",
             "timezone": "Asia/Shanghai",
@@ -36,7 +36,7 @@ def test_profile_goal_agent_records_home_journey_recommendation_and_weekly_summa
 
     goal = client.put(
         "/api/v1/goals/current",
-        headers=headers,
+        headers={**headers, "If-Match-Version": "0"},
         json={
             "kind": "maintain",
             "target_weight_kg": 65,

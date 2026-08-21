@@ -1,4 +1,5 @@
-from datetime import date
+from datetime import UTC, date, datetime, timedelta
+from zoneinfo import ZoneInfo
 
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
@@ -27,9 +28,15 @@ def journey(
     end_date: date | None = None,
     cursor: date | None = None,
     limit: int = Query(default=7, ge=1, le=31),
+    window_days: int | None = Query(default=None, ge=1, le=90),
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ) -> JourneyResponse:
+    if window_days is not None and start_date is None:
+        effective_end = (
+            end_date or datetime.now(UTC).astimezone(ZoneInfo(user.profile.timezone)).date()
+        )
+        start_date = effective_end - timedelta(days=window_days - 1)
     return aggregate_service.journey(
         db, user, start_date=start_date, end_date=end_date, cursor=cursor, limit=limit
     )

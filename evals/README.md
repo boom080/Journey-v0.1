@@ -65,6 +65,31 @@ docker compose run --rm --no-deps --entrypoint python \
 的意图、Schema、工具序列、Policy、Provider/模型、无 fallback 和 Token 记录均为 100%，
 p95 3112 ms、费用 `$0.00257824`，门禁通过。两份报告都必须保留，用于展示量化反馈闭环。
 
+## RAG Eval v1：Retrieval / Generation 分层评测
+
+`datasets/rag_eval_v1.json` 固定 60 题（40 有答案、20 应拒答），覆盖单文档、多文档、相似干扰、
+模糊问题、知识缺失和高风险拒答。普通 CI 比较同一 Dataset/知识 bundle 的两套配置：
+
+```bash
+PYTHONPATH=backend python3 evals/run_rag_eval.py \
+  --mode mock --config rag-v1 --output reports/evals/rag-v1.json --enforce
+PYTHONPATH=backend python3 evals/run_rag_eval.py \
+  --mode mock --config rag-v2-candidate \
+  --baseline reports/evals/rag-v1.json \
+  --output reports/evals/rag-v2-candidate.json --enforce
+```
+
+Mock 只评 Recall@1/3/5、Precision、MRR、nDCG、检索拒答和时延；Generation 必须显示
+`SKIPPED_REAL_MODEL`。当前 v1 → v2 的 Recall@3 为 0.9625 → 1.0、Recall@5 为 0.9625 → 1.0、
+MRR 为 0.9500 → 0.9625。
+
+真实模式必须使用非 Mock Provider、正预算、显式 `--execute` 和全新报告文件；Runner 拒绝覆盖
+已有报告，并拒绝 Dataset/bundle hash 不同的基线。2026-08-10 DeepSeek 最终报告为
+`reports/evals/rag-v2-real-2026-08-10-r2.json`：Groundedness/Relevance 0.9625、Citation
+Correctness 0.9083、Abstention 1.0、41 次调用、19 次确定性 `insufficient_context`、费用
+`$0.00624232`。首次拒答 0.6833 的失败报告继续保留。人类可读报告见
+[`reports/RAG_EVAL_V1_2026_08_10.md`](reports/RAG_EVAL_V1_2026_08_10.md)。
+
 `food_image_contract.json` 只验证结构化输出、份量/热量区间、非食物拒答和强制用户校正
 契约，不含照片。真实质量集 `food_image_real/manifest.jsonl` 固定 100 张公开许可图片；
 二进制下载到被 Git 忽略的 `assets/`，不进入普通 CI。

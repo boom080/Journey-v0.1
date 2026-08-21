@@ -6,8 +6,13 @@ import { useEffect, useState } from 'react';
 export function JourneyQueryProvider({ children }: PropsWithChildren) {
   const [client] = useState(() => new QueryClient({
     defaultOptions: {
-      queries: { staleTime: 30_000, retry: 1, refetchOnReconnect: true },
-      mutations: { retry: 0 },
+      queries: {
+        staleTime: 30_000,
+        retry: 1,
+        refetchOnReconnect: true,
+        networkMode: 'always',
+      },
+      mutations: { retry: 0, networkMode: 'always' },
     },
   }));
 

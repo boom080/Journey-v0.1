@@ -6,6 +6,7 @@
     "development": {
       "developmentClient": true,
       "distribution": "internal",
+      "environment": "development",
       "env": {
         "APP_VARIANT": "development",
         "EXPO_PUBLIC_FOOD_IMAGE_ANALYSIS_ENABLED": "true"
@@ -19,6 +20,7 @@
     },
     "preview": {
       "distribution": "internal",
+      "environment": "preview",
       "env": {
         "APP_VARIANT": "preview",
         "EXPO_PUBLIC_FOOD_IMAGE_ANALYSIS_ENABLED": "false"
@@ -28,6 +30,7 @@
       }
     },
     "production": {
+      "environment": "production",
       "env": {
         "APP_VARIANT": "production",
         "EXPO_PUBLIC_FOOD_IMAGE_ANALYSIS_ENABLED": "false"

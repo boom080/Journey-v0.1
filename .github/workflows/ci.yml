@@ -99,6 +99,13 @@ jobs:
           mkdir -p reports/evals
           PYTHONPATH=backend python evals/run_evals.py \
             --output reports/evals/latest.json --enforce
+          PYTHONPATH=backend AGENT_PROVIDER=mock python evals/run_rag_eval.py \
+            --mode mock --config rag-v1 \
+            --output reports/evals/rag-v1.json --enforce
+          PYTHONPATH=backend AGENT_PROVIDER=mock python evals/run_rag_eval.py \
+            --mode mock --config rag-v2-candidate \
+            --baseline reports/evals/rag-v1.json \
+            --output reports/evals/rag-v2-candidate.json --enforce
       - name: Docker production and test targets
         run: |
           docker build --target test -t journey-api-test -f backend/Dockerfile .
@@ -109,6 +116,14 @@ jobs:
           STAGING_APP_SECRET_KEY: ci-staging-app-secret-at-least-32-characters
           STAGING_TEST_ACCOUNT_PASSWORD: ci-staging-test-password
         run: docker compose -f compose.yaml -f compose.staging.yaml config --quiet
+      - name: Production Compose and Caddy contracts
+        run: |
+          docker compose --env-file .env.production.example -f compose.production.yaml config --quiet
+          docker run --rm \
+            -e SERVER_DOMAIN=journey.example.com \
+            -v "$PWD/infra/caddy/Caddyfile:/etc/caddy/Caddyfile:ro" \
+            caddy:2.11.4-alpine \
+            caddy validate --config /etc/caddy/Caddyfile
       - uses: actions/upload-artifact@v7
         if: always()
         with:
@@ -142,7 +157,11 @@ jobs:
           npx expo export --platform ios --output-dir dist-ios
           npx expo export --platform android --output-dir dist-android
       - name: Web runtime image
-        run: docker build -f infra/web/Dockerfile -t journey-web-ci .
+        run: |
+          docker build -f infra/web/Dockerfile \
+            --build-arg APP_VARIANT=production \
+            --build-arg EXPO_PUBLIC_API_BASE_URL=https://journey.example.com \
+            -t journey-web-ci .
       - uses: actions/upload-artifact@v7
         if: always()
         with:

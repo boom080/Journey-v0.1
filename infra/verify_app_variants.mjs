@@ -5,8 +5,13 @@ import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
 const configPath = require.resolve('../apps/mobile/app.config.js');
 
-function loadVariant(variant) {
+function loadVariant(variant, apiBaseUrl = undefined) {
   process.env.APP_VARIANT = variant;
+  if (apiBaseUrl === undefined) {
+    delete process.env.EXPO_PUBLIC_API_BASE_URL;
+  } else {
+    process.env.EXPO_PUBLIC_API_BASE_URL = apiBaseUrl;
+  }
   delete require.cache[configPath];
   return require(configPath);
 }
@@ -18,7 +23,10 @@ const expected = {
 };
 
 for (const [variant, [name, identifier, cleartext]] of Object.entries(expected)) {
-  const config = loadVariant(variant);
+  const config = loadVariant(
+    variant,
+    variant === 'development' ? undefined : 'https://journey.example.com',
+  );
   assert.equal(config.name, name);
   assert.equal(config.ios.bundleIdentifier, identifier);
   assert.equal(config.android.package, identifier);
@@ -30,8 +38,17 @@ for (const [variant, [name, identifier, cleartext]] of Object.entries(expected))
   assert.equal(buildProperties[1].android.usesCleartextTraffic, cleartext);
 }
 
+assert.throws(
+  () => loadVariant('production', 'http://journey.example.com'),
+  /require an HTTPS EXPO_PUBLIC_API_BASE_URL/,
+);
+
 delete process.env.APP_VARIANT;
+delete process.env.EXPO_PUBLIC_API_BASE_URL;
 const eas = JSON.parse(fs.readFileSync(new URL('../apps/mobile/eas.json', import.meta.url), 'utf8'));
+assert.equal(eas.build.development.environment, 'development');
+assert.equal(eas.build.preview.environment, 'preview');
+assert.equal(eas.build.production.environment, 'production');
 assert.equal(eas.build.development.env.EXPO_PUBLIC_FOOD_IMAGE_ANALYSIS_ENABLED, 'true');
 assert.equal(eas.build.preview.env.EXPO_PUBLIC_FOOD_IMAGE_ANALYSIS_ENABLED, 'false');
 assert.equal(eas.build.production.env.EXPO_PUBLIC_FOOD_IMAGE_ANALYSIS_ENABLED, 'false');

@@ -6,6 +6,7 @@ from app.api.v1.aggregates import router as aggregate_router
 from app.api.v1.auth import router as auth_router
 from app.api.v1.food_images import router as food_image_router
 from app.api.v1.food_records import router as food_router
+from app.api.v1.inspirations import router as inspiration_router
 from app.api.v1.profile import router as profile_router
 from app.api.v1.weight_records import router as weight_router
 from app.schemas.common import ErrorResponse
@@ -29,6 +30,7 @@ for child in (
     activity_router,
     weight_router,
     aggregate_router,
+    inspiration_router,
     agent_router,
 ):
     router.include_router(child)

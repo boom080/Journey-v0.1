@@ -1,6 +1,7 @@
 import json
 
 from app.agent.model_router import ModelInvocation, ModelRouter
+from app.agent.specialists import public_specialist_catalog, specialist_for_tool
 from app.agent.tool_registry import public_tool_catalog
 from app.schemas.agent import AgentPlan, AgentPlanStep, IntentPlan
 
@@ -52,6 +53,7 @@ def deterministic_plan(message: str, intent_plan: IntentPlan) -> AgentPlan:
                 segment=segment,
                 depends_on=[item for item in (depends_on or []) if item],
                 requires_confirmation=requires_confirmation,
+                specialist=specialist_for_tool(tool),
             )
         )
         if reuse:
@@ -87,6 +89,7 @@ def deterministic_plan(message: str, intent_plan: IntentPlan) -> AgentPlan:
             context_id = add(
                 "context.load",
                 "在候选确认后加载画像、目标和近期聚合",
+                segment=item.segment,
                 depends_on=confirmation_step_ids,
                 reuse=True,
             )
@@ -143,6 +146,7 @@ def create_plan(
                 "intents": intent_plan.model_dump(mode="json"),
                 "recent_thread_memory": memory_context or [],
                 "tools": public_tool_catalog(),
+                "specialists": public_specialist_catalog(),
             },
             ensure_ascii=False,
         ),
@@ -156,6 +160,11 @@ def redacted_plan(plan: AgentPlan) -> AgentPlan:
     return plan.model_copy(
         update={
             "goal": f"执行已校验的工具计划：{tools}",
-            "steps": [step.model_copy(update={"segment": None}) for step in plan.steps],
+            "steps": [
+                step.model_copy(
+                    update={"segment": None, "specialist": specialist_for_tool(step.tool)}
+                )
+                for step in plan.steps
+            ],
         }
     )

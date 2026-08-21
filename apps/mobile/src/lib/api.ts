@@ -2,6 +2,7 @@ import type {
   AgentConfirmationRequest,
   AgentConfirmationResponse,
   AgentRunResponse,
+  AgentRunTrace,
   ActivityRecord,
   ActivityRecordCreate,
   ApiErrorResponse,
@@ -13,9 +14,13 @@ import type {
   Goal,
   GoalUpsertRequest,
   HomeToday,
+  InspirationCreate,
+  InspirationPreview,
+  InspirationPreviewRequest,
   JourneyProfile,
   JourneyResponse,
   LoginRequest,
+  LifeInspiration,
   MessageResponse,
   Page,
   ProfileUpdateRequest,
@@ -29,7 +34,8 @@ import type {
 import { getApiBaseUrl } from '@/config/environment';
 import { clearStoredSession, loadStoredSession, saveStoredSession } from '@/lib/session-storage';
 
-const REQUEST_TIMEOUT_MS = 10_000;
+export const REQUEST_TIMEOUT_MS = 10_000;
+export const AGENT_REQUEST_TIMEOUT_MS = 120_000;
 type SessionListener = (session: TokenPair | null) => void;
 const sessionListeners = new Set<SessionListener>();
 
@@ -69,10 +75,10 @@ async function parseError(response: Response): Promise<ApiError> {
 async function rawRequest<T>(
   path: string,
   init: RequestInit = {},
-  options: { auth?: boolean; retryAuth?: boolean } = {},
+  options: { auth?: boolean; retryAuth?: boolean; timeoutMs?: number } = {},
 ): Promise<T> {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+  const timeout = setTimeout(() => controller.abort(), options.timeoutMs ?? REQUEST_TIMEOUT_MS);
   const session = options.auth === false ? null : await loadStoredSession();
   const headers = new Headers(init.headers);
   if (init.body && !headers.has('Content-Type')) headers.set('Content-Type', 'application/json');
@@ -154,14 +160,22 @@ export async function restoreSession(): Promise<TokenPair | null> {
 }
 
 export const fetchProfile = () => rawRequest<JourneyProfile>('/api/v1/profile');
-export const updateProfile = (payload: ProfileUpdateRequest) =>
-  rawRequest<JourneyProfile>('/api/v1/profile', { method: 'PATCH', body: JSON.stringify(payload) });
+export const updateProfile = (payload: ProfileUpdateRequest, expectedVersion: number) =>
+  rawRequest<JourneyProfile>('/api/v1/profile', {
+    method: 'PATCH',
+    headers: { 'If-Match-Version': String(expectedVersion) },
+    body: JSON.stringify(payload),
+  });
 export const fetchGoal = () => rawRequest<Goal>('/api/v1/goals/current');
-export const saveGoal = (payload: GoalUpsertRequest) =>
-  rawRequest<Goal>('/api/v1/goals/current', { method: 'PUT', body: JSON.stringify(payload) });
+export const saveGoal = (payload: GoalUpsertRequest, expectedVersion: number) =>
+  rawRequest<Goal>('/api/v1/goals/current', {
+    method: 'PUT',
+    headers: { 'If-Match-Version': String(expectedVersion) },
+    body: JSON.stringify(payload),
+  });
 export const fetchHomeToday = () => rawRequest<HomeToday>('/api/v1/home/today');
-export const fetchJourney = (limit = 7, cursor?: string) =>
-  rawRequest<JourneyResponse>(`/api/v1/journey?limit=${limit}${cursor ? `&cursor=${cursor}` : ''}`);
+export const fetchJourney = (limit = 7, cursor?: string, windowDays?: number) =>
+  rawRequest<JourneyResponse>(`/api/v1/journey?limit=${limit}${cursor ? `&cursor=${cursor}` : ''}${windowDays ? `&window_days=${windowDays}` : ''}`);
 
 const recordPath = { food: 'food-records', activity: 'activity-records', weight: 'weight-records' } as const;
 export type RecordKind = keyof typeof recordPath;
@@ -182,30 +196,56 @@ export async function updateRecord(
   kind: RecordKind,
   id: string,
   payload: Record<string, unknown>,
+  expectedVersion: number,
 ): Promise<FoodRecord | ActivityRecord | WeightRecord> {
   return rawRequest(`/api/v1/${recordPath[kind]}/${id}`, {
     method: 'PATCH',
+    headers: { 'If-Match-Version': String(expectedVersion) },
     body: JSON.stringify(payload),
   });
 }
 
-export const deleteRecord = (kind: RecordKind, id: string) =>
-  rawRequest<void>(`/api/v1/${recordPath[kind]}/${id}`, { method: 'DELETE' });
+export const deleteRecord = (kind: RecordKind, id: string, expectedVersion: number) =>
+  rawRequest<void>(`/api/v1/${recordPath[kind]}/${id}`, {
+    method: 'DELETE',
+    headers: { 'If-Match-Version': String(expectedVersion) },
+  });
 
 export const listFoodRecords = () => rawRequest<Page<FoodRecord>>('/api/v1/food-records?limit=100');
 export const listActivityRecords = () => rawRequest<Page<ActivityRecord>>('/api/v1/activity-records?limit=100');
 export const listWeightRecords = () => rawRequest<Page<WeightRecord>>('/api/v1/weight-records?limit=100');
 
+export const previewInspiration = (payload: InspirationPreviewRequest) =>
+  rawRequest<InspirationPreview>('/api/v1/inspirations/preview', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+
+export const createInspiration = (payload: InspirationCreate) =>
+  rawRequest<LifeInspiration>('/api/v1/inspirations', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+
+export const listInspirations = () =>
+  rawRequest<Page<LifeInspiration>>('/api/v1/inspirations?limit=100');
+
+export const deleteInspiration = (id: string) =>
+  rawRequest<MessageResponse>(`/api/v1/inspirations/${id}`, { method: 'DELETE' });
+
 export const runAgent = (message: string, threadId?: string) =>
   rawRequest<AgentRunResponse>('/api/v1/agent/runs', {
     method: 'POST',
     body: JSON.stringify({ message, thread_id: threadId }),
-  });
+  }, { timeoutMs: AGENT_REQUEST_TIMEOUT_MS });
 
 export const resumeAgentRun = (runId: string) =>
   rawRequest<AgentRunResponse>(`/api/v1/agent/runs/${runId}/resume`, {
     method: 'POST',
-  });
+  }, { timeoutMs: AGENT_REQUEST_TIMEOUT_MS });
+
+export const fetchAgentRunTrace = (runId: string) =>
+  rawRequest<AgentRunTrace>(`/api/v1/agent/runs/${runId}`);
 
 export const analyzeFoodImage = (payload: FoodImageAnalyzeRequest) =>
   rawRequest<FoodImageAnalysisResponse>('/api/v1/food-images/analyses', {

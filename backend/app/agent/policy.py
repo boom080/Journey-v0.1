@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+from app.agent.specialists import specialist_for_tool
 from app.agent.tool_registry import TOOL_REGISTRY
 from app.schemas.agent import AgentPlan
 
@@ -32,6 +33,8 @@ def validate_plan(plan: AgentPlan) -> PolicyDecision:
             violations.append("confirmation_policy_mismatch")
         if not spec.read_only:
             violations.append("direct_write_tool_forbidden")
+        if step.specialist is not None and step.specialist != specialist_for_tool(step.tool):
+            violations.append("specialist_tool_mismatch")
         seen.add(step.id)
         tool_by_id[step.id] = step.tool
 

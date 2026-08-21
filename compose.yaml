@@ -9,7 +9,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-local-journey-db-password}
       POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256
     ports:
-      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+      - "127.0.0.1:${POSTGRES_PORT:-55432}:5432"
     volumes:
       - journey_postgres_data:/var/lib/postgresql
     healthcheck:
@@ -70,7 +70,7 @@ services:
       KIMI_OUTPUT_USD_PER_MILLION: ${KIMI_OUTPUT_USD_PER_MILLION:-0}
       OPENAI_COMPATIBLE_API_BASE_URL: ${OPENAI_COMPATIBLE_API_BASE_URL:-}
       OPENAI_COMPATIBLE_DEFAULT_MODEL: ${OPENAI_COMPATIBLE_DEFAULT_MODEL:-}
-      AGENT_TIMEOUT_SECONDS: ${AGENT_TIMEOUT_SECONDS:-12}
+      AGENT_TIMEOUT_SECONDS: ${AGENT_TIMEOUT_SECONDS:-30}
       AGENT_MAX_RETRIES: ${AGENT_MAX_RETRIES:-1}
       AGENT_MAX_OUTPUT_TOKENS: ${AGENT_MAX_OUTPUT_TOKENS:-2048}
       AGENT_DAILY_BUDGET_USD: ${AGENT_DAILY_BUDGET_USD:-0}
@@ -78,6 +78,7 @@ services:
       AGENT_OUTPUT_USD_PER_MILLION: ${AGENT_OUTPUT_USD_PER_MILLION:-0}
       LITELLM_LOG: ${LITELLM_LOG:-ERROR}
       SEED_BUILTIN_KNOWLEDGE: ${SEED_BUILTIN_KNOWLEDGE:-true}
+      LIFE_INSPIRATION_FETCH_ENABLED: ${LIFE_INSPIRATION_FETCH_ENABLED:-true}
       FOOD_IMAGE_ANALYSIS_ENABLED: ${FOOD_IMAGE_ANALYSIS_ENABLED:-true}
       FOOD_IMAGE_PROVIDER: ${FOOD_IMAGE_PROVIDER:-mock}
       FOOD_IMAGE_MODEL: ${FOOD_IMAGE_MODEL:-journey-food-image-mock-v1}
@@ -148,6 +149,7 @@ services:
       AGENT_OUTPUT_USD_PER_MILLION: "0"
       LITELLM_LOG: ERROR
       SEED_BUILTIN_KNOWLEDGE: "true"
+      LIFE_INSPIRATION_FETCH_ENABLED: "true"
       FOOD_IMAGE_ANALYSIS_ENABLED: "true"
       FOOD_IMAGE_PROVIDER: mock
       FOOD_IMAGE_EXTERNAL_UPLOAD_CONFIRMED: "false"
@@ -169,7 +171,81 @@ services:
         --cov-report=xml:/reports/backend/coverage.xml
         --cov-fail-under=70 &&
         python evals/run_evals.py
-        --output /reports/evals/latest.json --enforce
+        --output /reports/evals/latest.json --enforce &&
+        python evals/run_rag_eval.py
+        --mode mock --config rag-v1
+        --output /reports/evals/rag-v1.json --enforce &&
+        python evals/run_rag_eval.py
+        --mode mock --config rag-v2-candidate
+        --baseline /reports/evals/rag-v1.json
+        --output /reports/evals/rag-v2-candidate.json --enforce
+    restart: "no"
+
+  rag-eval:
+    profiles: ["eval"]
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+      target: test
+    environment:
+      PYTHONPATH: /app
+      APP_ENV: local
+      APP_SECRET_KEY: ${APP_SECRET_KEY:-local-development-secret-change-before-use}
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-journey}:${POSTGRES_PASSWORD:-local-journey-db-password}@db:5432/${POSTGRES_DB:-journey}
+      SEED_TEST_ACCOUNT: "false"
+      SEED_BUILTIN_KNOWLEDGE: "true"
+      AGENT_PROVIDER: ${RAG_EVAL_PROVIDER:-mock}
+      AGENT_V2_ENABLED: "true"
+      AGENT_V3_ENABLED: "true"
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
+      QWEN_API_KEY: ${QWEN_API_KEY:-}
+      GLM_API_KEY: ${GLM_API_KEY:-}
+      KIMI_API_KEY: ${KIMI_API_KEY:-}
+      OPENAI_COMPATIBLE_API_KEY: ${OPENAI_COMPATIBLE_API_KEY:-}
+      AGENT_API_KEY: ${AGENT_API_KEY:-}
+      AGENT_API_BASE_URL: ${AGENT_API_BASE_URL:-}
+      AGENT_DEFAULT_MODEL: ${AGENT_DEFAULT_MODEL:-journey-deterministic-v1}
+      AGENT_MODEL_MAP_JSON: ${AGENT_MODEL_MAP_JSON:-{}}
+      DEEPSEEK_API_BASE_URL: ${DEEPSEEK_API_BASE_URL:-https://api.deepseek.com}
+      DEEPSEEK_DEFAULT_MODEL: ${DEEPSEEK_DEFAULT_MODEL:-deepseek-v4-flash}
+      DEEPSEEK_MODEL_MAP_JSON: '${DEEPSEEK_MODEL_MAP_JSON:-{"recommendation":"deepseek-v4-pro","weekly_summary":"deepseek-v4-pro"}}'
+      DEEPSEEK_MODEL_PRICING_JSON: '${DEEPSEEK_MODEL_PRICING_JSON:-{"deepseek-v4-flash":{"input":0.14,"output":0.28},"deepseek-v4-pro":{"input":0.435,"output":0.87}}}'
+      QWEN_API_BASE_URL: ${QWEN_API_BASE_URL:-https://dashscope.aliyuncs.com/compatible-mode/v1}
+      QWEN_DEFAULT_MODEL: ${QWEN_DEFAULT_MODEL:-qwen3.7-flash}
+      QWEN_MODEL_MAP_JSON: ${QWEN_MODEL_MAP_JSON:-{}}
+      QWEN_MODEL_PRICING_JSON: ${QWEN_MODEL_PRICING_JSON:-{}}
+      GLM_API_BASE_URL: ${GLM_API_BASE_URL:-https://open.bigmodel.cn/api/paas/v4}
+      GLM_DEFAULT_MODEL: ${GLM_DEFAULT_MODEL:-glm-5.2}
+      GLM_MODEL_MAP_JSON: ${GLM_MODEL_MAP_JSON:-{}}
+      GLM_MODEL_PRICING_JSON: ${GLM_MODEL_PRICING_JSON:-{}}
+      KIMI_API_BASE_URL: ${KIMI_API_BASE_URL:-https://api.moonshot.cn/v1}
+      KIMI_DEFAULT_MODEL: ${KIMI_DEFAULT_MODEL:-kimi-k2.6}
+      KIMI_MODEL_MAP_JSON: ${KIMI_MODEL_MAP_JSON:-{}}
+      KIMI_MODEL_PRICING_JSON: ${KIMI_MODEL_PRICING_JSON:-{}}
+      OPENAI_COMPATIBLE_API_BASE_URL: ${OPENAI_COMPATIBLE_API_BASE_URL:-}
+      OPENAI_COMPATIBLE_DEFAULT_MODEL: ${OPENAI_COMPATIBLE_DEFAULT_MODEL:-}
+      AGENT_TIMEOUT_SECONDS: ${AGENT_TIMEOUT_SECONDS:-30}
+      AGENT_MAX_RETRIES: ${AGENT_MAX_RETRIES:-1}
+      AGENT_MAX_OUTPUT_TOKENS: ${AGENT_MAX_OUTPUT_TOKENS:-2048}
+      AGENT_DAILY_BUDGET_USD: ${AGENT_DAILY_BUDGET_USD:-0}
+      AGENT_INPUT_USD_PER_MILLION: ${AGENT_INPUT_USD_PER_MILLION:-0}
+      AGENT_OUTPUT_USD_PER_MILLION: ${AGENT_OUTPUT_USD_PER_MILLION:-0}
+      LITELLM_LOG: ${LITELLM_LOG:-ERROR}
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./reports:/reports
+    command:
+      - python
+      - evals/run_rag_eval.py
+      - --mode
+      - mock
+      - --config
+      - rag-v2-candidate
+      - --output
+      - /reports/evals/rag-v2-candidate.json
     restart: "no"
 
   blackbox-api:

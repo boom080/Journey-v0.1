@@ -1,6 +1,7 @@
 # Journey API v1
 
-> 阶段 4 核心契约 + 阶段 6 Agent/RAG + 阶段 9 食物图片候选 + 阶段 11 Agent v3。机器可读事实源是
+> 阶段 4 核心契约 + 阶段 6 Agent/RAG + 阶段 9 食物图片候选 + 阶段 11 Agent v3 + 阶段 12
+> local-first 并发版本与生活灵感。机器可读事实源是
 > [`../packages/contracts/openapi.json`](../packages/contracts/openapi.json)。
 
 ## 统一约定
@@ -13,6 +14,10 @@
 - 请求追踪：可传 `X-Request-ID`，响应始终回传有效 request ID。
 - 创建饮食、运动、体重时可传 `Idempotency-Key`；同 key、同 payload 返回原结果，
   同 key、不同 payload 返回 `409 idempotency_conflict`。
+- 画像、目标、饮食、运动、体重响应均包含正整数 `version`。更新/删除必须把已读取版本放入
+  `If-Match-Version`；新建当前目标可传 `0` 或省略。
+- 版本过期返回 `409 sync_conflict`，`details` 包含资源类型/ID、预期/实际版本和当前服务端
+  快照；客户端必须让用户选择或重新基于新版本提交，不得静默覆盖。
 - 列表分页：`limit`、`offset`、`meta.total`；Journey 使用日期 `cursor`。
 - Agent 候选确认必须传 `Idempotency-Key`；同一候选只能成功写入一次。
 
@@ -51,6 +56,9 @@ access token 默认 15 分钟，refresh token 默认 30 天。手机号身份只
 
 最新体重来自 WeightRecord，不在 Profile 保存第二份值。
 
+`PATCH /profile` 和更新已有 `/goals/current` 必须发送当前 `If-Match-Version`。目标不存在时
+`PUT /goals/current` 使用版本 `0` 创建；并发设备已创建目标时会得到 `409 sync_conflict`。
+
 ## 核心记录和聚合
 
 | 方法 | 路径 | 用途 |
@@ -65,13 +73,25 @@ access token 默认 15 分钟，refresh token 默认 30 天。手机号身份只
 | GET | `/journey` | 日期范围与日期 cursor 聚合 |
 
 所有记录查询和变更都按当前 User 过滤；访问他人记录统一返回 404，避免泄露存在性。
+三类记录创建后从 `version=1` 开始；每次 PATCH 成功加 1。PATCH/DELETE 必须发送当前
+`If-Match-Version`，服务端在锁行后比较版本，避免两个设备静默覆盖。
+
+`GET /journey` 可传 `window_days=7` 或 `window_days=30`，服务端按用户画像 timezone 计算真实
+日历窗口；仍保留 `limit/cursor` 的多日列表语义，不把 Journey 改成今日 Timeline。
+
+`GET /home/today` 的兼容字段 `net_kcal` 仍为 `intake_kcal - activity_kcal`，语义是“记录差值”，
+不是包含基础活动、食物热效应等因素的完整能量结余。响应同时返回 `resting_energy`：仅在生日、
+身高、最新体重及女性/男性公式系数完整，且年龄处于原始健康成人样本 19—78 岁时，使用
+Mifflin–St Jeor 1990 公式给出静息能量消耗预测值；否则返回 `missing_profile` 或
+`unsupported_profile` 和原因。`estimated_energy_balance_kcal` 只计算
+`摄入 - 已记录运动 - 静息估算`，UI 必须提示它不等于 TDEE，也不能作为医疗测量值。
 
 ## Agent 与受控知识
 
 | 方法 | 路径 | 用途 |
 |---|---|---|
 | POST | `/agent/runs` | 路由单/多意图，执行查询或返回可编辑候选、引用和有序事件 |
-| GET | `/agent/runs/{run_id}` | 仅本人查询脱敏工具轨迹、版本、Token、延迟、重试与成本 |
+| GET | `/agent/runs/{run_id}` | 仅本人查询脱敏工具轨迹、确认进度、版本、Token、延迟、重试与成本 |
 | POST | `/agent/runs/{run_id}/resume` | 全部候选确认后，显式恢复 checkpoint 并读取最新业务数据 |
 | POST | `/agent/confirmations/{candidate_id}` | 验证签名令牌和幂等键后写入一条 food/activity/weight 记录 |
 
@@ -81,8 +101,14 @@ model 和 `$0` 成本。写意图不会在 `/agent/runs` 阶段产生业务记�
 改变候选类型。RAG 只从受控公共知识返回真实 chunk/document/source/version 引用；无相关
 知识时返回 no-answer，不进行自由网络搜索。
 
-阶段 11 默认以 `AGENT_V3_ENABLED=true` 启用带人工检查点和失败恢复的单 Agent 闭环；关闭后
-回退 `AGENT_V2_ENABLED` 所控制的阶段 10 路径。请求可选传入本人已有的
+移动端普通 API 请求保持 10 秒超时，`POST /agent/runs` 与 Resume 使用独立 120 秒窗口，以覆盖
+真实 Provider 的有界规划、工具和总结链路。服务端模型调用仍保留 30 秒/次、最多重试 1 次和
+可解释降级；两个超时属于不同层级。客户端遇到 Resume 409 或确认响应不确定时会读取上述 Run
+Trace，若 Run 已 `completed/degraded` 则清理过期继续状态，不重复写入业务记录。
+
+阶段 13 在 `AGENT_V3_ENABLED=true` 的既有状态机上明确为 Orchestrator + Record/Health
+Knowledge/Journey Summary 三个有界 Specialist；它们共享同一 Run State，不做 Agent 群聊，
+关闭 v3 后回退 `AGENT_V2_ENABLED` 所控制的阶段 10 路径。请求可选传入本人已有的
 `thread_id`；省略时创建新线程。跨用户或不存在的线程返回 404。响应在原有兼容字段外增加：
 
 - `thread_id`：PostgreSQL 线程标识；线程只保留最近 8 条结构化摘要，不保存原始消息正文。
@@ -93,6 +119,9 @@ model 和 `$0` 成本。写意图不会在 `/agent/runs` 阶段产生业务记�
 - `verification`：`done`、`wait_for_user`、`replan`、`clarify`、`fallback` 或 `stop` 决策，
   以及最多 2 次的 `replan_count`。
 - `confirmation_progress` 与 `resumable`：候选总数、已确认/待确认数量和是否允许显式恢复。
+- `selected_agents`：本次实际选择的 Orchestrator/Specialist 顺序。
+- `specialist` 与 `duration_ms`：Plan、Step、Observation 与 Tool Trace 的职责和耗时；Record
+  额外报告候选数，Knowledge 报告检索文档/最高分，Summary 报告数据窗口。
 
 组合“记录 + 建议”会在候选生成后返回 `status=waiting_for_user`，不会提前读取未确认数据或
 生成建议。Confirmation 响应只报告进度，不隐藏触发新的模型费用；全部候选确认后客户端调用
@@ -107,6 +136,24 @@ Planner 不能创建任意函数名，Executor 只执行服务端类型化注册
 `knowledge.safe_summary`，建议生成失败可用 `recommendation.rules_fallback`。将
 `AGENT_V3_ENABLED=false` 回退 v2，再关闭 `AGENT_V2_ENABLED` 才回退阶段 6 的 v1 固定分支；
 两种回退均不改变公开请求契约和既有业务数据。
+
+## 生活灵感（阶段 12 ADR-037）
+
+| 方法 | 路径 | 用途 |
+|---|---|---|
+| POST | `/inspirations/preview` | 对用户主动提供的小红书公开 HTTPS 链接做受限元数据预览 |
+| POST | `/inspirations` | 显式确认后保存链接、标题、短摘要、日期和标签 |
+| GET | `/inspirations` | 只列出当前用户的生活灵感 |
+| DELETE | `/inspirations/{id}` | 删除当前用户的一条生活灵感 |
+
+preview 只允许 `xiaohongshu.com` 与 `xhslink.com` 白名单，拒绝凭据 URL、自定义端口、私网 DNS
+和跨域重定向；不发送 Cookie，最多 3 次重定向，超时 8 秒，响应体上限 256 KB，只读取 HTML
+title/description 元数据。网络、访问控制、内容类型、体积或 Prompt Injection 门禁失败时返回
+`manual_required`，不绕过登录或反爬。
+
+创建请求必须包含 `confirmed=true`；同一用户不能重复保存同一规范化 URL。每条记录固定
+`evidence_level=inspiration_only`，不会成为 Agent 工具输入、RAG 文档、营养数值或健康建议
+证据。production 默认 `LIFE_INSPIRATION_FETCH_ENABLED=false`，此时只保留手动填写与确认路径。
 
 ## 食物图片候选（阶段 9 单项）
 

@@ -202,6 +202,10 @@
             "format": "date-time",
             "title": "Updated At",
             "type": "string"
+          },
+          "version": {
+            "title": "Version",
+            "type": "integer"
           }
         },
         "required": [
@@ -216,6 +220,7 @@
           "note",
           "source",
           "source_ref",
+          "version",
           "created_at",
           "updated_at"
         ],
@@ -606,6 +611,17 @@
             "title": "Recoverable",
             "type": "boolean"
           },
+          "specialist": {
+            "default": "orchestrator",
+            "enum": [
+              "orchestrator",
+              "record_agent",
+              "health_knowledge_agent",
+              "journey_summary_agent"
+            ],
+            "title": "Specialist",
+            "type": "string"
+          },
           "status": {
             "enum": [
               "completed",
@@ -734,6 +750,23 @@
             ],
             "title": "Segment"
           },
+          "specialist": {
+            "anyOf": [
+              {
+                "enum": [
+                  "orchestrator",
+                  "record_agent",
+                  "health_knowledge_agent",
+                  "journey_summary_agent"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Specialist"
+          },
           "tool": {
             "enum": [
               "context.load",
@@ -763,6 +796,12 @@
       },
       "AgentPlanStepResult": {
         "properties": {
+          "duration_ms": {
+            "default": 0,
+            "minimum": 0.0,
+            "title": "Duration Ms",
+            "type": "integer"
+          },
           "error_code": {
             "anyOf": [
               {
@@ -778,6 +817,17 @@
           "message": {
             "maxLength": 500,
             "title": "Message",
+            "type": "string"
+          },
+          "specialist": {
+            "default": "orchestrator",
+            "enum": [
+              "orchestrator",
+              "record_agent",
+              "health_knowledge_agent",
+              "journey_summary_agent"
+            ],
+            "title": "Specialist",
             "type": "string"
           },
           "status": {
@@ -946,6 +996,20 @@
             "title": "Safety Notice",
             "type": "string"
           },
+          "selected_agents": {
+            "items": {
+              "enum": [
+                "orchestrator",
+                "record_agent",
+                "health_knowledge_agent",
+                "journey_summary_agent"
+              ],
+              "type": "string"
+            },
+            "maxItems": 4,
+            "title": "Selected Agents",
+            "type": "array"
+          },
           "status": {
             "enum": [
               "completed",
@@ -1025,6 +1089,16 @@
               }
             ],
             "title": "Completed At"
+          },
+          "confirmation_progress": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AgentConfirmationProgress"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "created_at": {
             "format": "date-time",
@@ -1125,6 +1199,20 @@
             "title": "Schema Version",
             "type": "string"
           },
+          "selected_agents": {
+            "items": {
+              "enum": [
+                "orchestrator",
+                "record_agent",
+                "health_knowledge_agent",
+                "journey_summary_agent"
+              ],
+              "type": "string"
+            },
+            "maxItems": 4,
+            "title": "Selected Agents",
+            "type": "array"
+          },
           "status": {
             "title": "Status",
             "type": "string"
@@ -1213,6 +1301,17 @@
             "additionalProperties": true,
             "title": "Output Summary",
             "type": "object"
+          },
+          "specialist": {
+            "default": "orchestrator",
+            "enum": [
+              "orchestrator",
+              "record_agent",
+              "health_knowledge_agent",
+              "journey_summary_agent"
+            ],
+            "title": "Specialist",
+            "type": "string"
           },
           "status": {
             "title": "Status",
@@ -2041,6 +2140,10 @@
             "format": "date-time",
             "title": "Updated At",
             "type": "string"
+          },
+          "version": {
+            "title": "Version",
+            "type": "integer"
           }
         },
         "required": [
@@ -2058,6 +2161,7 @@
           "fat_g",
           "source",
           "source_ref",
+          "version",
           "created_at",
           "updated_at"
         ],
@@ -2261,6 +2365,10 @@
             "format": "date-time",
             "title": "Updated At",
             "type": "string"
+          },
+          "version": {
+            "title": "Version",
+            "type": "integer"
           }
         },
         "required": [
@@ -2271,6 +2379,7 @@
           "starts_on",
           "target_date",
           "is_active",
+          "version",
           "updated_at"
         ],
         "title": "GoalResponse",
@@ -2355,6 +2464,17 @@
             "title": "Date",
             "type": "string"
           },
+          "estimated_energy_balance_kcal": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Estimated Energy Balance Kcal"
+          },
           "intake_kcal": {
             "title": "Intake Kcal",
             "type": "number"
@@ -2374,6 +2494,9 @@
             "title": "Net Kcal",
             "type": "number"
           },
+          "resting_energy": {
+            "$ref": "#/components/schemas/RestingEnergyEstimate"
+          },
           "timezone": {
             "title": "Timezone",
             "type": "string"
@@ -2385,6 +2508,8 @@
           "intake_kcal",
           "activity_kcal",
           "net_kcal",
+          "resting_energy",
+          "estimated_energy_balance_kcal",
           "counts",
           "latest_weight_kg",
           "active_goal"
@@ -2413,6 +2538,217 @@
           "is_verified"
         ],
         "title": "IdentityResponse",
+        "type": "object"
+      },
+      "InspirationCreateRequest": {
+        "properties": {
+          "confirmed": {
+            "const": true,
+            "title": "Confirmed",
+            "type": "boolean"
+          },
+          "source_checked_at": {
+            "format": "date-time",
+            "title": "Source Checked At",
+            "type": "string"
+          },
+          "source_url": {
+            "maxLength": 2048,
+            "minLength": 12,
+            "title": "Source Url",
+            "type": "string"
+          },
+          "summary": {
+            "anyOf": [
+              {
+                "maxLength": 500,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Summary"
+          },
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 5,
+            "title": "Tags",
+            "type": "array"
+          },
+          "title": {
+            "maxLength": 160,
+            "minLength": 1,
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_url",
+          "title",
+          "source_checked_at",
+          "confirmed"
+        ],
+        "title": "InspirationCreateRequest",
+        "type": "object"
+      },
+      "InspirationPreviewRequest": {
+        "properties": {
+          "source_url": {
+            "maxLength": 2048,
+            "minLength": 12,
+            "title": "Source Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_url"
+        ],
+        "title": "InspirationPreviewRequest",
+        "type": "object"
+      },
+      "InspirationPreviewResponse": {
+        "properties": {
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "safety_flags": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Safety Flags",
+            "type": "array"
+          },
+          "source_checked_at": {
+            "format": "date-time",
+            "title": "Source Checked At",
+            "type": "string"
+          },
+          "source_name": {
+            "const": "小红书",
+            "default": "小红书",
+            "title": "Source Name",
+            "type": "string"
+          },
+          "source_url": {
+            "title": "Source Url",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "preview",
+              "manual_required"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "summary": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Summary"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          }
+        },
+        "required": [
+          "status",
+          "source_url",
+          "source_checked_at",
+          "safety_flags",
+          "message"
+        ],
+        "title": "InspirationPreviewResponse",
+        "type": "object"
+      },
+      "InspirationResponse": {
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "evidence_level": {
+            "const": "inspiration_only",
+            "title": "Evidence Level",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "source_checked_at": {
+            "format": "date-time",
+            "title": "Source Checked At",
+            "type": "string"
+          },
+          "source_name": {
+            "title": "Source Name",
+            "type": "string"
+          },
+          "source_url": {
+            "title": "Source Url",
+            "type": "string"
+          },
+          "summary": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Summary"
+          },
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Tags",
+            "type": "array"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "source_url",
+          "source_name",
+          "title",
+          "summary",
+          "tags",
+          "evidence_level",
+          "source_checked_at",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "InspirationResponse",
         "type": "object"
       },
       "IntentItem": {
@@ -2648,6 +2984,26 @@
         "title": "Page[FoodRecordResponse]",
         "type": "object"
       },
+      "Page_InspirationResponse_": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/InspirationResponse"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/PageMeta"
+          }
+        },
+        "required": [
+          "items",
+          "meta"
+        ],
+        "title": "Page[InspirationResponse]",
+        "type": "object"
+      },
       "Page_WeightRecordResponse_": {
         "properties": {
           "items": {
@@ -2740,6 +3096,10 @@
             "format": "uuid",
             "title": "User Id",
             "type": "string"
+          },
+          "version": {
+            "title": "Version",
+            "type": "integer"
           }
         },
         "required": [
@@ -2752,6 +3112,7 @@
           "height_cm",
           "preferred_unit",
           "latest_weight_kg",
+          "version",
           "updated_at"
         ],
         "title": "ProfileResponse",
@@ -2925,6 +3286,65 @@
           "display_name"
         ],
         "title": "RegisterRequest",
+        "type": "object"
+      },
+      "RestingEnergyEstimate": {
+        "properties": {
+          "age_years": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Age Years"
+          },
+          "formula": {
+            "const": "mifflin-st-jeor-1990",
+            "title": "Formula",
+            "type": "string"
+          },
+          "kcal_per_day": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Kcal Per Day"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Missing Fields",
+            "type": "array"
+          },
+          "note": {
+            "title": "Note",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "available",
+              "missing_profile",
+              "unsupported_profile"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "formula",
+          "missing_fields",
+          "note"
+        ],
+        "title": "RestingEnergyEstimate",
         "type": "object"
       },
       "Sex": {
@@ -3122,6 +3542,10 @@
             "title": "Updated At",
             "type": "string"
           },
+          "version": {
+            "title": "Version",
+            "type": "integer"
+          },
           "weight_kg": {
             "title": "Weight Kg",
             "type": "number"
@@ -3134,6 +3558,7 @@
           "weight_kg",
           "note",
           "source",
+          "version",
           "created_at",
           "updated_at"
         ],
@@ -3433,6 +3858,23 @@
               "title": "Record Id",
               "type": "string"
             }
+          },
+          {
+            "in": "header",
+            "name": "If-Match-Version",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "minimum": 1,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "If-Match-Version"
+            }
           }
         ],
         "responses": {
@@ -3528,6 +3970,23 @@
               "format": "uuid",
               "title": "Record Id",
               "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "If-Match-Version",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "minimum": 1,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "If-Match-Version"
             }
           }
         ],
@@ -4812,6 +5271,23 @@
               "title": "Record Id",
               "type": "string"
             }
+          },
+          {
+            "in": "header",
+            "name": "If-Match-Version",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "minimum": 1,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "If-Match-Version"
+            }
           }
         ],
         "responses": {
@@ -4907,6 +5383,23 @@
               "format": "uuid",
               "title": "Record Id",
               "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "If-Match-Version",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "minimum": 1,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "If-Match-Version"
             }
           }
         ],
@@ -5090,6 +5583,25 @@
       },
       "put": {
         "operationId": "upsert_goal_api_v1_goals_current_put",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "If-Match-Version",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "If-Match-Version"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -5288,6 +5800,405 @@
         ]
       }
     },
+    "/api/v1/inspirations": {
+      "get": {
+        "operationId": "list_inspirations_api_v1_inspirations_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_InspirationResponse_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Invalid request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Authentication failed"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Resource not found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Resource conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Validation failed"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unexpected server error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List Inspirations",
+        "tags": [
+          "Life Inspirations"
+        ]
+      },
+      "post": {
+        "operationId": "create_inspiration_api_v1_inspirations_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InspirationCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspirationResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Invalid request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Authentication failed"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Resource not found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Resource conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Validation failed"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unexpected server error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Create Inspiration",
+        "tags": [
+          "Life Inspirations"
+        ]
+      }
+    },
+    "/api/v1/inspirations/preview": {
+      "post": {
+        "operationId": "preview_inspiration_api_v1_inspirations_preview_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InspirationPreviewRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspirationPreviewResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Invalid request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Authentication failed"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Resource not found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Resource conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Validation failed"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unexpected server error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Preview Inspiration",
+        "tags": [
+          "Life Inspirations"
+        ]
+      }
+    },
+    "/api/v1/inspirations/{inspiration_id}": {
+      "delete": {
+        "operationId": "delete_inspiration_api_v1_inspirations__inspiration_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "inspiration_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Inspiration Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Invalid request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Authentication failed"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Resource not found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Resource conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Validation failed"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unexpected server error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Delete Inspiration",
+        "tags": [
+          "Life Inspirations"
+        ]
+      }
+    },
     "/api/v1/journey": {
       "get": {
         "operationId": "journey_api_v1_journey_get",
@@ -5353,6 +6264,24 @@
               "minimum": 1,
               "title": "Limit",
               "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "window_days",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maximum": 90,
+                  "minimum": 1,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Window Days"
             }
           }
         ],
@@ -5526,6 +6455,25 @@
       },
       "patch": {
         "operationId": "update_profile_api_v1_profile_patch",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "If-Match-Version",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "minimum": 1,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "If-Match-Version"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -5855,6 +6803,23 @@
               "title": "Record Id",
               "type": "string"
             }
+          },
+          {
+            "in": "header",
+            "name": "If-Match-Version",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "minimum": 1,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "If-Match-Version"
+            }
           }
         ],
         "responses": {
@@ -5950,6 +6915,23 @@
               "format": "uuid",
               "title": "Record Id",
               "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "If-Match-Version",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "minimum": 1,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "If-Match-Version"
             }
           }
         ],

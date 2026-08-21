@@ -1,6 +1,6 @@
 # Journey 简历描述与面试问答依据
 
-> 当前口径：2026-08-04 本机交付与真实模型验收基线。所有数字均来自仓库内报告或实际命令；不要把
+> 当前口径：2026-08-05 本机交付与真实模型验收基线。所有数字均来自仓库内报告或实际命令；不要把
 > Simulator、debug-certificate APK、Mock 评测或本机 staging 表述成已上架、生产部署或真实
 > 图片模型质量通过。
 
@@ -21,15 +21,16 @@ Journey 是一个从旧微信小程序渐进迁移而来的 Agent 增强健康�
 - 设计“意图路由—计划—策略校验—工具执行—Observation—验证—有限重规划—人工确认—
   幂等写入/恢复”的单 Agent 闭环；组合任务先暂停，确认后基于最新业务事实继续执行，并使用
   LangChain/LangGraph 与模型适配层支持供应商切换、受控 RAG 和结构化线程记忆。
-- 建立 85 条后端/API/数据库/评测测试（后端覆盖率 90.49%）、Requests + Pytest + Allure
-  网络黑盒、31 条移动组件测试、5 条逻辑测试、2 条核心 Web E2E，以及 362 条版本化样本和
+- 建立 93 条后端/API/数据库/评测测试（后端覆盖率 90.72%）、Requests + Pytest + Allure
+  网络黑盒、45 条移动组件/契约测试、5 条逻辑测试、2 条核心 Web E2E，以及 362 条版本化样本和
   26 项量化门禁；Allure、JUnit、Coverage 与 Agent JSON 报告并存，CI 使用 Mock/空真实 Key。
 - 建立 CI Mock 与真实发布门禁分层：DeepSeek `deepseek-v4-flash` 首轮发现一条画像查询误路由，
   Router Prompt 升级后 28/28 达到路由/饮食/运动解析 100%、0 fallback、p95 1768 ms；
   Qwen 图片链路虽可运行，
   但独立质量门禁失败，因此保持实验性和正式环境关闭。
-- 提供 Docker Compose 本机 staging、Alembic upgrade/downgrade 回环、iOS Simulator
-  Release 与 Android ARM64 Release APK 构建安装路径，并保留 Web production export。
+- 提供 Docker Compose 本机 staging 与单服务器 production 编排、Alembic upgrade/downgrade
+  回环、iOS Simulator Release 与 Android ARM64 Release APK 构建安装路径，并保留 Web
+  production export；iOS/Android 不由 Docker 分发。
 
 ### 测试开发岗位突出版
 
@@ -65,7 +66,7 @@ Journey 是一个从旧微信小程序渐进迁移而来的 Agent 增强健康�
 和人工确认，Executor 把结果转为 Observation，再由 Verifier 决定完成、等待、有限重规划或
 停止；组合任务会在候选处暂停，只有用户确认写入 PostgreSQL 后才恢复并读取最新事实。线程
 只保存服务端结构化摘要，所以切换模型不会丢失业务记忆。工程上我做了
-85 条后端/评测测试、Requests 网络黑盒、31 条移动组件测试、5 条逻辑测试、2 条核心 E2E，
+93 条后端/评测测试、Requests 网络黑盒、45 条移动组件/契约测试、5 条逻辑测试、2 条核心 E2E，
 以及 362 条版本化评测和 26 项门禁；iOS 和 Android Release 都在模拟器真实安装运行。真实
 DeepSeek 规划首轮因过度调用工具失败，Prompt 修正后通过；v3 的 checkpoint 与恢复门禁也
 完成 10 次真实调用并全部通过；Qwen 图片 API 能运行但独立质量门禁不

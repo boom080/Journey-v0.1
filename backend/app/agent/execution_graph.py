@@ -189,6 +189,7 @@ def run_execution_graph_v3(
             recoverable=execution.status == "failed" and bool(alternatives),
             output_summary=execution.output_summary,
             allowed_alternatives=alternatives,
+            specialist=execution.specialist,
         )
 
     while cursor < len(plan.steps):

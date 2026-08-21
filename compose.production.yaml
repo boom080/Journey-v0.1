@@ -1,0 +1,163 @@
+name: journey-production
+
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "5"
+
+services:
+  db:
+    image: postgres:18.4-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-journey}
+      POSTGRES_USER: ${POSTGRES_USER:-journey}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+      POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256
+    volumes:
+      - journey_production_postgres:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-journey} -d ${POSTGRES_DB:-journey}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
+    restart: unless-stopped
+    logging: *default-logging
+    networks:
+      - backend
+
+  api:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    environment:
+      APP_ENV: production
+      APP_SECRET_KEY: ${APP_SECRET_KEY:?Set APP_SECRET_KEY}
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-journey}:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-journey}
+      CORS_ORIGINS: ${PUBLIC_ORIGIN:?Set PUBLIC_ORIGIN}
+      ACCESS_TOKEN_MINUTES: ${ACCESS_TOKEN_MINUTES:-15}
+      REFRESH_TOKEN_DAYS: ${REFRESH_TOKEN_DAYS:-30}
+      SEED_TEST_ACCOUNT: "false"
+      AGENT_PROVIDER: ${AGENT_PROVIDER:-mock}
+      AGENT_V2_ENABLED: "true"
+      AGENT_V3_ENABLED: "true"
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
+      QWEN_API_KEY: ${QWEN_API_KEY:-}
+      GLM_API_KEY: ${GLM_API_KEY:-}
+      KIMI_API_KEY: ${KIMI_API_KEY:-}
+      OPENAI_COMPATIBLE_API_KEY: ${OPENAI_COMPATIBLE_API_KEY:-}
+      AGENT_API_KEY: ${AGENT_API_KEY:-}
+      AGENT_API_BASE_URL: ${AGENT_API_BASE_URL:-}
+      AGENT_DEFAULT_MODEL: ${AGENT_DEFAULT_MODEL:-journey-deterministic-v1}
+      AGENT_MODEL_MAP_JSON: ${AGENT_MODEL_MAP_JSON:-{}}
+      AGENT_MODEL_PRICING_JSON: ${AGENT_MODEL_PRICING_JSON:-{}}
+      DEEPSEEK_API_BASE_URL: ${DEEPSEEK_API_BASE_URL:-https://api.deepseek.com}
+      DEEPSEEK_DEFAULT_MODEL: ${DEEPSEEK_DEFAULT_MODEL:-deepseek-v4-flash}
+      DEEPSEEK_MODEL_MAP_JSON: '${DEEPSEEK_MODEL_MAP_JSON:-{}}'
+      DEEPSEEK_MODEL_PRICING_JSON: '${DEEPSEEK_MODEL_PRICING_JSON:-{}}'
+      QWEN_API_BASE_URL: ${QWEN_API_BASE_URL:-https://dashscope.aliyuncs.com/compatible-mode/v1}
+      QWEN_DEFAULT_MODEL: ${QWEN_DEFAULT_MODEL:-qwen3.6-flash}
+      QWEN_MODEL_MAP_JSON: '${QWEN_MODEL_MAP_JSON:-{}}'
+      QWEN_MODEL_PRICING_JSON: '${QWEN_MODEL_PRICING_JSON:-{}}'
+      GLM_API_BASE_URL: ${GLM_API_BASE_URL:-https://open.bigmodel.cn/api/paas/v4}
+      GLM_DEFAULT_MODEL: ${GLM_DEFAULT_MODEL:-glm-5.2}
+      GLM_MODEL_MAP_JSON: '${GLM_MODEL_MAP_JSON:-{}}'
+      GLM_MODEL_PRICING_JSON: '${GLM_MODEL_PRICING_JSON:-{}}'
+      KIMI_API_BASE_URL: ${KIMI_API_BASE_URL:-https://api.moonshot.cn/v1}
+      KIMI_DEFAULT_MODEL: ${KIMI_DEFAULT_MODEL:-kimi-k2.6}
+      KIMI_MODEL_MAP_JSON: '${KIMI_MODEL_MAP_JSON:-{}}'
+      KIMI_MODEL_PRICING_JSON: '${KIMI_MODEL_PRICING_JSON:-{}}'
+      OPENAI_COMPATIBLE_API_BASE_URL: ${OPENAI_COMPATIBLE_API_BASE_URL:-}
+      OPENAI_COMPATIBLE_DEFAULT_MODEL: ${OPENAI_COMPATIBLE_DEFAULT_MODEL:-}
+      AGENT_DAILY_BUDGET_USD: ${AGENT_DAILY_BUDGET_USD:-0}
+      AGENT_INPUT_USD_PER_MILLION: ${AGENT_INPUT_USD_PER_MILLION:-0}
+      AGENT_OUTPUT_USD_PER_MILLION: ${AGENT_OUTPUT_USD_PER_MILLION:-0}
+      QWEN_INPUT_USD_PER_MILLION: ${QWEN_INPUT_USD_PER_MILLION:-0}
+      QWEN_OUTPUT_USD_PER_MILLION: ${QWEN_OUTPUT_USD_PER_MILLION:-0}
+      GLM_INPUT_USD_PER_MILLION: ${GLM_INPUT_USD_PER_MILLION:-0}
+      GLM_OUTPUT_USD_PER_MILLION: ${GLM_OUTPUT_USD_PER_MILLION:-0}
+      KIMI_INPUT_USD_PER_MILLION: ${KIMI_INPUT_USD_PER_MILLION:-0}
+      KIMI_OUTPUT_USD_PER_MILLION: ${KIMI_OUTPUT_USD_PER_MILLION:-0}
+      SEED_BUILTIN_KNOWLEDGE: "true"
+      FOOD_IMAGE_ANALYSIS_ENABLED: "false"
+      FOOD_IMAGE_PROVIDER: mock
+      FOOD_IMAGE_EXTERNAL_UPLOAD_CONFIRMED: "false"
+      LIFE_INSPIRATION_FETCH_ENABLED: ${LIFE_INSPIRATION_FETCH_ENABLED:-false}
+    expose:
+      - "8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/ready', timeout=2)"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 20s
+    restart: unless-stopped
+    stop_grace_period: 30s
+    logging: *default-logging
+    networks:
+      - backend
+      - frontend
+
+  web:
+    build:
+      context: .
+      dockerfile: infra/web/Dockerfile
+      args:
+        APP_VARIANT: production
+        EXPO_PUBLIC_API_BASE_URL: ${PUBLIC_ORIGIN:?Set PUBLIC_ORIGIN}
+    expose:
+      - "8080"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8080/"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+    restart: unless-stopped
+    logging: *default-logging
+    networks:
+      - frontend
+
+  gateway:
+    image: caddy:2.11.4-alpine
+    environment:
+      SERVER_DOMAIN: ${SERVER_DOMAIN:?Set SERVER_DOMAIN}
+    ports:
+      - "${HTTP_PORT:-80}:80"
+      - "${HTTPS_PORT:-443}:443"
+      - "${HTTPS_PORT:-443}:443/udp"
+    volumes:
+      - ./infra/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - journey_production_caddy_data:/data
+      - journey_production_caddy_config:/config
+    depends_on:
+      api:
+        condition: service_healthy
+      web:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "caddy", "validate", "--config", "/etc/caddy/Caddyfile"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+    stop_grace_period: 30s
+    logging: *default-logging
+    networks:
+      - frontend
+
+volumes:
+  journey_production_postgres:
+  journey_production_caddy_data:
+  journey_production_caddy_config:
+
+networks:
+  backend:
+    internal: true
+  frontend:

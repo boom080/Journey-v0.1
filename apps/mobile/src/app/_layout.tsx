@@ -21,6 +21,7 @@ function RootNavigator() {
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="record/[kind]" options={{ presentation: 'modal' }} />
           <Stack.Screen name="food-image" options={{ presentation: 'modal' }} />
+          <Stack.Screen name="inspirations" options={{ presentation: 'modal' }} />
           <Stack.Screen name="settings/profile" options={{ presentation: 'modal' }} />
           <Stack.Screen name="settings/goal" options={{ presentation: 'modal' }} />
         </Stack.Protected>

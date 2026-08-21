@@ -1,3 +1,4 @@
+import re
 import time
 import uuid
 from dataclasses import dataclass, field
@@ -7,6 +8,7 @@ from sqlalchemy.orm import Session
 
 from app.agent.context import ContextSnapshot, build_context
 from app.agent.model_router import ModelInvocation, ModelRouter
+from app.agent.specialists import SPECIALIST_REGISTRY, specialist_for_tool
 from app.agent.tools import build_write_candidate, read_journey_tool, read_profile_tool
 from app.agent.workflows import run_knowledge, run_recommendation, run_weekly_summary
 from app.knowledge.retriever import RetrievedChunk, retrieve
@@ -50,6 +52,7 @@ class ToolExecution:
     output_summary: dict[str, Any] = field(default_factory=dict)
     node_traces: list[dict] = field(default_factory=list)
     error_code: str | None = None
+    specialist: str = "orchestrator"
 
 
 TOOL_REGISTRY: dict[AgentToolName, ToolSpec] = {
@@ -105,6 +108,7 @@ def public_tool_catalog() -> list[dict[str, Any]]:
             "description": spec.description,
             "risk": spec.risk,
             "requires_confirmation": spec.requires_confirmation,
+            "specialist": specialist_for_tool(spec.name),
         }
         for spec in TOOL_REGISTRY.values()
     ]
@@ -112,20 +116,34 @@ def public_tool_catalog() -> list[dict[str, Any]]:
 
 def _candidate_summary(candidate: AgentCandidate) -> dict[str, Any]:
     if candidate.kind == "food":
-        return {"kind": "food", "energy_present": candidate.payload.energy_kcal is not None}
+        return {
+            "kind": "food",
+            "candidate_count": 1,
+            "energy_present": candidate.payload.energy_kcal is not None,
+        }
     if candidate.kind == "activity":
         return {
             "kind": "activity",
+            "candidate_count": 1,
             "duration_present": candidate.payload.duration_minutes is not None,
         }
-    return {"kind": "weight", "value_present": True}
+    return {"kind": "weight", "candidate_count": 1, "value_present": True}
+
+
+def _summary_range_days(segment: str | None) -> int:
+    value = segment or ""
+    return 30 if re.search(r"(30\s*天|一个月|本月|月总结|月趋势)", value) else 7
 
 
 def _execute(runtime: ToolRuntime, step: AgentPlanStep) -> ToolExecution:
     started = time.perf_counter()
     tool = step.tool
     if tool == "context.load":
-        context = build_context(runtime.db, runtime.user)
+        context = build_context(
+            runtime.db,
+            runtime.user,
+            range_days=_summary_range_days(step.segment),
+        )
         runtime.artifacts["context"] = context
         return ToolExecution(
             step.id,
@@ -135,6 +153,7 @@ def _execute(runtime: ToolRuntime, step: AgentPlanStep) -> ToolExecution:
             int((time.perf_counter() - started) * 1000),
             output_summary={
                 "context_version": context.version,
+                "data_range_days": context.data.get("range_days", 7),
                 "estimated_tokens": context.estimated_tokens,
                 "sources": context.included_sources,
             },
@@ -193,7 +212,7 @@ def _execute(runtime: ToolRuntime, step: AgentPlanStep) -> ToolExecution:
         )
     if tool == "knowledge.answer":
         result = run_knowledge(runtime.db, runtime.model_router, step.segment or "")
-        if result.invocation.error_code:
+        if result.invocation.error_code not in {None, "insufficient_context"}:
             return ToolExecution(
                 step.id,
                 tool,
@@ -214,7 +233,10 @@ def _execute(runtime: ToolRuntime, step: AgentPlanStep) -> ToolExecution:
             answer=result.answer,
             citations=result.citations,
             invocations=[result.invocation],
-            output_summary={"citation_count": len(result.citations)},
+            output_summary={
+                "citation_count": len(result.citations),
+                "insufficient_context": result.invocation.error_code == "insufficient_context",
+            },
             node_traces=result.node_traces,
         )
     if tool == "knowledge.retrieve":
@@ -227,7 +249,11 @@ def _execute(runtime: ToolRuntime, step: AgentPlanStep) -> ToolExecution:
             "completed",
             "已检索受控健康知识",
             int((time.perf_counter() - started) * 1000),
-            output_summary={"chunk_count": len(chunks)},
+            output_summary={
+                "chunk_count": len(chunks),
+                "retrieved_documents": list(dict.fromkeys(chunk.document_id for chunk in chunks)),
+                "retrieval_score": max((chunk.score for chunk in chunks), default=0),
+            },
         )
     if tool in {"recommendation.generate", "weekly_summary.generate"}:
         context = runtime.artifacts.get("context")
@@ -351,7 +377,10 @@ def _execute(runtime: ToolRuntime, step: AgentPlanStep) -> ToolExecution:
 def execute_registered_tool(runtime: ToolRuntime, step: AgentPlanStep) -> ToolExecution:
     started = time.perf_counter()
     try:
-        return _execute(runtime, step)
+        specialist_name = specialist_for_tool(step.tool)
+        if specialist_name == "orchestrator":
+            raise ValueError("orchestrator_cannot_execute_business_tool")
+        return SPECIALIST_REGISTRY[specialist_name].execute(runtime, step, _execute)
     except (ValueError, RuntimeError) as error:
         return ToolExecution(
             step.id,
@@ -360,4 +389,5 @@ def execute_registered_tool(runtime: ToolRuntime, step: AgentPlanStep) -> ToolEx
             "工具执行失败，已停止依赖步骤并保留可安全完成的结果",
             int((time.perf_counter() - started) * 1000),
             error_code=str(error)[:80] or "tool_execution_failed",
+            specialist=specialist_for_tool(step.tool),
         )

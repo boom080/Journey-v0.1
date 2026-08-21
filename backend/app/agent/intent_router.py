@@ -19,7 +19,11 @@ def _detect(segment: str) -> list[IntentItem]:
         if not any(item.intent == intent for item in items):
             items.append(IntentItem(intent=intent, confidence=confidence, segment=segment))
 
-    if re.search(r"(周总结|本周总结|这一周|过去一周)", segment):
+    if re.search(
+        r"(周总结|本周总结|这一周|过去一周|这周|本周|最近\s*7\s*天|近\s*7\s*天|"
+        r"最近\s*30\s*天|近\s*30\s*天|一个月).{0,12}(总结|情况|表现|趋势|怎么样|减脂|增肌)?",
+        segment,
+    ):
         add("weekly_summary", 0.98)
     if re.search(r"(建议|推荐|今天怎么吃|今天怎么安排|计划)", segment):
         add("recommendation", 0.92)
@@ -62,7 +66,10 @@ def _detect(segment: str) -> list[IntentItem]:
 def deterministic_intent_plan(message: str, memory_context: list[dict] | None = None) -> IntentPlan:
     segments = [
         item.strip(" ，,")
-        for item in re.split(r"(?:然后|并且|以及|；|;|。|\n)+", message.strip())
+        for item in re.split(
+            r"(?:然后|并且|以及|；|;|。|\n|，(?=(?:早上|上午|中午|下午|晚上|今晚|我这周|我本周)))+",
+            message.strip(),
+        )
         if item.strip(" ，,")
     ]
     intents: list[IntentItem] = []

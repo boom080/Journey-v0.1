@@ -160,11 +160,17 @@ export function WarmHomeMetrics({ data, onRefresh }: { data: HomeToday; onRefres
       <View style={styles.metrics}>
         <HomeMetric label="已摄入" value={formatNumber(data.intake_kcal)} unit="kcal" />
         <HomeMetric label="活动" value={formatNumber(data.activity_kcal)} unit="kcal" />
-        <HomeMetric label="净结余" value={formatNumber(data.net_kcal)} unit="kcal" isLast />
+        <HomeMetric label="记录差值" value={formatNumber(data.net_kcal)} unit="kcal" />
+        <HomeMetric label="静息估算" value={data.resting_energy.kcal_per_day == null ? '待补资料' : formatNumber(data.resting_energy.kcal_per_day)} unit="kcal/天" isLast />
       </View>
       <Text style={styles.overviewFootnote}>
         {data.active_goal ? `${goalLabels[data.active_goal.kind]}进行中` : '设置目标后，Journey 会结合你的记录给出建议'}
         {' · '}饮食 {data.counts.food} 条 · 运动 {data.counts.activity} 条 · 体重 {data.counts.weight} 条
+      </Text>
+      <Text style={styles.overviewFootnote}>
+        {data.estimated_energy_balance_kcal == null
+          ? data.resting_energy.note
+          : `今日估算余量 ${formatNumber(data.estimated_energy_balance_kcal)} kcal；仅扣除静息估算与已记录运动，不等于完整 TDEE。`}
       </Text>
     </View>
   );
@@ -261,7 +267,7 @@ const styles = StyleSheet.create({
   overviewHeader: { flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between', gap: journeySpacing.md },
   overviewTitle: { color: warmHomeColors.text, fontSize: journeyTypography.subtitle, fontWeight: '800' },
   overviewTarget: { flexShrink: 1, color: warmHomeColors.muted, fontSize: journeyTypography.caption, textAlign: 'right' },
-  metrics: { flexDirection: 'row', borderTopWidth: 1, borderBottomWidth: 1, borderColor: '#DCEEE6', backgroundColor: 'rgba(255,255,255,0.44)', paddingVertical: journeySpacing.md },
+  metrics: { flexDirection: 'row', flexWrap: 'wrap', borderTopWidth: 1, borderBottomWidth: 1, borderColor: '#DCEEE6', backgroundColor: 'rgba(255,255,255,0.44)', paddingVertical: journeySpacing.md },
   metric: { flex: 1, minWidth: 0, paddingHorizontal: 8, borderRightWidth: 1, borderRightColor: '#DCEEE6' },
   metricLast: { borderRightWidth: 0 },
   metricHeading: { flexDirection: 'row', alignItems: 'baseline', gap: 3 },

@@ -5,7 +5,7 @@ from datetime import date, datetime
 from decimal import Decimal
 from typing import TYPE_CHECKING
 
-from sqlalchemy import CheckConstraint, Date, DateTime, ForeignKey, Numeric, String
+from sqlalchemy import CheckConstraint, Date, DateTime, ForeignKey, Integer, Numeric, String, text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -27,6 +27,7 @@ class Profile(Base):
             name="ck_profiles_sex",
         ),
         CheckConstraint("preferred_unit IN ('metric', 'imperial')", name="ck_profiles_unit"),
+        CheckConstraint("version >= 1", name="ck_profiles_version_positive"),
     )
 
     user_id: Mapped[uuid.UUID] = mapped_column(
@@ -39,6 +40,9 @@ class Profile(Base):
     birth_date: Mapped[date | None] = mapped_column(Date)
     height_cm: Mapped[Decimal | None] = mapped_column(Numeric(5, 2))
     preferred_unit: Mapped[str] = mapped_column(String(10), default="metric", nullable=False)
+    version: Mapped[int] = mapped_column(
+        Integer, default=1, server_default=text("1"), nullable=False
+    )
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utc_now, nullable=False
     )

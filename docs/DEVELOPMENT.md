@@ -51,13 +51,17 @@ v1.3 holdout 名称 Top-3 76.67%、单一食物份量误差中位数 36.36%，�
 在仓库根目录运行：
 
 ```bash
-docker compose config
-docker compose up --build
+./infra/demo/demo_up.sh
 curl http://127.0.0.1:8000/health/live
 curl http://127.0.0.1:8000/health/ready
 docker compose exec api alembic current
 docker compose down
 ```
+
+`demo_up.sh` 会先检查 Docker、`.env`、REAL/MOCK、Key/预算、Journey 所需 Host Port、其他
+Compose Project、migration 和 RAG readiness，再执行 `docker compose up -d --build --wait`。
+默认 `API_PORT=8000`、`POSTGRES_PORT=55432`；容器内数据库仍使用 `db:5432`。若端口被其他项目
+占用，应在 `.env` 修改 Journey Host Port，不能停止或清理其他项目。
 
 `down` 不删除命名 volume；删除 volume 需要单独授权。API 容器启动时执行
 `alembic upgrade head`，随后只在显式允许时幂等创建本地测试账号；应用 import 不建表。
@@ -92,8 +96,8 @@ docker run --rm --network journey_default \
   pytest -q -p no:cacheprovider
 ```
 
-测试命令不包含真实密钥，也不调用模型。首次使用前需在本地 PostgreSQL 创建
-`journey_test` 并执行 Alembic；执行证据见 `EXECUTION_LOG.md`。
+测试命令不包含真实密钥，也不调用模型。Compose test profile 会启动 tmpfs `test-db` 并执行
+Alembic，不需要宿主机 PostgreSQL；执行证据见 `EXECUTION_LOG.md`。
 
 仓库与 CI 默认使用以下安全基线，复制 `.env.example` 后也不得把 key 提交到 Git：
 
@@ -102,6 +106,7 @@ AGENT_PROVIDER=mock
 AGENT_API_KEY=
 AGENT_API_BASE_URL=
 AGENT_DAILY_BUDGET_USD=0
+AGENT_TIMEOUT_SECONDS=30
 ```
 
 Mock 会返回结构化路由、候选、引用、轨迹和确定性降级，不发出外部模型请求。以后接入
@@ -169,9 +174,9 @@ npm run mobile:web:build
 npm run mobile:e2e:web
 ```
 
-Compose `test-db` 使用 tmpfs 隔离测试数据，`test` target 依次执行 migration、85 条后端/
-评测测试、覆盖率门禁和 Agent/RAG 量化门禁。当前确定性基线为 362 条样本、26 项门禁、
-后端覆盖率 90.49%。机器可读报告写入被 Git 忽略的 `reports/`；
+Compose `test-db` 使用 tmpfs 隔离测试数据，`test` target 依次执行 migration、100 条后端/
+评测测试、覆盖率门禁、既有 Agent 门禁和 60 题 RAG v1/v2 对比。当前确定性基线为 362 条
+既有样本、26 项门禁、60 条 RAG Eval、后端覆盖率 90.60%。机器可读报告写入被 Git 忽略的 `reports/`；
 版本化改进证据位于 [`../evals/reports/STAGE7_EVALUATION_REPORT.md`](../evals/reports/STAGE7_EVALUATION_REPORT.md)。
 
 GitHub Actions 的 backend、mobile、web-e2e 三个 job 使用相同命令，上传 JUnit、覆盖率、

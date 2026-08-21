@@ -9,7 +9,7 @@ from app.models.food_record import FoodRecord
 from app.models.profile import Profile
 from app.models.user import User
 from app.models.weight_record import WeightRecord
-from app.repositories.records import get_owned, list_owned
+from app.repositories.records import get_owned_for_update, list_owned
 from app.schemas.common import Page, PageMeta
 from app.schemas.records import (
     ActivityRecordCreate,
@@ -22,7 +22,7 @@ from app.schemas.records import (
     WeightRecordResponse,
     WeightRecordUpdate,
 )
-from app.services.common import add_audit, user_local_date
+from app.services.common import add_audit, require_resource_version, user_local_date
 
 
 def _values(payload) -> dict[str, Any]:
@@ -59,15 +59,28 @@ def create_food(db: Session, user: User, payload: FoodRecordCreate, request_id: 
 
 
 def update_food(
-    db: Session, user: User, record_id: uuid.UUID, payload: FoodRecordUpdate, request_id: str
+    db: Session,
+    user: User,
+    record_id: uuid.UUID,
+    payload: FoodRecordUpdate,
+    request_id: str,
+    expected_version: int | None,
 ) -> FoodRecord:
-    record = get_owned(db, FoodRecord, user.id, record_id)
+    record = get_owned_for_update(db, FoodRecord, user.id, record_id)
     if record is None:
         raise _not_found("Food")
+    require_resource_version(
+        resource_type="food",
+        resource_id=record.id,
+        expected_version=expected_version,
+        actual_version=record.version,
+        server=FoodRecordResponse.model_validate(record).model_dump(mode="json"),
+    )
     values = _values(payload)
     _record_date(values, "recorded_at", user.profile)
     for field, value in values.items():
         setattr(record, field, value)
+    record.version += 1
     add_audit(
         db,
         user_id=user.id,
@@ -81,10 +94,23 @@ def update_food(
     return record
 
 
-def delete_food(db: Session, user: User, record_id: uuid.UUID, request_id: str) -> None:
-    record = get_owned(db, FoodRecord, user.id, record_id)
+def delete_food(
+    db: Session,
+    user: User,
+    record_id: uuid.UUID,
+    request_id: str,
+    expected_version: int | None,
+) -> None:
+    record = get_owned_for_update(db, FoodRecord, user.id, record_id)
     if record is None:
         raise _not_found("Food")
+    require_resource_version(
+        resource_type="food",
+        resource_id=record.id,
+        expected_version=expected_version,
+        actual_version=record.version,
+        server=FoodRecordResponse.model_validate(record).model_dump(mode="json"),
+    )
     db.delete(record)
     add_audit(
         db,
@@ -127,15 +153,28 @@ def create_activity(
 
 
 def update_activity(
-    db: Session, user: User, record_id: uuid.UUID, payload: ActivityRecordUpdate, request_id: str
+    db: Session,
+    user: User,
+    record_id: uuid.UUID,
+    payload: ActivityRecordUpdate,
+    request_id: str,
+    expected_version: int | None,
 ) -> ActivityRecord:
-    record = get_owned(db, ActivityRecord, user.id, record_id)
+    record = get_owned_for_update(db, ActivityRecord, user.id, record_id)
     if record is None:
         raise _not_found("Activity")
+    require_resource_version(
+        resource_type="activity",
+        resource_id=record.id,
+        expected_version=expected_version,
+        actual_version=record.version,
+        server=ActivityRecordResponse.model_validate(record).model_dump(mode="json"),
+    )
     values = _values(payload)
     _record_date(values, "recorded_at", user.profile)
     for field, value in values.items():
         setattr(record, field, value)
+    record.version += 1
     add_audit(
         db,
         user_id=user.id,
@@ -149,10 +188,23 @@ def update_activity(
     return record
 
 
-def delete_activity(db: Session, user: User, record_id: uuid.UUID, request_id: str) -> None:
-    record = get_owned(db, ActivityRecord, user.id, record_id)
+def delete_activity(
+    db: Session,
+    user: User,
+    record_id: uuid.UUID,
+    request_id: str,
+    expected_version: int | None,
+) -> None:
+    record = get_owned_for_update(db, ActivityRecord, user.id, record_id)
     if record is None:
         raise _not_found("Activity")
+    require_resource_version(
+        resource_type="activity",
+        resource_id=record.id,
+        expected_version=expected_version,
+        actual_version=record.version,
+        server=ActivityRecordResponse.model_validate(record).model_dump(mode="json"),
+    )
     db.delete(record)
     add_audit(
         db,
@@ -200,15 +252,28 @@ def create_weight(
 
 
 def update_weight(
-    db: Session, user: User, record_id: uuid.UUID, payload: WeightRecordUpdate, request_id: str
+    db: Session,
+    user: User,
+    record_id: uuid.UUID,
+    payload: WeightRecordUpdate,
+    request_id: str,
+    expected_version: int | None,
 ) -> WeightRecord:
-    record = get_owned(db, WeightRecord, user.id, record_id)
+    record = get_owned_for_update(db, WeightRecord, user.id, record_id)
     if record is None:
         raise _not_found("Weight")
+    require_resource_version(
+        resource_type="weight",
+        resource_id=record.id,
+        expected_version=expected_version,
+        actual_version=record.version,
+        server=WeightRecordResponse.model_validate(record).model_dump(mode="json"),
+    )
     values = _values(payload)
     _record_date(values, "measured_at", user.profile)
     for field, value in values.items():
         setattr(record, field, value)
+    record.version += 1
     add_audit(
         db,
         user_id=user.id,
@@ -222,10 +287,23 @@ def update_weight(
     return record
 
 
-def delete_weight(db: Session, user: User, record_id: uuid.UUID, request_id: str) -> None:
-    record = get_owned(db, WeightRecord, user.id, record_id)
+def delete_weight(
+    db: Session,
+    user: User,
+    record_id: uuid.UUID,
+    request_id: str,
+    expected_version: int | None,
+) -> None:
+    record = get_owned_for_update(db, WeightRecord, user.id, record_id)
     if record is None:
         raise _not_found("Weight")
+    require_resource_version(
+        resource_type="weight",
+        resource_id=record.id,
+        expected_version=expected_version,
+        actual_version=record.version,
+        server=WeightRecordResponse.model_validate(record).model_dump(mode="json"),
+    )
     db.delete(record)
     add_audit(
         db,

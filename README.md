@@ -1,36 +1,56 @@
 # Journey
 
-Journey 正在从旧版微信小程序升级为 Agent 增强的跨平台健康管理应用。
+Journey 是由旧版微信小程序迁移而来的跨平台 AI 健康记录 App。当前目标是一个稳定、可解释、
+可量化评测的秋招 Demo，不再无限增加产品功能。三个一级入口固定为：首页、Journey、我的。
 
-当前进度：阶段 1—8、10、11 已完成，阶段 9 获授权的食物图片单项已按真实质量门禁
-**Closed / No-Go**；阶段 12 为 **In Progress**，已完成用户确认的“暖白薄荷 Journey”首页
-视觉子项，完整本地数据副本与生活内容接入仍未实现。统一身份与核心业务 API、Expo 三端页面、受控 RAG、确认后写入、
-单 Agent 的 Planner → Policy Guard → Executor → Verifier 闭环，以及全栈自动化门禁均已
-落地。2026-08-04 当前复验结果为：85 条后端/评测测试、90.49% 后端覆盖率、362 条版本化
-Agent/RAG/图片契约样本、26 项量化门禁、33 条移动组件测试、5 条逻辑测试和 2 条核心 Web
-E2E；iOS 与 Android Release 均已在模拟器真实安装运行，Web production export 生成 13 条
-静态路由。
+## Implemented
 
-仓库和普通 CI 默认 Mock、空模型 Key、外部调用与成本均为 0。LangChain/LangGraph + 嵌入式
-LiteLLM Router 支持 DeepSeek，并为 Qwen、GLM、Kimi 建立 Provider Profile。Agent v3
-使用服务端类型化工具注册表、结构化计划、人工确认 checkpoint、最多 6 步/2 次重规划和
-PostgreSQL 最小结构化线程记忆，不依赖某个模型厂商的会话状态。组合任务在用户确认后显式
-恢复，可恢复故障通过 Observation/Verifier 选择白名单替代工具。2026-08-01
-新增真实模型发布门禁：DeepSeek `deepseek-v4-flash` 首轮发现一条画像查询误路由，升级
-Router Prompt 后 28/28 文字量化验收通过；Qwen
-`qwen3.7-flash` 真实 API 冒烟通过，但独立图片质量门禁仍失败。因此联网本机演示可使用真实
-文字模型和实验性图片候选，整体“文字 + 图片”尚不能表述为正式发布验收通过。本机工程演示
-已验收，production id 为
-`com.boom080.journey`；公网服务器、Apple 商店签名与 Android Play 签名均未执行，不能把
-当前状态表述为已生产发布。
+- Expo SDK 57 的 iOS、Android、Web 客户端；邮箱/用户名 + 密码、Token/Refresh Token、
+  SecureStore 与按账户 AES-256-GCM 本地副本；
+- FastAPI 模块化单体、PostgreSQL 18、Alembic `0007`、画像/目标/饮食/运动/体重/Home/Journey
+  稳定 `/api/v1` 契约；
+- Home 由服务端统一给出“摄入－已记录运动”的记录差值，以及基于完整画像的 Mifflin–St Jeor
+  静息能量消耗估算；资料不足时明确不估算，不把该值冒充完整 TDEE；
+- Orchestrator + Record/Health Knowledge/Journey Summary 三个有界 Specialist Agent；
+  Planner、Policy、工具白名单、Confirmation Gate、Observation、Verifier 和最多 2 次重规划；
+- 受控 RAG、引用、`insufficient_context`、60 题固定 Eval、rag-v1/v2 比较；
+- 原生端离线 CRUD Outbox、自动恢复同步、版本冲突选择与退出清理；
+- Docker Compose 管理 API/PostgreSQL/RAG/Agent 依赖，移动端 Metro/Simulator 按原生开发机制
+  运行在宿主机。
 
-当前新增功能范围暂时收敛为文字与食物图片，不启动语音、视频等能力。食物图片方向完成了
-授权数据、独立密封集和真实 Qwen 评测，但自动估重与“识别候选”两条
-路线都没有达到预注册门槛：ADR-031 的总体 Top-3 为 67.27%、中国家庭餐为 60%、Schema
-为 98.33%。Preview/Production/staging 不启用真实图片识别，Development 仅可实验性生成
-候选，并继续使用手动记录与用户确认回退。
-这一 No-Go 是项目的量化产品决策案例，不是已上线功能。用户也已明确当前不做语音转文字；
-其余阶段 9 能力未启动。
+## Demo Ready
+
+- 主场景：`今天中午吃了一份牛肉面，晚上跑了5公里，我这周减脂情况怎么样？`；Orchestrator
+  拆分任务，生成两个记录候选，用户逐条确认后写库，再输出 7 天总结与引用；
+- 真实 DeepSeek Requests 黑盒 1/1 通过，28.02 秒；启动和 `/health/ready` 明确显示 REAL/MOCK、
+  Provider 与 Model；
+- Docker 全量 100 条后端/评测测试、覆盖率 90.69%；48 条移动 Jest + 5 条逻辑测试；Mock
+  Requests 黑盒 2/2；Web Playwright 2/2；
+- 真实 DeepSeek 周总结客户端允许 120 秒工作流窗口；2026-08-13 实际 v4 Pro smoke 在 20.4 秒内
+  返回 HTTP 200、3 条引用、无降级；Run 完成后客户端会清理过期“继续执行”状态；
+- 60 题 RAG v2：Recall@3/5 1.0、MRR 0.9625；真实 Generation Groundedness 0.9625、
+  Relevance 0.9625、Citation Correctness 0.9083、Abstention Accuracy 1.0；
+- Web/iOS/Android bundle 通过；iPhone 17 Pro 与 Pixel 9 Debug 构建、安装和当前 JS 页面运行；
+- `./infra/demo/demo_up.sh` 完成端口 preflight、构建、migration、health 和 REAL Provider 检查。
+
+## Experimental
+
+- 食物图片链路已经具备“模型 → 候选 → 用户校正 → 确认 → 保存”，但 Qwen 独立密封质量门禁
+  未通过：Top-3 67.27%、中国家庭餐 60%、Schema 98.33%。只能在 Development 作为实验性
+  候选，Preview/Production 默认关闭；不能宣称照片可以准确称重；
+- 用户主动保存的小红书公开链接只作 `inspiration_only` 生活灵感，不进入 Agent/RAG/健康事实；
+  production 自动预览默认关闭；
+- 单服务器 production Compose 已有可部署配置，但没有公网域名、正式证书或生产 SLA 证据。
+
+## Post-Demo / Future
+
+语音输入/语音转文字、视频动作识别、微信登录、Apple/Google/第三方 OAuth、手机验证码、手机号
+绑定、邮箱验证码/验证、忘记密码/邮件找回、HealthKit、Health Connect、Push、自动抓取小红书、
+通用浏览器 Agent、自由网页搜索 Agent 和复杂社交功能均已暂停，不是近期计划。已有兼容字段不会
+仅为封板而破坏性删除。
+
+production id 为 `com.boom080.journey`。当前没有 Apple Developer Program、Android Play
+upload key、公网上线或商店发布证据，不能把“本机 Demo Ready”描述成“生产发布完成”。
 
 工程边界：
 
@@ -38,16 +58,27 @@ Router Prompt 后 28/28 文字量化验收通过；Qwen
 - `backend/`：FastAPI 模块化单体、核心业务 API、Agent/RAG、Provider Router、Alembic、
   HTTPX/TestClient 白盒测试、Requests 网络黑盒与 Allure/JUnit/Coverage 报告。
 - `packages/`：OpenAPI/TypeScript 跨端契约和 design token。
-- `compose.yaml`：仅包含 FastAPI API 与 PostgreSQL。
-- `evals/`：362 条版本化样本、真实图片调试集、无参照/尺度/识别密封集、量化门禁与报告。
+- `compose.yaml`：本机 FastAPI API、PostgreSQL 与隔离测试服务。
+- `compose.production.yaml`：单服务器 PostgreSQL、FastAPI、Expo Web 与 Caddy HTTPS 网关；
+  当前配置/API/Web/Caddy 已分别验证，四容器本机整栈仍受 Docker Hub 网络超时阻塞。
+- `evals/`：362 条既有 Agent/契约样本、60 条 RAG Eval、真实图片密封集、量化门禁与报告。
 - `assets/brand/`：从旧项目保留的卡通人物和品牌资产。
+- 生活灵感：用户主动提交白名单公开链接，受限预览/手动回退并显式确认；不绑定小红书账号，
+  不使用 Cookie，不进入 Agent/RAG/健康事实层。
 
 开发说明见 [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)，API 见
-[docs/API.md](docs/API.md)，阶段 8 运行手册见
-[docs/deployment/STAGING.md](docs/deployment/STAGING.md)，演示脚本见
+[docs/API.md](docs/API.md)，Multi-Agent 与 RAG 说明见
+[docs/architecture/MULTI_AGENT_DATA_FLOW.md](docs/architecture/MULTI_AGENT_DATA_FLOW.md) 和
+[docs/architecture/RAG_ARCHITECTURE_AND_EVAL.md](docs/architecture/RAG_ARCHITECTURE_AND_EVAL.md)，
+阶段 8 运行手册见
+[docs/deployment/STAGING.md](docs/deployment/STAGING.md)；服务器 Docker 上线路径见
+[docs/deployment/SERVER_DOCKER.md](docs/deployment/SERVER_DOCKER.md)；演示脚本见
 [docs/demo/INTERVIEW_DEMO.md](docs/demo/INTERVIEW_DEMO.md)，开发、测试开发、产品和售前
 岗位的讲述材料见
-[docs/demo/RESUME_AND_INTERVIEW.md](docs/demo/RESUME_AND_INTERVIEW.md)。开始后续工作前请阅读
+[docs/demo/RESUME_AND_INTERVIEW.md](docs/demo/RESUME_AND_INTERVIEW.md)，按岗位分类、每次更新
+同步维护的面试案例见 [qiuzhaomianshi.md](qiuzhaomianshi.md)；需要在另一个项目中按具体 JD
+生成简历时，使用带证据路径、状态标签和诚实边界的
+[秋招跨岗位项目素材知识库](docs/demo/JOURNEY_CAREER_MATERIAL_KNOWLEDGE_BASE.md)。开始后续工作前请阅读
 [AGENTS.md](AGENTS.md) 和 [docs/README.md](docs/README.md)；唯一迁移计划是
 [docs/JOURNEY_REFACTOR_PLAN.md](docs/JOURNEY_REFACTOR_PLAN.md)。
 

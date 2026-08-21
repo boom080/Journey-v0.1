@@ -12,12 +12,17 @@ jest.mock('@/lib/session-storage', () => ({
 }));
 
 import {
+  AGENT_REQUEST_TIMEOUT_MS,
+  REQUEST_TIMEOUT_MS,
   ApiNetworkError,
   analyzeFoodImage,
+  createInspiration,
   confirmAgentCandidate,
   createRecord,
   deleteRecord,
+  deleteInspiration,
   fetchApiHealth,
+  fetchAgentRunTrace,
   fetchGoal,
   fetchHomeToday,
   fetchJourney,
@@ -25,11 +30,13 @@ import {
   listActivityRecords,
   listFoodRecords,
   listWeightRecords,
+  listInspirations,
   login,
   logout,
   refreshSession,
   register,
   restoreSession,
+  previewInspiration,
   resumeAgentRun,
   runAgent,
   saveGoal,
@@ -87,6 +94,12 @@ describe('API client', () => {
     });
   });
 
+  test('reserves a longer client timeout for real Agent workflows', () => {
+    expect(REQUEST_TIMEOUT_MS).toBe(10_000);
+    expect(AGENT_REQUEST_TIMEOUT_MS).toBe(120_000);
+    expect(AGENT_REQUEST_TIMEOUT_MS).toBeGreaterThan(REQUEST_TIMEOUT_MS);
+  });
+
   test('stable API error envelope and network failure stay distinguishable', async () => {
     jest.spyOn(global, 'fetch').mockResolvedValueOnce(jsonResponse({
       error: { code: 'validation_error', message: '参数错误', details: [] },
@@ -121,24 +134,32 @@ describe('API client', () => {
     const fetchMock = jest.spyOn(global, 'fetch').mockImplementation(async () => jsonResponse({ ok: true }));
     await register({ email: 'a@example.com', username: 'stage7', password: 'JourneyPass2026', display_name: 'Stage 7' });
     await fetchProfile();
-    await updateProfile({ display_name: 'Stage 7' });
+    await updateProfile({ display_name: 'Stage 7' }, 3);
     await fetchGoal();
-    await saveGoal({ kind: 'maintain' });
+    await saveGoal({ kind: 'maintain' }, 2);
     await fetchHomeToday();
     await fetchJourney(30, '2026-07-01');
     await createRecord('food', { recorded_at: '2026-07-20T00:00:00Z', meal_type: 'other', name: '苹果', energy_kcal: 88 }, 'food-key');
-    await updateRecord('food', 'food-1', { energy_kcal: 90 });
+    await updateRecord('food', 'food-1', { energy_kcal: 90 }, 4);
     fetchMock.mockResolvedValueOnce(new Response(null, { status: 204 }));
-    await deleteRecord('food', 'food-1');
+    await deleteRecord('food', 'food-1', 4);
     await listFoodRecords();
     await listActivityRecords();
     await listWeightRecords();
+    await previewInspiration({ source_url: 'https://www.xiaohongshu.com/explore/public-note' });
+    await createInspiration({
+      source_url: 'https://www.xiaohongshu.com/explore/public-note',
+      title: '周末轻徒步', tags: ['周末'], source_checked_at: '2026-08-09T08:00:00Z', confirmed: true,
+    });
+    await listInspirations();
+    await deleteInspiration('inspiration-1');
     await confirmAgentCandidate('candidate-1', {
       confirmation_token: 'confirmation-token-long-enough',
       kind: 'weight',
       payload: { measured_at: '2026-07-20T00:00:00Z', weight_kg: 65 },
     }, 'candidate-key');
     await resumeAgentRun('run-1');
+    await fetchAgentRunTrace('run-1');
     await analyzeFoodImage({
       image_base64: '/9j/4EpvdXJuZXk=',
       media_type: 'image/jpeg',

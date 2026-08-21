@@ -12,9 +12,22 @@
 - Agent run 只保存输入 SHA-256、字符数、路由、版本、Token、耗时、成本和错误码；不保存
   原始健康文本或完整 Prompt。
 - 登录 Token 使用 SecureStore；Android backup 按 SecureStore 规则配置。
-- 原生离线待同步队列使用 AES-256-GCM；密钥保存在 SecureStore，数据 24 小时过期、最多
-  50 条、按用户隔离，注销清除当前用户队列。
-- Web 不持久化离线健康队列，只保留当前进程内存。
+- 原生 local-first 副本使用 AES-256-GCM；每账户密钥保存在 SecureStore，并设为
+  `WHEN_UNLOCKED_THIS_DEVICE_ONLY`。AsyncStorage 只保存密文，第一批范围是画像、目标、最近
+  90 天饮食/运动/体重与 Journey、Outbox 和冲突。
+- Outbox 最多 1000 条且达到上限时明确拒绝继续写入，不静默截断。退出、账户切换或 401 会话
+  失效会清除该账户密文、副本、Outbox、冲突、密钥、旧队列和 React Query 缓存；在途同步不能
+  在清除后写回。
+- Web 不持久化本地健康副本，只保留当前进程内存；刷新后不保证保留，不能宣称与原生加密
+  local-first 等价。
+- 生活灵感只接受用户主动提供的小红书公开 HTTPS 链接，不接收平台账号、密码、Cookie、验证码
+  或登录态。自动预览只提取 title/description 元数据，不保存正文、HTML、图片或响应 Cookie；
+  每条由用户编辑并显式确认，可追溯来源并删除。
+- 生活灵感预览采用域名白名单、DNS/重定向 SSRF 校验、无 Cookie、8 秒超时、最多 3 次重定向、
+  256 KB 响应体上限和 Prompt Injection 词标门禁；失败直接回退手动填写，不绕过访问控制。
+  内容固定为 `inspiration_only`，与 Agent、RAG 和健康事实层隔离。
+- production 默认 `LIFE_INSPIRATION_FETCH_ENABLED=false`。若未来启用，必须重新复核当日平台
+  协议、公开访问稳定性、运营主体的数据删除流程与服务器出站审计。
 - Preview/Production Android 禁止明文 HTTP；仅 development 模拟器允许 localhost HTTP。
 
 ## 发布前必须确认
@@ -33,7 +46,7 @@
 | 模型调用 | `$0/day` | 确认供应商、价格、数据政策、硬上限和降级后单独 ADR |
 | 本地 Docker | `$0` 云成本 | 仅本机资源 |
 | 本机 staging | `$0` | 阶段 8 已接受，不上传公网 |
-| 未来自租服务器 | Proposed | 用户确认供应商、地区、期限、域名、隐私、备份和预算 |
+| 未来自租服务器 | 配置已实现 / 未部署 | Compose/HTTPS 基线已形成；仍需确认供应商、地区、期限、域名、隐私、备份和预算 |
 | EAS/Apple/Google | Proposed | 用户确认账号、签名与费用 |
 
 任何非零账单、真实模型请求、外部健康数据上传或长期云资源创建都需要单独确认。

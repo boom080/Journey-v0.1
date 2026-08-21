@@ -12,6 +12,14 @@ def get_owned[ModelT: Base](
     return db.scalar(select(model).where(model.id == record_id, model.user_id == user_id))
 
 
+def get_owned_for_update[ModelT: Base](
+    db: Session, model: type[ModelT], user_id: uuid.UUID, record_id: uuid.UUID
+) -> ModelT | None:
+    return db.scalar(
+        select(model).where(model.id == record_id, model.user_id == user_id).with_for_update()
+    )
+
+
 def list_owned[ModelT: Base](
     db: Session,
     model: type[ModelT],

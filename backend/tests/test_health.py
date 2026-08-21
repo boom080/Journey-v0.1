@@ -27,3 +27,15 @@ def test_ready_health_degrades_when_database_is_unavailable(monkeypatch) -> None
 
     assert response.status_code == 503
     assert response.json()["database"] == "unavailable"
+    assert response.json()["rag"] == "unavailable"
+    assert response.json()["agent_mode"] == "MOCK"
+
+
+def test_ready_health_exposes_non_secret_demo_runtime_mode(seeded_knowledge) -> None:
+    response = TestClient(app).get("/health/ready")
+
+    assert response.status_code == 200
+    assert response.json()["database"] == "ok"
+    assert response.json()["rag"] == "ok"
+    assert response.json()["agent_mode"] == "MOCK"
+    assert response.json()["agent_provider"] == "mock"

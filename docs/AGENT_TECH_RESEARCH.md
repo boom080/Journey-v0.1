@@ -1,6 +1,7 @@
 # Journey Agent 技术调研
 
-> 首次调研：2026-07-15；阶段 6 复核：2026-07-20；Provider Router 复核：2026-07-22
+> 首次调研：2026-07-15；阶段 6 复核：2026-07-20；Provider Router 复核：2026-07-22；
+> 阶段 13 有限 Multi-Agent / RAG Eval 实施复核：2026-08-10
 > 范围：Python/FastAPI 生态中的模型适配、Agent 编排、RAG、可观测性与评测
 > 注意：维护状态是调研日快照，正式安装前必须再次核对版本、许可证和兼容矩阵。
 
@@ -418,3 +419,23 @@ Agent 性成立于可观察闭环，而不是模型调用次数：执行结果�
 Allure 负责真实 Docker TCP 边界，Playwright 负责用户端闭环，自研评测器负责 Agent/RAG 的
 量化语义门禁。Requests 是补充的网络黑盒层，不取代现有测试；Allure 只增强报告，JUnit、
 Coverage 和 JSON 门禁仍是可移植事实源。
+
+## 16. 阶段 13 有限 Multi-Agent 与 RAG Eval 结论（2026-08-10）
+
+阶段 13 没有引入 CrewAI/AutoGen、独立 Agent 服务或额外 Provider 抽象。最终实现是一个
+Orchestrator + 三个 Specialist 的有限协作：Record 只处理 food/activity/weight 候选，Health
+Knowledge 只处理受控检索与有依据回答，Journey Summary 只读取画像、目标和 7/30 天结构化
+记录。所有 Specialist 复用原有 LangGraph 状态、Pydantic 契约、类型化工具注册表、Policy
+Guard、Observation、Verifier 和 Confirmation Gate。这一结构让职责与 Trace 可展示，同时
+避免多 Agent 群聊的延迟、不可控 handoff 和重复模型调用。
+
+RAG 没有因为“向量数据库”三个字引入新基础设施。现有 4 个受控来源与本地 embedding 适合
+当前 Demo 规模，改造重点放在可复现实验：固定 60 题、冻结 dataset/bundle/scorer 版本和哈希，
+对同一数据比较无 rerank 的 rag-v1 与 hybrid rerank 的 rag-v2，并分别评估 Retrieval、
+Generation 与工程指标。Mock 只运行确定性检索指标，生成质量明确标记 `SKIPPED_REAL_MODEL`；
+真实报告记录 Provider、Model、Token、费用、延迟与失败样本。
+
+最终 rag-v2 真实 DeepSeek 报告达到 Recall@3/5=1.0、MRR=0.9625、Groundedness 与 Answer
+Relevance=0.9625、Citation Correctness=0.9083、Abstention Accuracy=1.0。第一轮因无上下文
+仍调用模型导致 Abstention=0.6833，修正为零检索直接 `insufficient_context` 后通过；两份报告
+均保留。这比只陈述“用了 RAG”更适合证明产品质量和工程迭代过程。

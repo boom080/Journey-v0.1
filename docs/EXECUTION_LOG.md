@@ -2315,3 +2315,404 @@
   `git rev-parse HEAD` 获取不可自引用写入的最终哈希。
 - GitHub 目标为 `https://github.com/boom080/journey_v1`（private）；推送后以远端分支和本地
   HEAD 一致为验收。没有 push 到旧 `origin`，没有创建 PR，也没有启动 ADR-036 产品实现。
+
+## 2026-08-05：单服务器 Docker production 部署基线
+
+### 授权与范围
+
+- 用户要求继续完善产品，并明确希望未来上线可通过 Docker 直接部署到服务器。本轮只执行阶段 8
+  的服务器 production 复验，不同时启动 ADR-036 本地数据、ADR-037 Web Research、小红书、
+  数据库/API/Agent 工具或新多模态能力。
+- 开始前执行并展示 `pwd`、`git status --short --branch`、`ls -la`；分支为
+  `codex/journey-migration-baseline`，迁移基线 HEAD 为
+  `2654c4308279a95f9fd8d45109807373b518202d`，工作区初始干净。
+- 没有租用服务器、购买域名、修改 DNS/防火墙、创建公网资源、commit、push 或 PR。
+
+### 实现
+
+- 新增独立 `compose.production.yaml`，一次编排 PostgreSQL 18、FastAPI、Expo Web/Nginx 和
+  Caddy 2.11.4；只有 gateway 发布 TCP 80/443 与 UDP 443，数据库/API 不映射宿主端口，数据库
+  使用 internal network 和持久卷。
+- 新增 `.env.production.example` 与 Git 忽略规则；production 必须提供域名 Origin、数据库密码
+  和应用密钥，禁止测试账号播种，真实图片识别固定关闭，Agent 默认 Mock/零预算。
+- 新增 `infra/caddy/Caddyfile`：Caddy 自动 HTTPS、HTTP 跳转、证书持久化、API/health 路由、
+  Web fallback、安全响应头和 JSON access log；新增只读 HTTPS health smoke 脚本。
+- Web Dockerfile 增加 `APP_VARIANT=production` 与 HTTPS API 构建门禁；移动 app config 同样拒绝
+  Preview/Production 的缺失或明文 API URL，EAS profile 绑定同名远程环境，变体验证脚本加入
+  正反向契约。
+- CI 新增 production Compose、Caddyfile 和 HTTPS Web runtime image 契约；补充
+  `SERVER_DOCKER.md`，记录服务器前置、初始化、部署、日志、备份、升级、回退和移动端边界。
+- 新增 ADR-038 Accepted；唯一计划将阶段 8 标为 Revalidated，并把四容器公网复验保留为未完成
+  门禁。`NEXT_TASK.md` 更新为阶段 12 ADR-036 的单一本地数据任务，不自动执行。
+
+### 验证证据
+
+- Docker 官方 production Compose 文档与 Caddy Automatic HTTPS/官方镜像复核完成；Caddy 官方
+  当前 tag 为 `2.11.4-alpine`。
+- `docker compose --env-file .env.production.example -f compose.production.yaml config --quiet`
+  通过；展开后只有 gateway 发布 80/443，API/db/web 无 published ports，backend network 为
+  internal。缺失 production env 会拒绝配置。
+- production API 镜像构建成功。第一次隔离启动错误使用 `--no-build` 且 project 名对应镜像不存在，
+  容器未启动；命令链没有 `set -e`，末尾误打印 PASS。该结果未计入验收，资源已清理。严格重跑
+  先构建对应镜像后，独立 API/PostgreSQL project healthy，live/ready 为 200，Alembic 为
+  `0005_agent_v3 (head)`，环境为 production、provider mock、图片 false、测试账号 false；随后只
+  删除本轮创建的验证容器、网络和临时卷。
+- `APP_VARIANT=production EXPO_PUBLIC_API_BASE_URL=https://journey.example.com` Web export 成功，
+  生成 13 条静态路由；EAS profile 环境绑定契约通过，明文 production URL 与 HTTP smoke 均按
+  预期拒绝。
+- 通过 Caddy 2.11.4 官方 macOS arm64 release binary 执行 `caddy fmt`、`validate` 和 `adapt`，
+  Caddyfile 有效并确认启用 automatic HTTPS 与 HTTP→HTTPS。
+- API/Web Docker build 中 API 成功；Web 在读取项目文件前失败于 Docker Hub anonymous token
+  端点连接超时，Node/Nginx 元数据无法拉取。Caddy 容器同样未能通过 Docker daemon 拉取，故本机
+  四容器整栈、真实 DNS/证书、外部备份恢复和跨网络移动端仍未验收，不宣称已经上线。
+- `docker compose config --quiet`、production config、`sh -n`、CI YAML、`git diff --check` 通过。
+  后端/评测 85/85、覆盖率 90.49%、362 样本/26 门禁通过，`provider=mock cost=$0`；移动端
+  TypeScript、Expo lint、变体契约、Jest 33/33、逻辑测试 5/5 通过，覆盖率未回退。
+
+### 当前结论与启动条件
+
+- 服务器侧现在具备“仓库 + `.env.production` + 一条 Docker Compose 命令”的生产配置基线；
+  PostgreSQL/FastAPI/Web/HTTPS 均纳入容器设计。iOS/Android 仍需签名构建和商店/内部分发，
+  Docker 只承载服务器和 Web。
+- 实际上线前仍需用户提供或确认服务器供应商/区域/预算、域名/DNS、运营与隐私信息、外部备份
+  位置；在网络正常的服务器补跑四容器 `up -d --build --wait`、HTTPS smoke、备份恢复、跨网络
+  移动端和最小负载测试。
+- 本轮到此停止。下一产品任务是 `NEXT_TASK.md` 中 ADR-036 的本地数据范围确认；不得把公网部署、
+  本地数据和小红书/Web Research 混成同一阶段。
+
+## 2026-08-05：阶段 12 ADR-036 原生 local-first 第一批实现
+
+### 授权与范围
+
+- 用户要求“继续下一项任务”。按当时 `NEXT_TASK.md` 的唯一推荐项执行 ADR-036：原生端保存
+  每账户画像、目标、最近 90 天饮食/运动/体重与 Journey，支持离线 CRUD Outbox、显式版本冲突
+  和退出彻底清理；不启动 ADR-037、小红书、Web Research、长期偏好、多 Agent 或新图片能力。
+- 开始前执行并展示 `pwd`、`git status --short --branch`、`ls -la`，保留同一工作区中尚未提交的
+  production Docker 变更；未清理或覆盖用户已有改动。
+- 没有调用真实模型 Provider、上传真实健康数据、commit、push、创建 PR 或部署公网资源。
+
+### 实现
+
+- 新增 `local-replica.ts`：iOS/Android 以每账户 AES-256-GCM 密文保存规范化 JSON，密钥放在
+  SecureStore 并使用 `WHEN_UNLOCKED_THIS_DEVICE_ONLY`；Web 明确只用进程内副本，不承诺刷新后
+  保留。Outbox 上限为 1000 条，到达上限时明确拒绝而不是丢弃数据。
+- Sync Provider 首次在线拉取画像、目标和最近 90 个日历日；离线记录新增/编辑/删除与画像/目标
+  修改先写副本和 Outbox，联网后合并连续动作并同步。创建沿用幂等键；响应丢失、删除 404、
+  更新 404 和 409 冲突都有确定性收敛或显式暂停规则。
+- 最终集成审查发现首版按 `3 × 31` 个有记录日期拉取，稀疏数据可能越过 90 个日历日；已改为按
+  画像时区计算“今天至前 89 天”的截止日、每页 30 天并严格过滤，新增回归测试确认旧记录不进入
+  副本。
+- 首页、Journey、我的、画像/目标设置和三类记录页均接入同一 Sync Provider；冲突页并排显示
+  本机/云端字段，由用户选择保留本机或采用云端，不做静默 last-write-wins。
+- 显式退出、401 会话失效和账户切换清除密文、副本、Outbox、冲突、账户密钥、旧离线队列与
+  React Query 缓存；generation/purge 门禁阻止在途同步在退出后写回。
+- 新增 Alembic `0006_local_first`，为画像、目标、饮食、运动、体重增加正整数 `version`；更新/
+  删除要求 `If-Match-Version`，服务层锁行并递增版本，过期请求返回结构化
+  `409 sync_conflict` 与服务端快照。OpenAPI 和 TypeScript 契约同步更新。
+- `apps/mobile/AGENTS.md` 要求写代码前核对 Expo SDK 57 精确文档；该嵌套规则在首轮编辑后才被
+  发现。随后完整核对 Expo 57 Crypto/SecureStore 文档，重新审查加密 API、密钥存储、备份和
+  大对象限制，并按精确 API 完成测试；此执行顺序偏差未隐藏。
+
+### 自动化与迁移证据
+
+- Alembic 完成 `0006 → 0005 → 0006`、`alembic check`，最终为
+  `0006_local_first (head)`。
+- 后端/评测全量 **87 passed**，覆盖率 **90.94%**；362 条版本化样本与 26 项门禁全部 PASS，
+  `provider=mock cost=$0`。新增冲突、版本、删除和 OpenAPI 契约测试。
+- 移动 TypeScript、Expo lint、变体契约通过；最终 Jest **41/41**、逻辑测试 **5/5**。新增账户隔离、
+  加密副本、退出清理、Outbox 合并、成功响应丢失、404 收敛、409 冲突和冲突选择测试。
+- Web production export 生成 13 路由；强制 Mock 的核心 Web E2E **2/2**，iOS/Android Hermes
+  export 均通过。
+- 提供者级账户切换测试首轮因 Jest mock 提升变量规则失败，改名后又暴露测试 mock 每次 render
+  返回新 QueryClient 导致 effect 重订阅；把测试依赖改为稳定实例并使用异步 `act` 后，断言账户
+  A 副本/旧队列在切到 B 时清理，最终全量 41/41 通过。未降低业务断言。
+
+### 原生与 Docker 复验
+
+- Android 16 `Pixel_9`：使用 Android Studio JBR 和本机 SDK 完成当前 Debug Development Build，
+  495 个 Gradle task 成功，APK 安装并启动；Metro 打包 1502 modules，Activity 在前台，日志有
+  `Running "main"` 且无业务 fatal。额外 Release 构建停在 `lintVitalRelease`，重复尝试仍未
+  收敛后中止，因此本轮只记 Debug 通过；阶段 10 的既有 Release 证据不被覆盖。
+- iOS 26.5 `iPhone 17 Pro`：Debug Development Build 0 error，ExpoCrypto/ExpoSecureStore pods
+  实际链接，安装并启动；初次 Metro localhost 只监听 IPv6，客户端访问 127.0.0.1 被拒绝，改用
+  LAN listen 后打包 1366 modules 并由 App 取得 200，无业务 fatal。
+- production Compose 配置再次通过；当前 API 镜像重新构建后，以隔离 project 启动 PostgreSQL
+  与 FastAPI，两个容器均 healthy，live/ready 为 200，Alembic 自动到达
+  `0006_local_first (head)`，环境为 production、Agent Mock、禁测试账号、禁真实图片识别。完成
+  后只删除本轮隔离容器、网络和临时数据库卷。
+- Web/Nginx/Caddy 四容器整栈和真实公网证书仍受既有 Docker Hub 网络问题及缺少服务器/域名
+  阻塞；因此结论是“当前代码可按 Compose 部署”，不是“已经上线”。iOS/Android 仍需单独签名
+  构建和分发，不能运行在 Docker 中。
+
+### 当前边界与下一项
+
+- ADR-036 转为 Accepted，但 1000 条长离线故障注入、5 人盲测、真实设备密钥取证、公网多设备
+  同步和正式隐私流程仍属于发布加固；Web 只提供进程内副本。
+- 阶段 12 继续为 In Progress，仅因 ADR-037 仍为 Proposed。下一项需要用户单独确认是否采用
+  “用户主动粘贴公开分享链接”的受控路径；不得绑定小红书账号、接收密码/Cookie、自动登录或
+  批量抓取。
+
+## 2026-08-09—10：阶段 12 ADR-037 生活灵感主动分享实现与验收
+
+### 授权、目录与产品边界
+
+- 用户要求“执行下一步计划”，并要求新建 `qiuzhaomianshi.md`、按岗位记录项目问题/解决方式/
+  日期，同时把“每次项目更新必须同步该文档”写入 `AGENTS.md`。按当时 `NEXT_TASK.md` 的四项
+  保守默认执行：只支持用户逐次主动分享公开链接，保存最小字段，社交内容只作灵感，本轮不租
+  服务器、不接入通用 Web Research 或新模型。
+- 开始前已执行并展示 `pwd`、`git status`、`ls -la`；当前目录为 Journey 根目录，分支
+  `codex/journey-migration-baseline`，HEAD `2654c4308279`。初始工作区已有阶段 8/ADR-036 的
+  68 项变化（57 项已跟踪修改、11 项未跟踪），全部保留，没有 reset、clean 或覆盖。
+- 重新检查小红书 Ark、小程序开放平台和开发者协议公开页面；没有找到可证明 Journey 可任意
+  搜索消费者笔记/推荐流的公开 API。实现不接收账号、密码、Cookie、验证码或登录态浏览器，
+  不自动/批量抓取，不复制正文和图片。
+
+### 实现
+
+- 新增 `LifeInspiration` 与 Alembic `0007_life_inspirations`：按用户保存规范化来源 URL、来源名、
+  标题、短摘要、用户确认标签、检查日期和固定 `inspiration_only`；同一用户 URL 唯一。
+- 新增认证后的 `/api/v1/inspirations/preview`、create/list/delete。preview 只允许
+  `xiaohongshu.com`/`xhslink.com` HTTPS 白名单，禁止凭据 URL 和自定义端口；逐跳校验 DNS、
+  私网地址和重定向，最多 3 次重定向、8 秒超时、256 KB 上限、不发送 Cookie，只解析
+  title/description 元数据。网络/访问控制/类型/体积/Prompt Injection 失败统一
+  `manual_required`，不绕过登录或反爬。
+- 移动端新增“我的 → 生活灵感”：离线提示、主动粘贴、预览或手动填写、可编辑标签、显式确认、
+  来源跳转与两步删除。该能力不新增一级入口，不接入首页 Agent、工具注册表、RAG 或健康事实。
+- `.env.example` 与本机 Compose 默认允许开发预览；`.env.production.example` 和 production
+  Compose 默认 `LIFE_INSPIRATION_FETCH_ENABLED=false`，关闭后保留手动填写/确认回退。
+- OpenAPI 双快照和 TypeScript 共享契约同步；新增根 `qiuzhaomianshi.md`，`AGENTS.md` 已规定
+  每次代码/配置/数据库/测试/ADR/交付更新都必须同步岗位案例或记录“无新增问题”。
+
+### 测试、迁移与构建证据
+
+- 后端专项 **6/6**：认证、HTTPS/域名、最小元数据、显式确认、去重、用户隔离/删除、私网 DNS、
+  跨域重定向、超时、大小上限、Prompt Injection 和 Cookie 不转发；Ruff 通过。
+- 移动专项与 API 定向 **10/10**；全量 TypeScript、Expo lint 通过，Jest **45/45**、逻辑测试
+  **5/5**。覆盖率 statements 76.27%、branches 65.98%、functions 73.33%、lines 78.51%。
+- 隔离数据库完成 `0007 → 0006 → 0007` 与 `alembic check`，最终
+  `0007_life_inspirations (head)`，无待生成操作。
+- `docker compose --profile test run --rm --build test`：最终后端/评测 **93 passed**（19.20 s），
+  覆盖率 **90.72%**；362 条版本化样本和 26 项门禁全部 PASS，Provider Mock、费用 `$0`。
+- `docker compose --profile blackbox run --rm --build blackbox`：最终 Requests + Pytest + Allure
+  网络黑盒 **1/1**（0.29 s）。
+- Web E2E 前显式覆盖 Agent/图片 Provider 为 Mock、所有模型 Key 为空、预算 0；确认运行环境无
+  外部 Key 后，核心 E2E **2/2**（4.7 s）。随后恢复本机 `.env` 的 DeepSeek/Qwen Provider，
+  API healthy；没有读取或输出 Key，也没有真实模型调用。
+- Web export 生成 **14** 条静态路由并包含 `/inspirations`；iOS、Android Hermes bundle 均成功。
+  这是三端 JS 构建证据，不冒充本轮新的原生安装或商店签名证据。
+- local 与 production Compose config 均通过；production 配置确认生活灵感自动预览为 `false`。
+- 最终主 API 按本机原配置重新构建并恢复，ready 为 `database=ok`，Alembic 为
+  `0007_life_inspirations (head)`；只核对 Provider 名称为 DeepSeek/Qwen，没有读取或输出 Key。
+- `git diff --check`、41 个 Markdown 文件本地链接检查和仓库高置信 Key/私钥文件名扫描均 PASS；
+  `.env` 继续被 Git 忽略。
+
+### 发现的问题与处理
+
+- 第一次启动 E2E API 时宿主 `5432` 已被其他 PostgreSQL 占用；没有停止现有进程，改用临时
+  宿主端口 `55432`，容器内数据库地址与迁移不变。
+- 健康轮询第一次把 zsh 只读变量 `status` 当普通变量；改名 `health_state` 后通过。随后一次
+  设置检查误引用不存在的 Settings 属性，只输出 AttributeError，没有输出 Key；改为仅检查
+  环境变量是否非空的布尔值后确认 Mock 环境所有外部 Key 均为空。
+- 移动测试首轮暴露 Expo 路由类型、异步断言和 Jest mock 提升命名问题；分别使用 `Href`、
+  `waitFor`/异步事件和 `mockItems` 修正，未降低业务断言。
+- 重复 URL 测试暴露唯一约束在 `flush` 阶段抛出；服务层把 flush 纳入冲突处理后稳定返回 409。
+
+### 收口
+
+- ADR-037 转 Accepted，阶段 12 Completed。生活灵感是用户主动收藏，不是小红书账号绑定、
+  通用浏览器、Agent Tool、RAG 摄取或健康证据；production 自动预览默认关闭。
+- 当前最终工作区为 85 项变化（65 项已跟踪修改、20 项未跟踪），包括此前阶段 8/ADR-036 与
+  本轮 ADR-037。没有 commit、push、PR、公网部署、依赖批量升级或真实模型调用。
+- 下一项只是在用户单独授权后完成最终差异/敏感信息复核并创建本地提交；默认不 push、不创建
+  PR，不自动启动新产品功能。
+
+## 2026-08-10：阶段 13 秋招 Demo 封板——真实 LLM、Multi-Agent、RAG Eval 与交付收口
+
+### 授权、目录与审计
+
+- 用户要求先扫描真实 Agent、RAG、evals、API、Run State、前端 Trace、Provider/Mock 切换和
+  Docker，再直接按“真实 LLM → Multi-Agent → RAG Eval → Journey → 图片 → E2E → 文档”实施；
+  同时冻结语音、视频、第三方登录、验证码/找回密码、健康平台、Push、自动小红书、通用浏览器、
+  自由网页搜索和复杂社交。
+- 开始和恢复时均执行 `pwd`、`git status`、`ls -la`；当前目录始终为 Journey 根目录。工作区
+  原本已有阶段 8/12 大量未提交变化，全部保留；没有 reset、clean、commit、push 或 PR。
+- 审计确认旧 Agent v3 已有 Router/Planner/Policy/Executor/Observation/Verifier/Confirmation，
+  但没有明确 Specialist 角色；RAG 为 4 份文档、420 字符无 overlap、96 维本地哈希 embedding、
+  PostgreSQL JSON vector、top-3/0.16；旧评测没有 Recall@1/5、MRR 和真实生成分层指标。
+
+### Multi-Agent 与 Journey 实现
+
+- 新增 `specialists.py`，把现有工具明确归属 Orchestrator、Record Agent、Health Knowledge Agent、
+  Journey Summary Agent；Policy 拒绝角色/工具不匹配，仍为同一 FastAPI 模块化单体，不新增
+  Agent 群聊或微服务。
+- Router 支持“中午记录 + 晚上运动 + 本周减脂情况”的精确分段；Plan/Step/Observation/Tool
+  Trace 增加 `specialist`、`selected_agents`、`duration_ms`、候选数、检索文档/分数和数据范围。
+  原始输入仍只保留 hash/长度，不保存模型思维链。
+- 精确输入会生成 food/activity 两个候选并暂停；两个候选全部经 Confirmation Gate 写库后，
+  显式 Resume 读取更新后的画像、目标、7 天记录与体重趋势，再组合知识引用和周总结。
+- Journey API/客户端增加 7/30 个日历日窗口、摄入/运动/体重趋势、目标与 AI 总结；继续保留按
+  日期的 food/activity/weight/summary 多日语义。
+- `/health/ready` 与启动日志增加非敏感 REAL/MOCK、Provider、Model；模型 Key 未打印。
+
+### RAG Eval 与真实结果
+
+- 新增 60 题 `rag_eval_v1`（40 有答案/20 拒答）、Dataset/bundle hash、Retrieval 与 Generation
+  分层评测、不可覆盖输出和跨版本基线一致性检查。Mock Generation 明确
+  `SKIPPED_REAL_MODEL`。
+- `rag-v1`：Recall@1 0.7083、Recall@3/5 0.9625、MRR 0.9500；
+  `rag-v2-candidate`：Recall@1 0.7083、Recall@3/5 1.0、MRR 0.9625。
+- 第一次真实 DeepSeek 报告 `rag-v2-real-2026-08-10.json`：60 次调用，Groundedness/Relevance
+  0.9625、Citation 0.9083，但 Abstention 0.6833，门禁失败。未覆盖或删除该报告。
+- 定位到 Retrieval 无 Context 时仍调用模型，且 scorer 未统一识别结构化拒答；改为直接返回
+  `insufficient_context` 并升级固定 scorer。第二份不可覆盖报告
+  `rag-v2-real-2026-08-10-r2.json`：41 次真实调用 + 19 次确定性拒答，输入/输出 Token
+  27,696/8,446，费用 `$0.00624232`；Groundedness/Relevance 0.9625、Citation 0.9083、
+  Abstention 1.0；Generation p50/p95 1584/2873 ms、总 p50/p95 1585/2874 ms，全部门禁通过。
+
+### E2E、超时与离线恢复
+
+- 真实复合 Requests 黑盒首轮业务完成但测试固定 15 秒超时；改为环境变量控制，Mock/CI 保持
+  15 秒，真实验收显式 75 秒。随后一次模型成功但文案为“过去的7天”，补充语义等价断言；再一次
+  Provider 的周总结在 12 秒阈值重试后 `model_timeout` 并进入可解释 degraded。
+- 结构化工具日志证明一次成功周总结实际约 24.3 秒，因此把 Demo `AGENT_TIMEOUT_SECONDS` 从
+  12 调整为 30、仍最多重试 1 次。最终精确复合真实黑盒 **1/1 passed，28.02 秒**；不把供应商
+  波动隐藏成成功。
+- 隔离 Mock API 的 Requests + Pytest + Allure **2/2 passed，0.50 秒**，生成 JUnit/Allure；
+  Playwright 首轮因工具名同时出现在 Plan/Trace 而触发 strict locator，限定到计划完整文本后
+  **2/2 passed，3.3 秒**。图片 E2E 仍验证 Mock 候选经用户校正后保存。
+- 新增离线 `create → Outbox → reconnect → create API → pull snapshot → Outbox 清空` 回归；专项
+  5/5，通过服务端 ID/version 对齐验证，不只检查“队列存在”。
+
+### 全量测试、构建与 Docker
+
+- `docker compose --profile test run --rm --build test`：**100 passed**，覆盖率 **90.60%**；
+  362 条既有样本/26 项门禁、60 题 RAG v1/v2 全部 PASS，Provider Mock、费用 0。
+- 移动 Jest **46/46**，逻辑 **5/5**；Statements 71.76%、Branches 61.62%、Functions 69.79%、
+  Lines 74.41%；TypeScript、Expo lint、应用变体检查通过。
+- Web export 14 路由；iOS/Android Hermes export 通过；Web 真浏览器 E2E 2/2。
+- iPhone 17 Pro / iOS 26.5：Debug Build Succeeded，0 error、36 条 Xcode 缓存/脚本警告，安装并
+  获取 1367-module Metro bundle；Pixel 9 / Android 16：首次因终端无系统 Java 失败，显式使用
+  Android Studio JBR 21 后 495 tasks、`BUILD SUCCESSFUL in 4m 39s`，APK 安装，MainActivity
+  前台并获取 1498-module bundle，无业务 fatal。截图保存在被忽略的 `reports/`。
+- `infra/demo/preflight.py` 检出另一 Compose Project `mall` 使用宿主 5432；未停止或修改它，
+  Journey 使用 API 8000、PostgreSQL 55432，容器内仍为 `db:5432`。新增 `demo_up.sh` 执行
+  preflight → build/up/wait → health/migration/rag 检查。
+- 最终执行 `docker compose down`（不删卷）和 `./infra/demo/demo_up.sh`。旧 test/blackbox profile
+  容器仍占 Journey network，因此 down 提示 network still in use；核心 API/DB 仍按新镜像重建，
+  `docker compose ps` healthy，live/ready 200，REAL DeepSeek、RAG ok，Alembic
+  `0007_life_inspirations (head)`。未执行任何全局 Docker prune。
+
+### 当前结论与边界
+
+- ADR-039 Accepted，阶段 13 Completed。Journey 现在可以诚实描述为“有界、可解释、确认后写入、
+  真实模型与 RAG 可分层评测的 Multi-Agent 健康记录 Demo”，不能描述为 Agent 群聊、医疗诊断、
+  公网生产或商店发布。
+- 食物图片仍为 Experimental/No-Go；生活灵感不进入 RAG；Post-Demo / Future 能力没有实现或
+  启动。没有真实 Key、私钥、原图或原始健康文本写入跟踪文档。
+- 本阶段到此停止；下一步只有用户单独授权后才能做最终差异/敏感信息复核与本地 Git 提交，
+  默认不 push、不创建 PR。
+
+### 中断恢复后的最终一致性检查
+
+- 任务恢复后再次核对目录与工作区；仍为 Journey 根目录、分支
+  `codex/journey-migration-baseline`、HEAD `2654c4308279`。最终收口时共有 115 项未提交变化
+  （87 项已跟踪修改、28 项未跟踪），没有 reset、clean、commit、push 或 PR。
+- 修正 `PROJECT_STATUS.md`、`NEXT_TASK.md`、当前项目审计和 Agent 技术结论中残留的阶段 12、
+  单 Agent、93 条后端和 45 条移动测试旧口径；阶段 10/11 的历史描述保留为历史事实。
+- `git diff --check` 首轮发现 ADR-039 状态行尾空格，使用最小补丁去除；复跑通过。44 个 Markdown
+  文件的本地链接检查通过。
+- 高置信 API Key、GitHub Token、AWS Key 与私钥头扫描只输出命中文件名，最终 0 个命中文件；
+  `.env` 未被 Git 跟踪且权限为 `0600`，没有读取或打印其中的值。
+- local Compose config、带无密钥示例环境的 production Compose config、`demo_up.sh` shell 语法
+  和 `preflight.py` Python 语法均通过。production Compose 在不提供必需的 `PUBLIC_ORIGIN` 等
+  变量时按设计 fail-fast，使用 `.env.production.example` 后配置验证通过。
+- 当前 `docker compose ps` 显示 Journey API/DB healthy；`/health/live` 正常，`/health/ready`
+  返回 database/rag=`ok`、Agent Mode=`REAL`、Provider=`deepseek`、Model=`deepseek-v4-flash`。
+  旧 test/blackbox profile 容器仍属于 Journey namespace，没有影响另一 Compose Project。
+
+## 2026-08-13：封板维护——真实 Agent 超时/Resume 对账与静息能量口径
+
+### 现场证据与根因
+
+- 用户在 iOS Simulator 复合场景中看到三条错误：候选确认
+  `Idempotency-Key was already used with a different payload`、首页继续执行
+  `Run is not waiting`、Journey 周总结“网络不可用”；同时指出热量指标未包含基础代谢。
+- 开始前执行并展示 `pwd`、`git status`、`ls -la`，只操作 Journey 根目录并保留既有大量未提交
+  变化；没有 reset、clean、commit、push、PR 或全局 Docker 清理。
+- PostgreSQL 只读核对确认问题 Run `df8c...` 已是 `completed/consumed`，两个候选均在
+  09:27:16/09:27:23 UTC 写入，确认 2/2、resume 1 次；Run 累计工具 latency 24,756 ms。
+  09:29 的独立周总结 Run 同样 completed，latency 21,939 ms。移动端却对全部 API 固定 10 秒，
+  因而先报网络错误，后端继续完成，再留下过期 Resume 和二次确认冲突。
+- 幂等保护工作正确，阻止了同一候选不同 Payload 的重复写入；根因不是数据库、RAG 或模型未执行，
+  不能通过放宽幂等约束修复。
+
+### 实现
+
+- `apps/mobile/src/lib/api.ts` 将普通 API 保持 10 秒，Agent Run/Resume 单独设为 120 秒；增加
+  `fetchAgentRunTrace`。确认页和首页在响应不确定或 Resume 409 时读取 Run Trace，Run 已完成则
+  清理过期继续状态；候选此前已写入时提示编辑既有记录，不重复保存。
+- `AgentRunTrace` 增加 confirmation progress，继续只返回脱敏计划、Observation、工具、用量和
+  状态，不返回原始输入或思维链。
+- 新增服务端与离线共口径的 Mifflin–St Jeor 静息能量预测；缺少生日/身高/最新体重/适用性别，
+  或年龄不在原始健康成人 19—78 岁范围时返回原因而非默认值。Home 增加静息估算和记录口径
+  余量，旧 `net_kcal` 兼容保留但 UI 改为“记录差值”；Journey/Agent Context 同步提示不等于 TDEE。
+- 新增 ADR-040，并同步 README、API、文档索引与求职面试材料。公式依据为 Mifflin 等 1990
+  原始论文 PubMed PMID 2305711。
+
+### 验收
+
+- Python 语法与 TypeScript 通过；移动 Jest **48/48**、逻辑 **5/5**。
+- Docker 定向后端 **17/17**；全量后端/评测 **100/100**，覆盖率 **90.69%**；26 项 Agent 门禁、
+  60 题 `rag-v1`/`rag-v2-candidate` Eval 全部运行，Provider 明确 Mock，未冒充真实 Generation。
+- OpenAPI 双快照更新；`git diff --check` 通过。
+- 重建主 API 后 `docker compose ps` 显示 API/DB healthy，live/ready 均 200；ready 为
+  database/rag=`ok`、Agent Mode=`REAL`、Provider=`deepseek`、Model=`deepseek-v4-flash`。
+- 实际测试账号 `/home/today`：摄入 600、已记录运动 300、记录差值 300、静息估算 1,591.5
+  kcal/天、记录口径估算余量 −1,291.5；问题 Run Trace 为 completed/consumed、确认 2/2、
+  `resume_available=false`。
+- 新发起真实 DeepSeek v4 Pro 7 天总结：HTTP 200、端到端 20,434 ms、Agent 19,975 ms、答案存在、
+  3 条引用、`fallback_used=false`。没有打印 API Key。
+- 使用 iOS Simulator 的本地测试账号完成页面级复验：首页实际渲染“记录差值 300 / 静息估算
+  1,592 / 今日估算余量 −1,292”及 TDEE 边界；在 Journey 点击“生成”后约 27 秒出现真实 7 天
+  总结和 3 条依据，没有再显示“网络不可用”。对应最新 Run completed、DeepSeek v4 Pro、
+  latency 21,798 ms、fallback=false；截图保存在被 Git 忽略的 `reports/manual/2026-08-13/`。
+
+### 结论与边界
+
+- 截图中的 AI 总结并非业务执行失败，而是客户端超时与状态对账缺失；修复后仍保留真实失败、
+  超时和降级提示，不承诺生产 SLA。
+- 静息能量是预测值，不是完整 TDEE 或医疗测量；漏记数据会影响余量。本轮是阶段 13 后 bug fix
+  和指标语义修正，不启动阶段 14 或任何外围产品功能。
+
+## 2026-08-13：秋招跨岗位项目素材知识库
+
+### 范围与事实源
+
+- 按用户授权新增一份用于其他 Codex 生成 Journey 简历内容的事实素材库；本轮只修改文档，不改
+  前端、后端、数据库、Agent、RAG、Compose 或 CI 行为，也不启动新阶段。
+- 开始前执行并展示 `pwd`、`git status`、`ls -la`，确认处于 Journey 根目录并保留既有大量未提交
+  变化；未执行 reset、clean、commit、push、PR 或任何 Docker 清理。
+- 重新读取当前 `package.json`/`pyproject.toml`/lock、OpenAPI、Agent/RAG 源码、Compose/CI、
+  移动端离线实现、ADR、执行日志和现有报告，而不是只复述旧交接文档；未读取或输出 `.env` 值。
+
+### 产物
+
+- 新增 `docs/demo/JOURNEY_CAREER_MATERIAL_KNOWLEDGE_BASE.md`，以快照日期、状态标签和素材编号组织：
+  项目演进、产品设计、跨端/后端技术、Multi-Agent、RAG/Eval、测试、Docker/CI、安全隐私、
+  14 个问题解决案例、Agent/测试/运维/售前/产品/AI 产品六类岗位地图、面试叙事和禁用陈述。
+- 指标使用当前可核验证据：OpenAPI 25 Path/34 Operation；后端 100/100、覆盖率 90.69%；
+  362 条 Agent/契约样本和 26 项门禁；60 题 RAG；真实复合黑盒 1/1；图片 Top-3 67.27%
+  门禁失败。Mock、真实模型、图片 No-Go、本机 Demo 和 production Conditional 均单独标记。
+- 同步更新根 README、文档索引与 `qiuzhaomianshi.md`；没有建立平行 Roadmap，也没有修改 ADR
+  状态。
+
+### 验收与边界
+
+- 本轮仅为文档编写，未重复运行完整业务测试；引用的是 2026-08-13 最近一次已落盘的测试/报告
+  快照，知识库明确要求后续使用者在更晚日期先重新核验。
+- 对本轮涉及的 5 份 Markdown 执行相对链接检查，共检查 49 个本地链接，缺失 0；
+  `git diff --check` 通过；高置信 API Key、GitHub Token 与私钥头扫描命中 0。未读取或打印 `.env`。
+- 知识库共 1072 行、14 个问题解决案例、7 组岗位素材（六个目标岗位 + 后端/全栈补充），所有
+  量化数字均附事实源或明确引用执行日志快照。
+- 知识库不能作为已上线、生产 SLA、商店发布、图片质量通过、医疗准确性或 Future 功能已实现的
+  证明。

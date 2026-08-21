@@ -66,6 +66,12 @@ def test_ownership_crud_home_and_journey_are_deterministic(
     owner = register_user()
     stranger = register_user()
     owner_headers = headers(owner)
+    profile = client.patch(
+        "/api/v1/profile",
+        headers={**owner_headers, "If-Match-Version": "1"},
+        json={"sex": "male", "birth_date": "2000-08-13", "height_cm": 170},
+    )
+    assert profile.status_code == 200, profile.text
 
     food = client.post(
         "/api/v1/food-records",
@@ -98,7 +104,7 @@ def test_ownership_crud_home_and_journey_are_deterministic(
 
     forbidden_by_ownership = client.patch(
         f"/api/v1/food-records/{food.json()['id']}",
-        headers=headers(stranger),
+        headers={**headers(stranger), "If-Match-Version": str(food.json()["version"])},
         json={"energy_kcal": 1},
     )
     assert forbidden_by_ownership.status_code == 404
@@ -109,6 +115,15 @@ def test_ownership_crud_home_and_journey_are_deterministic(
     assert home.json()["activity_kcal"] == 240
     assert home.json()["net_kcal"] == 280
     assert home.json()["latest_weight_kg"] == 70.5
+    assert home.json()["resting_energy"] == {
+        "status": "available",
+        "kcal_per_day": 1647.5,
+        "formula": "mifflin-st-jeor-1990",
+        "age_years": 25,
+        "missing_fields": [],
+        "note": "静息能量消耗预测值，不是代谢测量，也不等于包含日常活动和食物热效应的 TDEE。",
+    }
+    assert home.json()["estimated_energy_balance_kcal"] == -1367.5
 
     client.post(
         "/api/v1/food-records",
