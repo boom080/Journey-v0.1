@@ -74,7 +74,7 @@ jobs:
         working-directory: backend
         run: |
           mkdir -p ../reports/backend/allure-results
-          python -m pytest -q -p no:cacheprovider tests ../evals/test_*.py \
+          PYTHONPATH=.:.. python -m pytest -q -p no:cacheprovider tests ../evals/test_*.py \
             --junitxml=../reports/backend/junit.xml \
             --alluredir=../reports/backend/allure-results \
             --cov=app --cov-report=term-missing \
@@ -91,7 +91,8 @@ jobs:
             if [ "$attempt" = 30 ]; then cat ../reports/backend/blackbox-api.log; exit 1; fi
             sleep 1
           done
-          BLACKBOX_BASE_URL=http://127.0.0.1:8000 python -m pytest -q -p no:cacheprovider blackbox_tests \
+          PYTHONPATH=.:.. BLACKBOX_BASE_URL=http://127.0.0.1:8000 \
+            python -m pytest -q -p no:cacheprovider blackbox_tests \
             --junitxml=../reports/backend/blackbox-junit.xml \
             --alluredir=../reports/backend/blackbox-allure-results
       - name: Agent and RAG quantitative gates
