@@ -8,8 +8,10 @@ SUPPORTED_MAX_AGE = 78
 
 
 def age_on(birth_date: date, on_date: date) -> int:
-    return on_date.year - birth_date.year - (
-        (on_date.month, on_date.day) < (birth_date.month, birth_date.day)
+    return (
+        on_date.year
+        - birth_date.year
+        - ((on_date.month, on_date.day) < (birth_date.month, birth_date.day))
     )
 
 
@@ -59,7 +61,10 @@ def estimate_resting_energy(
             formula=FORMULA_VERSION,
             age_years=age_years,
             missing_fields=[],
-            note=f"该公式的原始健康成人样本年龄为 {SUPPORTED_MIN_AGE}—{SUPPORTED_MAX_AGE} 岁，当前不输出估算。",
+            note=(
+                f"该公式的原始健康成人样本年龄为 {SUPPORTED_MIN_AGE}—"
+                f"{SUPPORTED_MAX_AGE} 岁，当前不输出估算。"
+            ),
         )
 
     sex_constant = 5 if sex == "male" else -161

@@ -236,8 +236,7 @@ def _run_graph(
                     else f"静息消耗暂不可估算：{recent.get('energy_estimate_note', '画像信息不足')}"
                 )
                 + weight_sentence
-                +
-                "这是基于结构化数据的确定性总结，可继续观察记录完整性和趋势。"
+                + "这是基于结构化数据的确定性总结，可继续观察记录完整性和趋势。"
             )
             return WeeklySummaryGenerated(
                 summary=summary,
