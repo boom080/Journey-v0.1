@@ -101,6 +101,11 @@ export default function ProfileScreen() {
             <Text style={[styles.meta, { color: theme.colors.textMuted }]}>Journey 提供一般健身、营养和生活方式管理，不诊断疾病、不开处方。</Text>
           </Card>
           <Card>
+            <SectionTitle>外部 AI 与数据</SectionTitle>
+            <Text style={[styles.meta, { color: theme.colors.textMuted }]}>查看服务端授权状态、发送范围、保留期限，并随时撤回授权或删除 Agent 数据。</Text>
+            <Button variant="secondary" onPress={() => router.push('/settings/agent-privacy' as Href)}>管理外部 AI 与数据</Button>
+          </Card>
+          <Card>
             <SectionTitle>生活灵感</SectionTitle>
             <Text style={[styles.meta, { color: theme.colors.textMuted }]}>主动保存公开分享链接，只作为生活灵感；不绑定账号、不后台抓取、不作为健康证据。</Text>
             <Button variant="secondary" onPress={() => router.push('/inspirations' as Href)}>管理生活灵感</Button>

@@ -1,14 +1,15 @@
 #!/bin/sh
 set -eu
 
-: "${DATABASE_URL:?Set DATABASE_URL to the staging PostgreSQL connection string}"
-
-output_dir="${BACKUP_DIR:-artifacts/staging/backups}"
-mkdir -p "$output_dir"
-timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
-output="$output_dir/journey-staging-$timestamp.dump"
-
-docker run --rm -e DATABASE_URL postgres:18.4-alpine \
-  sh -c 'pg_dump --format=custom --no-owner --no-acl "$DATABASE_URL"' > "$output"
-shasum -a 256 "$output" > "$output.sha256"
-printf 'backup=%s\nchecksum=%s.sha256\n' "$output" "$output"
+# No connection URL in shell arguments; use a verified Compose container.
+: "${BACKUP_CONTAINER:?Set the exact Journey database container name}"
+: "${BACKUP_PROJECT:?Set its Journey Compose project name}"
+: "${BACKUP_DATABASE:?Set the exact database name}"
+: "${BACKUP_USER:?Set the database user}"
+: "${BACKUP_DIR:?Set an absolute private backup directory}"
+: "${BACKUP_KEY_FILE:?Set a separate private 32-byte key file}"
+script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+exec node "$script_dir/../privacy/backup.mjs" backup \
+  --container "$BACKUP_CONTAINER" --project "$BACKUP_PROJECT" \
+  --database "$BACKUP_DATABASE" --user "$BACKUP_USER" \
+  --directory "$BACKUP_DIR" --key-file "$BACKUP_KEY_FILE"

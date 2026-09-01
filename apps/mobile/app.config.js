@@ -25,6 +25,28 @@ const selected = variants[variant];
 const isDevelopment = variant === 'development';
 const apiBaseUrl = process.env.EXPO_PUBLIC_API_BASE_URL?.trim();
 
+function isExplicitlyEnabled(name) {
+  return process.env[name]?.trim().toLowerCase() === 'true';
+}
+
+const testAccountIdentifier = (
+  process.env.TEST_ACCOUNT_EMAIL || process.env.TEST_ACCOUNT_USERNAME || ''
+).trim();
+const testAccountPassword = process.env.TEST_ACCOUNT_PASSWORD?.trim() || '';
+const localTestAccount = (
+  isDevelopment &&
+  isExplicitlyEnabled('SEED_TEST_ACCOUNT') &&
+  testAccountIdentifier &&
+  testAccountPassword
+)
+  ? { identifier: testAccountIdentifier, password: testAccountPassword }
+  : null;
+const capabilities = {
+  foodImageAnalysis: isDevelopment && isExplicitlyEnabled('EXPO_PUBLIC_FOOD_IMAGE_ANALYSIS_ENABLED'),
+  localTestAccount: localTestAccount !== null,
+  agentDebugDetails: isDevelopment && isExplicitlyEnabled('EXPO_PUBLIC_AGENT_DEBUG_DETAILS_ENABLED'),
+};
+
 if (!isDevelopment && (!apiBaseUrl || !apiBaseUrl.startsWith('https://'))) {
   throw new Error('Preview and production require an HTTPS EXPO_PUBLIC_API_BASE_URL');
 }
@@ -95,5 +117,7 @@ module.exports = {
   },
   extra: {
     appVariant: variant,
+    capabilities,
+    localTestAccount,
   },
 };

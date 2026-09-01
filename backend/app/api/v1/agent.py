@@ -13,9 +13,30 @@ from app.schemas.agent import (
     AgentRunResponse,
     AgentRunTrace,
 )
+from app.schemas.agent_privacy import AgentConsentRequest, AgentDataDeletion, AgentPrivacyStatus
 from app.services.agent import confirm_candidate, get_run_trace, resume_agent_run, run_agent
+from app.services.agent_privacy import delete_agent_data, privacy_status, update_consent
 
 router = APIRouter(prefix="/agent", tags=["Agent"])
+
+
+@router.get("/privacy", response_model=AgentPrivacyStatus)
+def read_privacy(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return privacy_status(db, user.id)
+
+
+@router.put("/privacy/consent", response_model=AgentPrivacyStatus)
+def write_consent(
+    payload: AgentConsentRequest,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    return update_consent(db, user.id, granted=payload.granted, version=payload.policy_version)
+
+
+@router.delete("/privacy/data", response_model=AgentDataDeletion)
+def erase_agent_data(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return delete_agent_data(db, user.id)
 
 
 @router.post("/runs", response_model=AgentRunResponse)

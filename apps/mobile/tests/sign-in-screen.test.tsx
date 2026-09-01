@@ -2,6 +2,7 @@ import { fireEvent, render, waitFor } from '@testing-library/react-native';
 
 const mockSignIn = jest.fn();
 const mockSignUp = jest.fn();
+let mockLocalTestAccount: { identifier: string; password: string } | null = null;
 
 jest.mock('@/providers/auth-provider', () => ({
   useAuth: () => ({ signIn: (...args: unknown[]) => mockSignIn(...args), signUp: (...args: unknown[]) => mockSignUp(...args) }),
@@ -19,6 +20,9 @@ jest.mock('@/lib/api', () => {
   class ApiError extends Error {}
   return { ApiError };
 });
+jest.mock('@/config/environment', () => ({
+  getLocalTestAccount: () => mockLocalTestAccount,
+}));
 
 import SignInScreen from '@/app/sign-in';
 
@@ -27,9 +31,19 @@ describe('sign-in page', () => {
     jest.clearAllMocks();
     mockSignIn.mockResolvedValue(undefined);
     mockSignUp.mockResolvedValue(undefined);
+    mockLocalTestAccount = null;
   });
 
-  test('local test account remains a one-click deterministic login', async () => {
+  test('hides the local test account unless the development manifest enables it', async () => {
+    const screen = await render(<SignInScreen />);
+    expect(screen.queryByRole('button', { name: '使用本地测试账号' })).toBeNull();
+  });
+
+  test('enabled local test account remains a one-click deterministic login', async () => {
+    mockLocalTestAccount = {
+      identifier: 'demo@journey.local',
+      password: 'JourneyDemo2026',
+    };
     const screen = await render(<SignInScreen />);
     await fireEvent.press(screen.getByRole('button', { name: '使用本地测试账号' }));
     await waitFor(() => expect(mockSignIn).toHaveBeenCalledWith({

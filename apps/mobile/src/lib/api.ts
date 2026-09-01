@@ -1,6 +1,9 @@
 import type {
   AgentConfirmationRequest,
   AgentConfirmationResponse,
+  AgentConsentRequest,
+  AgentDataDeletion,
+  AgentPrivacyStatus,
   AgentRunResponse,
   AgentRunTrace,
   ActivityRecord,
@@ -38,6 +41,9 @@ export const REQUEST_TIMEOUT_MS = 10_000;
 export const AGENT_REQUEST_TIMEOUT_MS = 120_000;
 type SessionListener = (session: TokenPair | null) => void;
 const sessionListeners = new Set<SessionListener>();
+type AgentDataDeletedListener = () => void;
+const agentDataDeletedListeners = new Set<AgentDataDeletedListener>();
+let agentDataRevision = 0;
 
 export class ApiError extends Error {
   constructor(
@@ -55,6 +61,26 @@ export class ApiNetworkError extends Error {}
 export function subscribeToSession(listener: SessionListener): () => void {
   sessionListeners.add(listener);
   return () => sessionListeners.delete(listener);
+}
+
+/**
+ * Notify in-memory Agent consumers after the server confirms a data deletion.
+ * This deliberately does not persist anything; it only lets mounted screens
+ * discard their local run/thread/candidate state.
+ */
+export function subscribeToAgentDataDeleted(listener: AgentDataDeletedListener): () => void {
+  agentDataDeletedListeners.add(listener);
+  return () => agentDataDeletedListeners.delete(listener);
+}
+
+export function notifyAgentDataDeleted(): void {
+  agentDataRevision += 1;
+  agentDataDeletedListeners.forEach((listener) => listener());
+}
+
+/** Monotonic in-memory marker used to ignore Agent responses that finish after deletion. */
+export function getAgentDataRevision(): number {
+  return agentDataRevision;
 }
 
 async function setSession(session: TokenPair | null) {
@@ -238,6 +264,33 @@ export const runAgent = (message: string, threadId?: string) =>
     method: 'POST',
     body: JSON.stringify({ message, thread_id: threadId }),
   }, { timeoutMs: AGENT_REQUEST_TIMEOUT_MS });
+
+export const fetchAgentPrivacy = () =>
+  rawRequest<AgentPrivacyStatus>('/api/v1/agent/privacy');
+
+export const updateAgentConsent = (payload: AgentConsentRequest) =>
+  rawRequest<AgentPrivacyStatus>('/api/v1/agent/privacy/consent', {
+    method: 'PUT',
+    body: JSON.stringify(payload),
+  }, { timeoutMs: AGENT_REQUEST_TIMEOUT_MS });
+
+export const deleteAgentData = () =>
+  rawRequest<AgentDataDeletion>('/api/v1/agent/privacy/data', {
+    method: 'DELETE',
+  }, { timeoutMs: AGENT_REQUEST_TIMEOUT_MS });
+
+const agentPrivacyErrorMessages: Record<string, string> = {
+  agent_provider_review_required: '外部 AI 的部署审核尚未完成或已过期，消息未发送；请到“外部 AI 与数据”查看状态。',
+  consent_required: '使用外部 AI 前需要先在“外部 AI 与数据”中明确授权；消息尚未发送。',
+  consent_outdated: '外部 AI 的隐私政策已更新，请在“外部 AI 与数据”中重新确认后再试。',
+  agent_external_disabled: '外部 AI 当前已关闭，消息不会发送；你可以在“外部 AI 与数据”查看当前状态。',
+};
+
+export function getAgentErrorMessage(error: unknown): string {
+  if (error instanceof ApiError) return agentPrivacyErrorMessages[error.code] ?? error.message;
+  if (error instanceof ApiNetworkError) return `${error.message}；结果尚未确认，请刷新状态后重试。`;
+  return 'Agent 暂时不可用，操作未确认完成，请刷新状态后重试。';
+}
 
 export const resumeAgentRun = (runId: string) =>
   rawRequest<AgentRunResponse>(`/api/v1/agent/runs/${runId}/resume`, {

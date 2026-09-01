@@ -519,6 +519,62 @@
         "title": "AgentConfirmationResponse",
         "type": "object"
       },
+      "AgentConsentRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "granted": {
+            "title": "Granted",
+            "type": "boolean"
+          },
+          "policy_version": {
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Policy Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "granted",
+          "policy_version"
+        ],
+        "title": "AgentConsentRequest",
+        "type": "object"
+      },
+      "AgentDataDeletion": {
+        "properties": {
+          "consent_revoked": {
+            "const": true,
+            "default": true,
+            "title": "Consent Revoked",
+            "type": "boolean"
+          },
+          "deleted_runs": {
+            "title": "Deleted Runs",
+            "type": "integer"
+          },
+          "deleted_threads": {
+            "title": "Deleted Threads",
+            "type": "integer"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "provider_data_deleted": {
+            "const": false,
+            "default": false,
+            "title": "Provider Data Deleted",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "deleted_runs",
+          "deleted_threads",
+          "message"
+        ],
+        "title": "AgentDataDeletion",
+        "type": "object"
+      },
       "AgentEvent": {
         "properties": {
           "data": {
@@ -870,6 +926,92 @@
           "message"
         ],
         "title": "AgentPlanStepResult",
+        "type": "object"
+      },
+      "AgentPrivacyStatus": {
+        "properties": {
+          "consent_granted": {
+            "title": "Consent Granted",
+            "type": "boolean"
+          },
+          "data_sent": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Data Sent",
+            "type": "array"
+          },
+          "deletion_notice": {
+            "title": "Deletion Notice",
+            "type": "string"
+          },
+          "enabled": {
+            "title": "Enabled",
+            "type": "boolean"
+          },
+          "external": {
+            "title": "External",
+            "type": "boolean"
+          },
+          "granted_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Granted At"
+          },
+          "notice": {
+            "title": "Notice",
+            "type": "string"
+          },
+          "policy_version": {
+            "title": "Policy Version",
+            "type": "string"
+          },
+          "provider": {
+            "title": "Provider",
+            "type": "string"
+          },
+          "provider_policy_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Provider Policy Url"
+          },
+          "provider_retention_notice": {
+            "title": "Provider Retention Notice",
+            "type": "string"
+          },
+          "retention_days": {
+            "title": "Retention Days",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "provider",
+          "external",
+          "enabled",
+          "policy_version",
+          "consent_granted",
+          "granted_at",
+          "retention_days",
+          "notice",
+          "data_sent",
+          "provider_policy_url",
+          "provider_retention_notice",
+          "deletion_notice"
+        ],
+        "title": "AgentPrivacyStatus",
         "type": "object"
       },
       "AgentRunRequest": {
@@ -4197,6 +4339,274 @@
           }
         ],
         "summary": "Confirm",
+        "tags": [
+          "Agent"
+        ]
+      }
+    },
+    "/api/v1/agent/privacy": {
+      "get": {
+        "operationId": "read_privacy_api_v1_agent_privacy_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentPrivacyStatus"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Invalid request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Authentication failed"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Resource not found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Resource conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Validation failed"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unexpected server error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Read Privacy",
+        "tags": [
+          "Agent"
+        ]
+      }
+    },
+    "/api/v1/agent/privacy/consent": {
+      "put": {
+        "operationId": "write_consent_api_v1_agent_privacy_consent_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AgentConsentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentPrivacyStatus"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Invalid request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Authentication failed"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Resource not found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Resource conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Validation failed"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unexpected server error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Write Consent",
+        "tags": [
+          "Agent"
+        ]
+      }
+    },
+    "/api/v1/agent/privacy/data": {
+      "delete": {
+        "operationId": "erase_agent_data_api_v1_agent_privacy_data_delete",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentDataDeletion"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Invalid request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Authentication failed"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Resource not found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Resource conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Validation failed"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unexpected server error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Erase Agent Data",
         "tags": [
           "Agent"
         ]

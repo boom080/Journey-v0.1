@@ -6,15 +6,15 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { journeyRadii, journeySpacing, journeyTypography } from '@journey/design-tokens';
 
 import { Button, Card, Chip, Field, Notice } from '@/components/ui';
+import { getLocalTestAccount, type LocalTestAccount } from '@/config/environment';
 import { ApiError } from '@/lib/api';
 import { useAuth } from '@/providers/auth-provider';
 import { useJourneyTheme } from '@/theme/theme-provider';
 
-const demo = { identifier: 'demo@journey.local', password: 'JourneyDemo2026' };
-
 export default function SignInScreen() {
   const theme = useJourneyTheme();
   const { signIn, signUp } = useAuth();
+  const localTestAccount = getLocalTestAccount();
   const [mode, setMode] = useState<'login' | 'register'>('login');
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
@@ -24,11 +24,11 @@ export default function SignInScreen() {
   const [pending, setPending] = useState(false);
   const [error, setError] = useState('');
 
-  async function submit(testAccount = false) {
+  async function submit(testAccount?: LocalTestAccount) {
     setPending(true);
     setError('');
     try {
-      if (testAccount) await signIn(demo);
+      if (testAccount) await signIn(testAccount);
       else if (mode === 'login') await signIn({ identifier: identifier.trim(), password });
       else await signUp({ email: email.trim(), username: username.trim(), password, display_name: displayName.trim() });
     } catch (reason) {
@@ -60,7 +60,11 @@ export default function SignInScreen() {
                 <Field label="邮箱或用户名" value={identifier} onChangeText={setIdentifier} autoCapitalize="none" autoCorrect={false} textContentType="username" />
                 <Field label="密码" value={password} onChangeText={setPassword} secureTextEntry textContentType="password" />
                 <Button loading={pending} disabled={!identifier.trim() || !password} onPress={() => void submit()}>进入 Journey</Button>
-                <Button variant="secondary" disabled={pending} onPress={() => void submit(true)}>使用本地测试账号</Button>
+                {localTestAccount && (
+                  <Button variant="secondary" disabled={pending} onPress={() => void submit(localTestAccount)}>
+                    使用本地测试账号
+                  </Button>
+                )}
               </>
             ) : (
               <>

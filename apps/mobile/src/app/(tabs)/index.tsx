@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { router, useFocusEffect } from 'expo-router';
-import { useCallback, useState } from 'react';
+import { router, type Href, useFocusEffect } from 'expo-router';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { journeySpacing, journeyTypography } from '@journey/design-tokens';
@@ -9,8 +9,16 @@ import type { AgentCandidate, AgentRunResponse, AgentSpecialist } from '@journey
 import { AgentStatusStrip, WarmHomeHero, WarmHomeMetrics, warmHomeColors } from '@/components/home-overview';
 import { ScreenShell } from '@/components/screen-shell';
 import { Button, Card, EmptyState, ErrorState, LoadingState, Notice, SectionTitle } from '@/components/ui';
-import { isFoodImageAnalysisEnabled } from '@/config/environment';
-import { ApiError, ApiNetworkError, fetchAgentRunTrace, resumeAgentRun, runAgent } from '@/lib/api';
+import { isAgentDebugDetailsEnabled, isFoodImageAnalysisEnabled } from '@/config/environment';
+import {
+  ApiError,
+  fetchAgentPrivacy,
+  fetchAgentRunTrace,
+  getAgentErrorMessage,
+  resumeAgentRun,
+  runAgent,
+  subscribeToAgentDataDeleted,
+} from '@/lib/api';
 import { classifyMockInput, type MockCandidate } from '@/lib/mock-intent';
 import { useSync } from '@/providers/sync-provider';
 import { useJourneyTheme } from '@/theme/theme-provider';
@@ -46,8 +54,13 @@ function observationDetail(summary: Record<string, unknown>): string {
   return '结构化结果已记录';
 }
 
+function isAgentPrivacyError(error: unknown): error is ApiError {
+  return error instanceof ApiError && ['consent_required', 'consent_outdated', 'agent_external_disabled', 'agent_provider_review_required'].includes(error.code);
+}
+
 export default function HomeScreen() {
   const theme = useJourneyTheme();
+  const debugDetailsEnabled = isAgentDebugDetailsEnabled();
   const sync = useSync();
   const queryClient = useQueryClient();
   const [input, setInput] = useState('');
@@ -57,7 +70,25 @@ export default function HomeScreen() {
   const [agentPending, setAgentPending] = useState(false);
   const [agentError, setAgentError] = useState('');
   const [resumeRunId, setResumeRunId] = useState<string>();
+  const agentPrivacyChecked = useRef(false);
+  const agentMemoryVersion = useRef(0);
   const home = useQuery({ queryKey: ['home'], queryFn: sync.fetchHome });
+
+  useEffect(() => subscribeToAgentDataDeleted(() => {
+    queryClient.removeQueries({
+      predicate: (query) => {
+        const [root] = query.queryKey;
+        return typeof root === 'string' && root.startsWith('agent');
+      },
+    });
+    agentMemoryVersion.current += 1;
+    setCandidate(null);
+    setAgentResult(null);
+    setAgentThreadId(undefined);
+    setResumeRunId(undefined);
+    setAgentError('');
+    agentPrivacyChecked.current = false;
+  }), [queryClient]);
 
   useFocusEffect(useCallback(() => {
     const continuation = queryClient.getQueryData<AgentRunResponse>(['agent-continuation']);
@@ -85,26 +116,35 @@ export default function HomeScreen() {
 
   async function continueRun() {
     if (!resumeRunId) return;
+    const memoryVersion = agentMemoryVersion.current;
     setAgentPending(true); setAgentError('');
     try {
       const continuation = await resumeAgentRun(resumeRunId);
+      if (memoryVersion !== agentMemoryVersion.current) return;
       setAgentResult(continuation);
       queryClient.removeQueries({ queryKey: ['agent-resume-needed'], exact: true });
       setResumeRunId(undefined);
     } catch (reason) {
+      if (memoryVersion !== agentMemoryVersion.current) return;
       const trace = await fetchAgentRunTrace(resumeRunId).catch(() => null);
+      if (memoryVersion !== agentMemoryVersion.current) return;
       if (trace && trace.status !== 'waiting_for_user') {
         queryClient.removeQueries({ queryKey: ['agent-resume-needed'], exact: true });
         setResumeRunId(undefined);
         setAgentError('该 Run 已在后台完成。记录已同步，可到 Journey 生成最新总结。');
         await home.refetch();
       } else {
-        setAgentError(reason instanceof ApiError || reason instanceof ApiNetworkError ? reason.message : '继续执行失败，请稍后重试');
+        setAgentError(getAgentErrorMessage(reason));
+        if (isAgentPrivacyError(reason)) {
+          agentPrivacyChecked.current = false;
+          router.push('/settings/agent-privacy' as Href);
+        }
       }
     } finally { setAgentPending(false); }
   }
 
   async function analyze() {
+    const memoryVersion = agentMemoryVersion.current;
     setAgentError(''); setAgentResult(null); setCandidate(null);
     if (!sync.isOnline) {
       const local = classifyMockInput(input);
@@ -114,11 +154,34 @@ export default function HomeScreen() {
     }
     setAgentPending(true);
     try {
+      if (!agentPrivacyChecked.current) {
+        const privacy = await fetchAgentPrivacy();
+        if (!privacy.enabled) {
+          setAgentError('Agent 当前已关闭，消息不会发送；请到“外部 AI 与数据”查看服务端状态。');
+          router.push('/settings/agent-privacy' as Href);
+          return;
+        }
+        if (privacy.external && !privacy.consent_granted) {
+          setAgentError('使用外部 AI 前需要先明确授权，消息尚未发送。');
+          router.push('/settings/agent-privacy' as Href);
+          return;
+        }
+        if (memoryVersion !== agentMemoryVersion.current) return;
+        agentPrivacyChecked.current = true;
+      }
       const result = await runAgent(input.trim(), agentThreadId);
+      if (memoryVersion !== agentMemoryVersion.current) return;
       setAgentThreadId(result.thread_id ?? undefined);
       setAgentResult(result);
     }
-    catch (reason) { setAgentError(reason instanceof ApiError || reason instanceof ApiNetworkError ? reason.message : 'Agent 暂时不可用，请稍后重试'); }
+    catch (reason) {
+      if (memoryVersion !== agentMemoryVersion.current) return;
+      setAgentError(getAgentErrorMessage(reason));
+      if (isAgentPrivacyError(reason)) {
+        agentPrivacyChecked.current = false;
+        router.push('/settings/agent-privacy' as Href);
+      }
+    }
     finally { setAgentPending(false); }
   }
 
@@ -151,39 +214,43 @@ export default function HomeScreen() {
       {agentResult && (
         <Card>
           <SectionTitle>处理结果</SectionTitle>
-          <Text style={[styles.explanation, { color: theme.colors.primaryStrong }]}>协作链路：{agentResult.selected_agents.map((item) => specialistLabels[item]).join(' → ')}</Text>
-          <Text style={[styles.explanation, { color: theme.colors.textMuted }]}>运行模式：{agentResult.usage.provider === 'mock' ? 'MOCK' : 'REAL'} · {agentResult.usage.provider}/{agentResult.usage.model}</Text>
-          {agentResult.plan && (
-            <View style={styles.planBlock}>
-              <Text style={[styles.planTitle, { color: theme.colors.text }]}>Agent 执行计划</Text>
-              {agentResult.plan.steps.map((step) => {
-                const result = agentResult.step_results.find((item) => item.step_id === step.id);
-                return (
-                  <View key={step.id} style={styles.planRow}>
-                    <Text style={[styles.planStatus, { color: theme.colors.primaryStrong }]}>
-                      {result?.status === 'completed' ? '✓' : result?.status === 'awaiting_confirmation' ? '待确认' : result?.status === 'failed' ? '失败' : result?.status === 'skipped' ? '跳过' : '计划'}
+          {debugDetailsEnabled && (
+            <>
+              <Text style={[styles.explanation, { color: theme.colors.primaryStrong }]}>协作链路：{agentResult.selected_agents.map((item) => specialistLabels[item]).join(' → ')}</Text>
+              <Text style={[styles.explanation, { color: theme.colors.textMuted }]}>运行模式：{agentResult.usage.provider === 'mock' ? 'MOCK' : 'REAL'} · {agentResult.usage.provider}/{agentResult.usage.model}</Text>
+              {agentResult.plan && (
+                <View style={styles.planBlock}>
+                  <Text style={[styles.planTitle, { color: theme.colors.text }]}>Agent 执行计划</Text>
+                  {agentResult.plan.steps.map((step) => {
+                    const result = agentResult.step_results.find((item) => item.step_id === step.id);
+                    return (
+                      <View key={step.id} style={styles.planRow}>
+                        <Text style={[styles.planStatus, { color: theme.colors.primaryStrong }]}>
+                          {result?.status === 'completed' ? '✓' : result?.status === 'awaiting_confirmation' ? '待确认' : result?.status === 'failed' ? '失败' : result?.status === 'skipped' ? '跳过' : '计划'}
+                        </Text>
+                        <View style={styles.planCopy}>
+                          <Text style={[styles.explanation, { color: theme.colors.text }]}>{specialistLabels[result?.specialist ?? step.specialist ?? 'orchestrator']} · {step.tool}</Text>
+                          <Text style={[styles.explanation, { color: theme.colors.textMuted }]}>{result?.message ?? step.reason}{result ? ` · ${result.duration_ms} ms` : ''}</Text>
+                        </View>
+                      </View>
+                    );
+                  })}
+                  {agentResult.verification && <Text style={[styles.explanation, { color: theme.colors.textMuted }]}>校验：{agentResult.verification.reason} · 重规划 {agentResult.verification.replan_count}/2</Text>}
+                  {agentResult.observations.filter((item) => item.recoverable || item.step_id.startsWith('recovery-')).map((item) => (
+                    <Text key={`${item.step_id}-${item.status}`} style={[styles.explanation, { color: theme.colors.textMuted }]}>
+                      {item.step_id.startsWith('recovery-') ? '降级工具' : '可恢复异常'}：{item.tool} · {item.status}
                     </Text>
-                    <View style={styles.planCopy}>
-                      <Text style={[styles.explanation, { color: theme.colors.text }]}>{specialistLabels[result?.specialist ?? step.specialist ?? 'orchestrator']} · {step.tool}</Text>
-                      <Text style={[styles.explanation, { color: theme.colors.textMuted }]}>{result?.message ?? step.reason}{result ? ` · ${result.duration_ms} ms` : ''}</Text>
-                    </View>
-                  </View>
-                );
-              })}
-              {agentResult.verification && <Text style={[styles.explanation, { color: theme.colors.textMuted }]}>校验：{agentResult.verification.reason} · 重规划 {agentResult.verification.replan_count}/2</Text>}
-              {agentResult.status === 'waiting_for_user' && <Notice tone="info">Agent 已暂停。确认全部候选后，才会读取更新后的记录并继续建议。</Notice>}
-              {agentResult.observations.filter((item) => item.recoverable || item.step_id.startsWith('recovery-')).map((item) => (
-                <Text key={`${item.step_id}-${item.status}`} style={[styles.explanation, { color: theme.colors.textMuted }]}>
-                  {item.step_id.startsWith('recovery-') ? '降级工具' : '可恢复异常'}：{item.tool} · {item.status}
-                </Text>
-              ))}
-              {agentResult.observations.filter((item) => !item.recoverable && !item.step_id.startsWith('recovery-')).map((item) => (
-                <Text key={`trace-${item.step_id}-${item.status}`} style={[styles.explanation, { color: theme.colors.textMuted }]}>Trace · {specialistLabels[item.specialist]} · {item.tool} · {observationDetail(item.output_summary)}</Text>
-              ))}
-              {agentResult.confirmation_progress && <Text style={[styles.explanation, { color: theme.colors.textMuted }]}>Confirmation · 已确认 {agentResult.confirmation_progress.confirmed}/{agentResult.confirmation_progress.total} · 待确认 {agentResult.confirmation_progress.pending}</Text>}
-              {!!agentThreadId && <Text style={[styles.explanation, { color: theme.colors.textMuted }]}>当前为连续对话线程；后续输入会复用结构化摘要。</Text>}
-            </View>
+                  ))}
+                  {agentResult.observations.filter((item) => !item.recoverable && !item.step_id.startsWith('recovery-')).map((item) => (
+                    <Text key={`trace-${item.step_id}-${item.status}`} style={[styles.explanation, { color: theme.colors.textMuted }]}>Trace · {specialistLabels[item.specialist]} · {item.tool} · {observationDetail(item.output_summary)}</Text>
+                  ))}
+                  {agentResult.confirmation_progress && <Text style={[styles.explanation, { color: theme.colors.textMuted }]}>Confirmation · 已确认 {agentResult.confirmation_progress.confirmed}/{agentResult.confirmation_progress.total} · 待确认 {agentResult.confirmation_progress.pending}</Text>}
+                  {!!agentThreadId && <Text style={[styles.explanation, { color: theme.colors.textMuted }]}>当前为连续对话线程；后续输入会复用结构化摘要。</Text>}
+                </View>
+              )}
+            </>
           )}
+          {agentResult.status === 'waiting_for_user' && <Notice tone="info">请确认全部候选，Journey 才会写入记录并继续生成建议。</Notice>}
           {!!agentResult.answer && <Text style={[styles.copy, { color: theme.colors.text }]}>{agentResult.answer}</Text>}
           {agentResult.candidates.map((item) => <View key={item.candidate_id} style={styles.resultBlock}>
             <Text style={[styles.candidateTitle, { color: theme.colors.text }]}>{item.kind === 'food' ? item.payload.name : item.kind === 'activity' ? item.payload.name : `${item.payload.weight_kg} kg`}</Text>
@@ -194,8 +261,8 @@ export default function HomeScreen() {
             <Text style={[styles.citationTitle, { color: theme.colors.text }]}>{citation.title} · v{citation.version}</Text>
             <Text style={[styles.explanation, { color: theme.colors.textMuted }]}>{citation.excerpt}</Text>
           </View>)}
-          <Text style={[styles.explanation, { color: theme.colors.textMuted }]}>意图：{agentResult.intents.map((item) => item.intent).join('、')} · {agentResult.usage.provider}/{agentResult.usage.model} · {agentResult.usage.latency_ms} ms · ${agentResult.usage.estimated_cost_usd.toFixed(6)}</Text>
-          {agentResult.fallback_used && <Notice tone="info">当前使用 Mock 或确定性降级，未调用外部模型。</Notice>}
+          {debugDetailsEnabled && <Text style={[styles.explanation, { color: theme.colors.textMuted }]}>意图：{agentResult.intents.map((item) => item.intent).join('、')} · {agentResult.usage.provider}/{agentResult.usage.model} · {agentResult.usage.latency_ms} ms · ${agentResult.usage.estimated_cost_usd.toFixed(6)}</Text>}
+          {agentResult.fallback_used && <Notice tone="info">当前使用受限降级结果，请核对内容后再继续。</Notice>}
           <Text style={[styles.explanation, { color: theme.colors.textMuted }]}>{agentResult.safety_notice}</Text>
           <Button variant="ghost" onPress={() => setAgentResult(null)}>关闭结果</Button>
         </Card>

@@ -1,7 +1,7 @@
 import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -14,7 +14,13 @@ import { journeyRadii, journeySpacing, journeyTypography } from '@journey/design
 
 import { Button, Card, Chip, Field, Notice, SectionTitle } from '@/components/ui';
 import { isFoodImageAnalysisEnabled } from '@/config/environment';
-import { analyzeFoodImage, ApiError, ApiNetworkError } from '@/lib/api';
+import {
+  analyzeFoodImage,
+  ApiError,
+  ApiNetworkError,
+  getAgentDataRevision,
+  subscribeToAgentDataDeleted,
+} from '@/lib/api';
 import { mealLabels } from '@/lib/format';
 import { useSync } from '@/providers/sync-provider';
 import { useJourneyTheme } from '@/theme/theme-provider';
@@ -87,6 +93,18 @@ export default function FoodImageScreen() {
   const [pending, setPending] = useState(false);
   const [error, setError] = useState('');
   const featureEnabled = isFoodImageAnalysisEnabled();
+  const deletionRevision = useRef(getAgentDataRevision());
+
+  useEffect(() => subscribeToAgentDataDeleted(() => {
+    const nextRevision = getAgentDataRevision();
+    if (nextRevision <= deletionRevision.current) return;
+    deletionRevision.current = nextRevision;
+    // Keep the user-selected photo and manual fields. Only Agent-derived
+    // analysis data is invalidated by a server-confirmed data deletion.
+    setResult(null);
+    setPending(false);
+    setError('');
+  }), []);
 
   function acceptPickerResult(picked: ImagePicker.ImagePickerResult) {
     if (picked.canceled) {
@@ -152,11 +170,12 @@ export default function FoodImageScreen() {
       setError('请输入 8—60 厘米之间的真实直径；不确定时请选择“无参照”。');
       return;
     }
+    const requestRevision = getAgentDataRevision();
     setPending(true);
     setError('');
     setResult(null);
     try {
-      setResult(await analyzeFoodImage({
+      const analysis = await analyzeFoodImage({
         image_base64: image.base64,
         media_type: image.mediaType,
         width: image.width,
@@ -166,15 +185,18 @@ export default function FoodImageScreen() {
         scale_reference_type: scaleReference,
         scale_reference_size_cm: referenceSize,
         confirm_upload: true,
-      }));
+      });
+      if (requestRevision !== getAgentDataRevision()) return;
+      setResult(analysis);
     } catch (reason) {
+      if (requestRevision !== getAgentDataRevision()) return;
       setError(
         reason instanceof ApiError || reason instanceof ApiNetworkError
           ? `${reason.message}；请使用手动饮食记录。`
           : '图片分析失败，请使用手动饮食记录。',
       );
     } finally {
-      setPending(false);
+      if (requestRevision === getAgentDataRevision()) setPending(false);
     }
   }
 

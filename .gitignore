@@ -54,5 +54,8 @@ pnpm-debug.log*
 # Markdown 文档（只保留 README）
 *.md
 !README.md
-!docs/README.md
+!docs/v*开发文档.md
+!docs/v*问题文档.md
+!docs/问题总文档.md
 !AGENTS.md
+*.env

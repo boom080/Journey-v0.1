@@ -1,20 +1,15 @@
 #!/bin/sh
 set -eu
 
-: "${DATABASE_URL:?Set DATABASE_URL to the staging PostgreSQL connection string}"
-: "${RESTORE_FILE:?Set RESTORE_FILE to a .dump created by backup.sh}"
-
-if [ "${RESTORE_CONFIRM:-}" != "journey-staging" ]; then
-  echo "Refusing restore: set RESTORE_CONFIRM=journey-staging" >&2
+# Never overwrite or expose a live database. This wrapper only validates an
+# isolated restore, drops old Agent state/consent and invalidates old sessions.
+: "${RESTORE_FILE:?Set an authenticated .jbackup archive}"
+: "${BACKUP_KEY_FILE:?Set the separate private key file}"
+: "${RESTORE_REPORT:?Set an absolute private report path}"
+if [ -n "${DATABASE_URL:-}" ]; then
+  echo "Live DATABASE_URL restore is disabled; only an isolated drill is supported" >&2
   exit 2
 fi
-if [ ! -f "$RESTORE_FILE" ]; then
-  echo "Restore file not found: $RESTORE_FILE" >&2
-  exit 2
-fi
-
-shasum -a 256 -c "$RESTORE_FILE.sha256"
-docker run --rm -i -e DATABASE_URL postgres:18.4-alpine \
-  sh -c 'pg_restore --clean --if-exists --no-owner --no-acl --dbname "$DATABASE_URL"' \
-  < "$RESTORE_FILE"
-echo "staging restore completed"
+script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+exec node "$script_dir/../privacy/backup.mjs" drill \
+  --archive "$RESTORE_FILE" --key-file "$BACKUP_KEY_FILE" --report "$RESTORE_REPORT"

@@ -1,0 +1,11 @@
+{
+  "status": "pending",
+  "scope": "journey-text-agent",
+  "disclosure_sha256": "REPLACE_WITH_READ_ONLY_RELEASE_CHECK_OUTPUT",
+  "reviewed_by": "REQUIRED_ACCOUNTABLE_DEPLOYMENT_OWNER",
+  "reviewed_at": null,
+  "expires_at": null,
+  "retention_evidence": "REQUIRED_ACCOUNT_SPECIFIC_POLICY_OR_AGREEMENT_REFERENCE",
+  "deletion_evidence": "REQUIRED_PROVIDER_DELETION_PROCESS_AND_VERIFIED_EVIDENCE_REFERENCE",
+  "restore_evidence": "REQUIRED_ISOLATED_RESTORE_REPORT_REFERENCE"
+}

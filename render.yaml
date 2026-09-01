@@ -26,23 +26,23 @@ services:
       - key: REFRESH_TOKEN_DAYS
         value: "7"
       - key: SEED_TEST_ACCOUNT
-        value: "true"
-      - key: TEST_ACCOUNT_EMAIL
-        value: demo@journey.local
-      - key: TEST_ACCOUNT_USERNAME
-        value: journey_demo
-      - key: TEST_ACCOUNT_PASSWORD
-        sync: false
+        value: "false"
       - key: AGENT_PROVIDER
-        value: mock
-      - key: AGENT_API_KEY
-        value: ""
-      - key: AGENT_API_BASE_URL
-        value: ""
-      - key: AGENT_DEFAULT_MODEL
-        value: journey-deterministic-v1
+        value: deepseek
+      - key: AGENT_EXTERNAL_ENABLED
+        value: "false"
+      - key: AGENT_PROVIDER_POLICY_URL
+        sync: false
+      - key: AGENT_PROVIDER_RETENTION_NOTICE
+        sync: false
+      - key: AGENT_PROVIDER_REVIEW_JSON
+        sync: false
+      - key: AGENT_DATA_RETENTION_DAYS
+        value: "7"
+      - key: DEEPSEEK_API_KEY
+        sync: false
       - key: AGENT_DAILY_BUDGET_USD
-        value: "0"
+        value: "0.10"
       - key: AGENT_INPUT_USD_PER_MILLION
         value: "0"
       - key: AGENT_OUTPUT_USD_PER_MILLION

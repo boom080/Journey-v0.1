@@ -9,7 +9,8 @@
       "environment": "development",
       "env": {
         "APP_VARIANT": "development",
-        "EXPO_PUBLIC_FOOD_IMAGE_ANALYSIS_ENABLED": "true"
+        "EXPO_PUBLIC_FOOD_IMAGE_ANALYSIS_ENABLED": "true",
+        "EXPO_PUBLIC_AGENT_DEBUG_DETAILS_ENABLED": "true"
       }
     },
     "ios-simulator": {
@@ -23,7 +24,8 @@
       "environment": "preview",
       "env": {
         "APP_VARIANT": "preview",
-        "EXPO_PUBLIC_FOOD_IMAGE_ANALYSIS_ENABLED": "false"
+        "EXPO_PUBLIC_FOOD_IMAGE_ANALYSIS_ENABLED": "false",
+        "EXPO_PUBLIC_AGENT_DEBUG_DETAILS_ENABLED": "false"
       },
       "android": {
         "buildType": "apk"
@@ -33,7 +35,8 @@
       "environment": "production",
       "env": {
         "APP_VARIANT": "production",
-        "EXPO_PUBLIC_FOOD_IMAGE_ANALYSIS_ENABLED": "false"
+        "EXPO_PUBLIC_FOOD_IMAGE_ANALYSIS_ENABLED": "false",
+        "EXPO_PUBLIC_AGENT_DEBUG_DETAILS_ENABLED": "false"
       }
     }
   }

@@ -30,6 +30,7 @@ from app.schemas.media import (
     FoodImageScaleReferenceType,
 )
 from app.schemas.records import FoodRecordCreate
+from app.services.agent_privacy import prepare_agent_access
 
 FOOD_IMAGE_PROMPT_VERSION = "journey-food-image-1.3.0"
 FOOD_IMAGE_SCHEMA_VERSION = "journey-food-image-schema-3"
@@ -436,6 +437,18 @@ def analyze_food_image(
             code="food_image_analysis_disabled",
             message="Food image analysis is disabled; use manual food entry",
         )
+    # The text-model consent contract does not authorize image egress. Keep
+    # external image analysis closed until it has its own reviewed contract.
+    if settings.food_image_provider != "mock" or (
+        analyzer is not None and analyzer.provider != "mock"
+    ):
+        raise APIError(
+            status_code=503,
+            code="food_image_external_disabled",
+            message="外部图片分析尚未完成独立隐私授权，请使用手动饮食记录",
+        )
+    # Mock image candidates share AgentRun storage and the deletion barrier.
+    prepare_agent_access(db, user.id)
     image_bytes = _decode_image(payload, settings)
     data_url = f"data:{payload.media_type};base64,{payload.image_base64}"
     analyzer = analyzer or (

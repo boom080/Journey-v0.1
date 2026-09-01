@@ -3,6 +3,7 @@ import os
 from dataclasses import dataclass, field
 from functools import lru_cache
 from typing import Literal
+from urllib.parse import urlsplit
 
 from app.agent.provider_profiles import AgentProvider, get_provider_profile
 
@@ -70,6 +71,11 @@ class Settings:
     food_image_max_dimension: int
     life_inspiration_fetch_enabled: bool
     seed_builtin_knowledge: bool
+    agent_external_enabled: bool = False
+    agent_provider_policy_url: str = ""
+    agent_provider_retention_notice: str = ""
+    agent_data_retention_days: int = 7
+    agent_provider_review_json: str = field(default="", repr=False)
 
 
 def _positive_int(name: str, default: int) -> int:
@@ -183,8 +189,8 @@ def get_settings() -> Settings:
     cors_origins = tuple(origin.strip() for origin in raw_origins.split(",") if origin.strip())
 
     seed_test_account = _boolean("SEED_TEST_ACCOUNT")
-    if environment == "production" and seed_test_account:
-        raise RuntimeError("SEED_TEST_ACCOUNT cannot be enabled in production")
+    if environment in {"staging", "production"} and seed_test_account:
+        raise RuntimeError("SEED_TEST_ACCOUNT cannot be enabled outside local/test")
 
     test_account_password = os.getenv("TEST_ACCOUNT_PASSWORD", "").strip()
     if seed_test_account and len(test_account_password.encode("utf-8")) < 10:
@@ -194,6 +200,8 @@ def get_settings() -> Settings:
     if agent_provider not in {"mock", *EXTERNAL_AGENT_PROVIDERS}:
         allowed = ", ".join(("mock", *sorted(EXTERNAL_AGENT_PROVIDERS)))
         raise RuntimeError(f"AGENT_PROVIDER must be one of: {allowed}")
+    if environment in {"staging", "production"} and agent_provider == "mock":
+        raise RuntimeError("AGENT_PROVIDER=mock cannot be enabled outside local/test")
 
     agent_api_key = ""
     agent_api_base_url = None
@@ -271,6 +279,34 @@ def get_settings() -> Settings:
         ):
             models = ", ".join(sorted(missing_pricing))
             raise RuntimeError(f"Model pricing is required before enabling: {models}")
+
+    agent_external_enabled = _boolean("AGENT_EXTERNAL_ENABLED")
+    agent_provider_policy_url = os.getenv("AGENT_PROVIDER_POLICY_URL", "").strip()
+    agent_provider_retention_notice = os.getenv("AGENT_PROVIDER_RETENTION_NOTICE", "").strip()
+    agent_data_retention_days = _positive_int("AGENT_DATA_RETENTION_DAYS", 7)
+    if agent_data_retention_days > 30:
+        raise RuntimeError("AGENT_DATA_RETENTION_DAYS must not exceed 30")
+    if agent_external_enabled and agent_provider != "mock":
+        for address in (
+            agent_provider_policy_url,
+            *([agent_api_base_url] if agent_api_base_url else []),
+        ):
+            parsed = urlsplit(address or "")
+            if (
+                parsed.scheme != "https"
+                or not parsed.hostname
+                or parsed.username
+                or parsed.password
+                or parsed.query
+                or parsed.fragment
+            ):
+                raise RuntimeError(
+                    "External Agent endpoint and policy URL must be credential-free HTTPS URLs"
+                )
+        if len(agent_provider_retention_notice) < 20:
+            raise RuntimeError(
+                "AGENT_PROVIDER_RETENTION_NOTICE must explain provider retention and deletion"
+            )
 
     food_image_analysis_enabled = _boolean(
         "FOOD_IMAGE_ANALYSIS_ENABLED", environment in {"local", "test"}
@@ -356,4 +392,9 @@ def get_settings() -> Settings:
             "LIFE_INSPIRATION_FETCH_ENABLED", environment in {"local", "test"}
         ),
         seed_builtin_knowledge=_boolean("SEED_BUILTIN_KNOWLEDGE", environment in {"local", "test"}),
+        agent_external_enabled=agent_external_enabled,
+        agent_provider_policy_url=agent_provider_policy_url,
+        agent_provider_retention_notice=agent_provider_retention_notice,
+        agent_data_retention_days=agent_data_retention_days,
+        agent_provider_review_json=os.getenv("AGENT_PROVIDER_REVIEW_JSON", ""),
     )

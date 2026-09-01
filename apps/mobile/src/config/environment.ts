@@ -1,4 +1,20 @@
+import Constants from 'expo-constants';
 import { Platform } from 'react-native';
+
+export type LocalTestAccount = {
+  identifier: string;
+  password: string;
+};
+
+type RuntimeExtra = {
+  appVariant?: string;
+  capabilities?: {
+    foodImageAnalysis?: boolean;
+    localTestAccount?: boolean;
+    agentDebugDetails?: boolean;
+  };
+  localTestAccount?: LocalTestAccount | null;
+};
 
 const platformDefault = Platform.select({
   android: 'http://10.0.2.2:8000',
@@ -21,5 +37,25 @@ export function getApiBaseUrl(): string {
 }
 
 export function isFoodImageAnalysisEnabled(): boolean {
-  return process.env.EXPO_PUBLIC_FOOD_IMAGE_ANALYSIS_ENABLED?.trim().toLowerCase() !== 'false';
+  const extra = Constants.expoConfig?.extra as RuntimeExtra | undefined;
+  return extra?.appVariant === 'development' && extra.capabilities?.foodImageAnalysis === true;
+}
+
+export function isAgentDebugDetailsEnabled(): boolean {
+  const extra = Constants.expoConfig?.extra as RuntimeExtra | undefined;
+  return extra?.appVariant === 'development' && extra.capabilities?.agentDebugDetails === true;
+}
+
+export function getLocalTestAccount(): LocalTestAccount | null {
+  const extra = Constants.expoConfig?.extra as RuntimeExtra | undefined;
+  const account = extra?.localTestAccount;
+  if (
+    extra?.appVariant !== 'development' ||
+    extra.capabilities?.localTestAccount !== true ||
+    !account?.identifier.trim() ||
+    !account.password
+  ) {
+    return null;
+  }
+  return { identifier: account.identifier.trim(), password: account.password };
 }

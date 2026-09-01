@@ -1,13 +1,17 @@
-import { fireEvent, render, waitFor } from '@testing-library/react-native';
+import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
 import type { ReactNode } from 'react';
 
 import type { AgentRunResponse, HomeToday } from '@journey/contracts';
 
 const mockUseQuery = jest.fn();
 const mockRunAgent = jest.fn();
+const mockFetchAgentPrivacy = jest.fn();
 const mockRouterPush = jest.fn();
 const mockQueryClient = { getQueryData: jest.fn(), removeQueries: jest.fn() };
+const mockAgentDataDeletedListeners = new Set<() => void>();
 const mockSyncState = { isOnline: true, pendingCount: 0, status: 'idle' as const };
+let mockFoodImageEnabled = false;
+let mockAgentDebugEnabled = false;
 
 jest.mock('@tanstack/react-query', () => ({
   useQuery: (...args: unknown[]) => mockUseQuery(...args),
@@ -33,8 +37,24 @@ jest.mock('@/components/screen-shell', () => ({
 jest.mock('@/lib/api', () => {
   class ApiError extends Error {}
   class ApiNetworkError extends Error {}
-  return { ApiError, ApiNetworkError, fetchHomeToday: jest.fn(), resumeAgentRun: jest.fn(), runAgent: (...args: unknown[]) => mockRunAgent(...args) };
+  return {
+    ApiError,
+    ApiNetworkError,
+    fetchHomeToday: jest.fn(),
+    fetchAgentPrivacy: (...args: unknown[]) => mockFetchAgentPrivacy(...args),
+    resumeAgentRun: jest.fn(),
+    runAgent: (...args: unknown[]) => mockRunAgent(...args),
+    subscribeToAgentDataDeleted: (listener: () => void) => {
+      mockAgentDataDeletedListeners.add(listener);
+      return () => mockAgentDataDeletedListeners.delete(listener);
+    },
+    getAgentErrorMessage: (error: unknown) => error instanceof Error ? error.message : 'Agent 暂时不可用，请稍后重试',
+  };
 });
+jest.mock('@/config/environment', () => ({
+  isFoodImageAnalysisEnabled: () => mockFoodImageEnabled,
+  isAgentDebugDetailsEnabled: () => mockAgentDebugEnabled,
+}));
 
 import HomeScreen from '@/app/(tabs)/index';
 
@@ -72,14 +92,21 @@ const agentResponse: AgentRunResponse = {
 describe('Home page states and Agent candidate', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockAgentDataDeletedListeners.clear();
     mockSyncState.isOnline = true;
     mockUseQuery.mockReturnValue({ isLoading: false, isError: false, data: emptyHome, refetch: jest.fn() });
+    mockFetchAgentPrivacy.mockResolvedValue({
+      provider: 'journey-internal', external: false, enabled: true, policy_version: '2026-08-01',
+      consent_granted: false, granted_at: null, retention_days: 30,
+      notice: 'Agent 隐私说明', data_sent: [], provider_policy_url: null,
+      provider_retention_notice: '不发送给第三方。', deletion_notice: '可删除 Agent 数据。',
+    });
     mockRunAgent.mockResolvedValue(agentResponse);
-    delete process.env.EXPO_PUBLIC_FOOD_IMAGE_ANALYSIS_ENABLED;
+    mockFoodImageEnabled = false;
+    mockAgentDebugEnabled = false;
   });
 
-  test('hides the food image entry when the client feature flag is off', async () => {
-    process.env.EXPO_PUBLIC_FOOD_IMAGE_ANALYSIS_ENABLED = 'false';
+  test('hides the food image entry when the runtime capability is off', async () => {
     const screen = await render(<HomeScreen />);
     expect(screen.queryByRole('button', { name: '📷 拍照估算饮食' })).toBeNull();
     expect(screen.getByText(/今天轻松记/)).toBeTruthy();
@@ -87,6 +114,8 @@ describe('Home page states and Agent candidate', () => {
   });
 
   test('renders empty state and a confirmed-write candidate without writing directly', async () => {
+    mockFoodImageEnabled = true;
+    mockAgentDebugEnabled = true;
     const screen = await render(<HomeScreen />);
     expect(screen.getByText('今天还没有记录')).toBeTruthy();
     await fireEvent.press(screen.getByRole('button', { name: '📷 拍照估算饮食' }));
@@ -98,9 +127,65 @@ describe('Home page states and Agent candidate', () => {
     expect(screen.getByText(/Orchestrator → Record Agent/)).toBeTruthy();
     expect(screen.getByText(/food\.parse_candidate/)).toBeTruthy();
     expect(screen.getByText(/连续对话线程/)).toBeTruthy();
-    expect(screen.getByText(/当前使用 Mock/)).toBeTruthy();
+    expect(screen.getByText(/当前使用受限降级结果/)).toBeTruthy();
     await fireEvent.press(screen.getByRole('button', { name: '打开并确认候选' }));
     expect(mockRouterPush).toHaveBeenCalledWith(expect.objectContaining({ pathname: '/record/[kind]' }));
+  });
+
+  test('keeps internal Agent details out of the ordinary user result', async () => {
+    const screen = await render(<HomeScreen />);
+    await fireEvent.changeText(screen.getByLabelText('统一记录输入'), '午餐吃苹果 88 千卡');
+    await fireEvent.press(screen.getByRole('button', { name: '理解并处理' }));
+    await waitFor(() => expect(screen.getByText('苹果')).toBeTruthy());
+    expect(screen.queryByText('Agent 执行计划')).toBeNull();
+    expect(screen.queryByText(/Orchestrator → Record Agent/)).toBeNull();
+    expect(screen.queryByText(/food\.parse_candidate/)).toBeNull();
+    expect(screen.queryByText(/journey-deterministic-v1/)).toBeNull();
+  });
+
+  test('checks external consent before the first online submission and sends no message when missing', async () => {
+    mockFetchAgentPrivacy.mockResolvedValue({
+      provider: 'example-ai', external: true, enabled: true, policy_version: 'policy-7',
+      consent_granted: false, granted_at: null, retention_days: 30, notice: 'notice',
+      data_sent: ['message'], provider_policy_url: null, provider_retention_notice: 'retention', deletion_notice: 'deletion',
+    });
+    const screen = await render(<HomeScreen />);
+    await fireEvent.changeText(screen.getByLabelText('统一记录输入'), '午餐吃苹果 88 千卡');
+    await fireEvent.press(screen.getByRole('button', { name: '理解并处理' }));
+    await waitFor(() => expect(mockRouterPush).toHaveBeenCalledWith('/settings/agent-privacy'));
+    expect(mockFetchAgentPrivacy).toHaveBeenCalledTimes(1);
+    expect(mockRunAgent).not.toHaveBeenCalled();
+    expect(screen.getByText(/消息尚未发送/)).toBeTruthy();
+  });
+
+  test('deletion notification clears the home Agent run, thread and candidates', async () => {
+    const screen = await render(<HomeScreen />);
+    await fireEvent.changeText(screen.getByLabelText('统一记录输入'), '午餐吃苹果 88 千卡');
+    await fireEvent.press(screen.getByRole('button', { name: '理解并处理' }));
+    await waitFor(() => expect(screen.getByText('苹果')).toBeTruthy());
+    expect(mockAgentDataDeletedListeners.size).toBeGreaterThan(0);
+    await act(async () => {
+      mockAgentDataDeletedListeners.forEach((listener) => listener());
+    });
+    await waitFor(() => expect(screen.queryByText('苹果')).toBeNull());
+    expect(mockQueryClient.removeQueries).toHaveBeenCalledWith(expect.objectContaining({ predicate: expect.any(Function) }));
+  });
+
+  test('does not rehydrate a late Agent response after deletion notification', async () => {
+    let resolveRun: ((value: AgentRunResponse) => void) | undefined;
+    mockRunAgent.mockImplementation(() => new Promise<AgentRunResponse>((resolve) => { resolveRun = resolve; }));
+    const screen = await render(<HomeScreen />);
+    await fireEvent.changeText(screen.getByLabelText('统一记录输入'), '午餐吃苹果 88 千卡');
+    await fireEvent.press(screen.getByRole('button', { name: '理解并处理' }));
+    await waitFor(() => expect(mockRunAgent).toHaveBeenCalled());
+    await act(async () => {
+      mockAgentDataDeletedListeners.forEach((listener) => listener());
+    });
+    await act(async () => {
+      resolveRun?.(agentResponse);
+    });
+    await waitFor(() => expect(screen.queryByText('苹果')).toBeNull());
+    expect(screen.queryByText('处理结果')).toBeNull();
   });
 
   test('shows loading, API error, and offline Agent degradation explicitly', async () => {

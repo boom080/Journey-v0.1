@@ -16,6 +16,7 @@ concurrency:
 env:
   AGENT_PROVIDER: mock
   AGENT_API_KEY: ""
+  AGENT_PROVIDER_REVIEW_JSON: ""
   AGENT_API_BASE_URL: ""
   AGENT_DAILY_BUDGET_USD: "0"
   AGENT_INPUT_USD_PER_MILLION: "0"
@@ -113,6 +114,7 @@ jobs:
           docker build --target runtime -t journey-api -f backend/Dockerfile .
       - name: Staging Compose contract
         env:
+          STAGING_AGENT_PROVIDER: deepseek
           STAGING_POSTGRES_PASSWORD: ci-staging-db-password
           STAGING_APP_SECRET_KEY: ci-staging-app-secret-at-least-32-characters
           STAGING_TEST_ACCOUNT_PASSWORD: ci-staging-test-password
@@ -146,6 +148,10 @@ jobs:
         run: |
           npm run test:logic --workspace @journey/mobile
           npm run test:ci --workspace @journey/mobile
+      - name: Private backup encryption and restore safeguards
+        run: |
+          node --test infra/privacy/backup.test.mjs
+          sh -n infra/staging/backup.sh infra/staging/restore.sh
       - name: Typecheck and lint
         run: |
           npm run mobile:typecheck

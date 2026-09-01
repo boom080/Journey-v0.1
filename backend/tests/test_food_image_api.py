@@ -224,3 +224,24 @@ def test_food_image_feature_flag_has_manual_fallback_message(
     assert response.status_code == 503
     assert response.json()["error"]["code"] == "food_image_analysis_disabled"
     assert "manual food entry" in response.json()["error"]["message"]
+
+
+def test_external_image_cannot_reuse_text_consent_or_construct_provider(
+    client: TestClient, register_user, monkeypatch
+) -> None:
+    account = register_user()
+    settings = replace(get_settings(), food_image_provider="qwen")
+    monkeypatch.setattr("app.media.food_image.get_settings", lambda: settings)
+    constructors = []
+    monkeypatch.setattr(
+        "app.media.food_image.LangChainLiteLLMFoodImageAnalyzer",
+        lambda *args: constructors.append(True),
+    )
+    response = client.post(
+        "/api/v1/food-images/analyses", headers=auth(account), json=image_request()
+    )
+    assert response.status_code == 503
+    assert response.json()["error"]["code"] == "food_image_external_disabled"
+    assert constructors == []
+    with Session(engine) as db:
+        assert db.query(AgentRun).count() == 0

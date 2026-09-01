@@ -3,11 +3,12 @@ from datetime import datetime
 from decimal import Decimal
 from typing import Any
 
-from sqlalchemy import JSON, Boolean, DateTime, ForeignKey, Index, Integer, Numeric, String
+from sqlalchemy import JSON, Boolean, DateTime, ForeignKey, Index, Integer, Numeric, String, event
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, Session, mapped_column, relationship
 
 from app.core.database import Base
+from app.core.privacy import redact_payload, redact_text, trace_summary
 from app.models.user import utc_now
 
 
@@ -123,3 +124,17 @@ class AgentConfirmation(Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utc_now, nullable=False
     )
+
+
+@event.listens_for(Session, "before_flush")
+def redact_agent_operational_data(session, flush_context, instances) -> None:
+    for item in session.new | session.dirty:
+        if isinstance(item, AgentRun):
+            for field in ("plan", "verification", "observations", "checkpoint"):
+                value = getattr(item, field)
+                if value is not None:
+                    setattr(item, field, redact_payload(value, trace=True))
+            item.request_id = redact_text(item.request_id)
+        elif isinstance(item, AgentToolRun):
+            item.input_summary = trace_summary(item.input_summary or {})
+            item.output_summary = trace_summary(item.output_summary or {})

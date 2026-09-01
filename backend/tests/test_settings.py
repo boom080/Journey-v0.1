@@ -25,14 +25,30 @@ def test_sqlite_database_url_is_rejected(monkeypatch) -> None:
         get_settings.cache_clear()
 
 
-def test_test_account_seed_is_rejected_in_production(monkeypatch) -> None:
-    monkeypatch.setenv("APP_ENV", "production")
+@pytest.mark.parametrize("environment", ["staging", "production"])
+def test_test_account_seed_is_rejected_outside_local_test(monkeypatch, environment: str) -> None:
+    monkeypatch.setenv("APP_ENV", environment)
     monkeypatch.setenv("APP_SECRET_KEY", "production-secret-at-least-32-characters")
     monkeypatch.setenv("SEED_TEST_ACCOUNT", "true")
     get_settings.cache_clear()
 
     try:
-        with pytest.raises(RuntimeError, match="cannot be enabled in production"):
+        with pytest.raises(RuntimeError, match="cannot be enabled outside local/test"):
+            get_settings()
+    finally:
+        get_settings.cache_clear()
+
+
+@pytest.mark.parametrize("environment", ["staging", "production"])
+def test_mock_agent_is_rejected_outside_local_test(monkeypatch, environment: str) -> None:
+    monkeypatch.setenv("APP_ENV", environment)
+    monkeypatch.setenv("APP_SECRET_KEY", "production-secret-at-least-32-characters")
+    monkeypatch.setenv("SEED_TEST_ACCOUNT", "false")
+    monkeypatch.setenv("AGENT_PROVIDER", "mock")
+    get_settings.cache_clear()
+
+    try:
+        with pytest.raises(RuntimeError, match="mock cannot be enabled outside local/test"):
             get_settings()
     finally:
         get_settings.cache_clear()

@@ -381,13 +381,13 @@ def execute_registered_tool(runtime: ToolRuntime, step: AgentPlanStep) -> ToolEx
         if specialist_name == "orchestrator":
             raise ValueError("orchestrator_cannot_execute_business_tool")
         return SPECIALIST_REGISTRY[specialist_name].execute(runtime, step, _execute)
-    except (ValueError, RuntimeError) as error:
+    except (ValueError, RuntimeError):
         return ToolExecution(
             step.id,
             step.tool,
             "failed",
             "工具执行失败，已停止依赖步骤并保留可安全完成的结果",
             int((time.perf_counter() - started) * 1000),
-            error_code=str(error)[:80] or "tool_execution_failed",
+            error_code="tool_execution_failed",
             specialist=specialist_for_tool(step.tool),
         )

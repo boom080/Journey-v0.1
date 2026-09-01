@@ -31,6 +31,7 @@ from app.agent.tools import (
 )
 from app.agent.workflows import run_knowledge, run_recommendation, run_weekly_summary
 from app.api.errors import APIError
+from app.core.privacy import redact_payload, redact_text, trace_summary
 from app.core.security import decode_agent_confirmation_token
 from app.domain.enums import RecordSource
 from app.models.agent import AgentConfirmation, AgentRun
@@ -60,6 +61,7 @@ from app.schemas.records import (
     WeightRecordResponse,
 )
 from app.services import records as record_service
+from app.services.agent_privacy import prepare_agent_access
 from app.services.common import (
     commit_idempotent_or_replay,
     find_idempotent_response,
@@ -185,7 +187,7 @@ def _run_agent_v1(
         input_hash=hashlib.sha256(message.encode("utf-8")).hexdigest(),
         input_length=len(message),
         intents=[],
-        provider=router.adapter.provider,
+        provider=router.provider,
         model=router.model_for("intent_classification"),
         prompt_version=PROMPT_VERSION,
         schema_version=SCHEMA_VERSION,
@@ -388,7 +390,7 @@ def _run_agent_v2(
         plan={},
         verification={},
         replan_count=0,
-        provider=model_router.adapter.provider,
+        provider=model_router.provider,
         model=model_router.model_for("intent_classification"),
         prompt_version=PROMPT_VERSION,
         schema_version=SCHEMA_VERSION,
@@ -703,7 +705,7 @@ def _run_agent_v3(
         checkpoint={},
         replan_count=0,
         resume_count=0,
-        provider=model_router.adapter.provider,
+        provider=model_router.provider,
         model=model_router.model_for("intent_classification"),
         prompt_version=PROMPT_VERSION,
         schema_version="journey-agent-schema-3.0.0",
@@ -880,6 +882,10 @@ def resume_agent_run(
     model_router: ModelRouter | None = None,
 ) -> AgentRunResponse:
     started = time.perf_counter()
+    prepare_agent_access(db, user.id)
+    router = model_router or ModelRouter(db)
+    router.bind_user(user.id)
+    router.authorize()
     run = db.scalar(
         select(AgentRun).where(AgentRun.id == run_id, AgentRun.user_id == user.id).with_for_update()
     )
@@ -903,7 +909,6 @@ def resume_agent_run(
             message="Confirm all candidates before resuming",
         )
 
-    router = model_router or ModelRouter(db)
     plan = AgentPlan.model_validate(run.plan)
     cursor = int(run.checkpoint.get("next_cursor", 0))
     satisfied = set(run.checkpoint.get("satisfied_step_ids", []))
@@ -1009,7 +1014,11 @@ def run_agent(
     thread_id: uuid.UUID | None = None,
     model_router: ModelRouter | None = None,
 ) -> AgentRunResponse:
+    prepare_agent_access(db, user.id)
     router = model_router or ModelRouter(db)
+    router.bind_user(user.id)
+    router.authorize()
+    message = redact_text(message, router.private_values())
     if not router.settings.agent_v2_enabled:
         return _run_agent_v1(
             db,
@@ -1038,6 +1047,7 @@ def run_agent(
 
 
 def get_run_trace(db: Session, user: User, run_id: uuid.UUID) -> AgentRunTrace:
+    prepare_agent_access(db, user.id)
     run = db.scalar(select(AgentRun).where(AgentRun.id == run_id, AgentRun.user_id == user.id))
     if run is None:
         raise APIError(status_code=404, code="agent_run_not_found", message="Agent run not found")
@@ -1056,9 +1066,9 @@ def get_run_trace(db: Session, user: User, run_id: uuid.UUID) -> AgentRunTrace:
         thread_id=run.thread_id,
         status=run.status,
         intents=run.intents,
-        plan=run.plan or None,
-        verification=run.verification or None,
-        observations=run.observations or [],
+        plan=redact_payload(run.plan, trace=True) or None,
+        verification=redact_payload(run.verification, trace=True) or None,
+        observations=redact_payload(run.observations, trace=True) or [],
         replan_count=run.replan_count,
         resume_count=run.resume_count,
         checkpoint_status=checkpoint_status,
@@ -1078,7 +1088,11 @@ def get_run_trace(db: Session, user: User, run_id: uuid.UUID) -> AgentRunTrace:
         completed_at=run.completed_at,
         tools=[
             AgentToolTrace.model_validate(tool).model_copy(
-                update={"specialist": specialist_for_tool(tool.tool_name)}
+                update={
+                    "specialist": specialist_for_tool(tool.tool_name),
+                    "input_summary": trace_summary(tool.input_summary),
+                    "output_summary": trace_summary(tool.output_summary),
+                }
             )
             for tool in tools
         ],
@@ -1099,6 +1113,7 @@ def confirm_candidate(
     path: str,
     idempotency_key: str,
 ) -> AgentConfirmationResponse | dict:
+    prepare_agent_access(db, user.id)
     request_body = payload.model_dump(mode="json")
     replay = find_idempotent_response(
         db,

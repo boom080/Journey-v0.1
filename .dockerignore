@@ -3,6 +3,9 @@
 .env
 .env.*
 !.env.example
+# Private backups, keys and local evidence must never enter a build context.
+/artifacts/
+/reports/
 **/.DS_Store
 **/__pycache__
 **/*.py[cod]

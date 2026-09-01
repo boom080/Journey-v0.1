@@ -14,14 +14,17 @@ jest.mock('@/lib/session-storage', () => ({
 import {
   AGENT_REQUEST_TIMEOUT_MS,
   REQUEST_TIMEOUT_MS,
+  ApiError,
   ApiNetworkError,
   analyzeFoodImage,
   createInspiration,
   confirmAgentCandidate,
   createRecord,
+  deleteAgentData,
   deleteRecord,
   deleteInspiration,
   fetchApiHealth,
+  fetchAgentPrivacy,
   fetchAgentRunTrace,
   fetchGoal,
   fetchHomeToday,
@@ -40,6 +43,8 @@ import {
   resumeAgentRun,
   runAgent,
   saveGoal,
+  getAgentErrorMessage,
+  updateAgentConsent,
   updateProfile,
   updateRecord,
 } from '@/lib/api';
@@ -98,6 +103,39 @@ describe('API client', () => {
     expect(REQUEST_TIMEOUT_MS).toBe(10_000);
     expect(AGENT_REQUEST_TIMEOUT_MS).toBe(120_000);
     expect(AGENT_REQUEST_TIMEOUT_MS).toBeGreaterThan(REQUEST_TIMEOUT_MS);
+  });
+
+  test('Agent privacy wrappers use the agreed authenticated contract', async () => {
+    const privacy = {
+      provider: 'example-ai', external: true, enabled: true, policy_version: 'policy-7',
+      consent_granted: false, granted_at: null, retention_days: 30,
+      notice: 'notice', data_sent: ['message'], provider_policy_url: null,
+      provider_retention_notice: 'retention', deletion_notice: 'deletion',
+    };
+    const fetchMock = jest.spyOn(global, 'fetch')
+      .mockResolvedValueOnce(jsonResponse(privacy))
+      .mockResolvedValueOnce(jsonResponse({ ...privacy, consent_granted: true, granted_at: '2026-08-30T08:00:00Z' }))
+      .mockResolvedValueOnce(jsonResponse({ deleted_runs: 1, deleted_threads: 2, consent_revoked: true, provider_data_deleted: false, message: 'done' }));
+
+    await expect(fetchAgentPrivacy()).resolves.toEqual(privacy);
+    await expect(updateAgentConsent({ granted: true, policy_version: 'policy-7' })).resolves.toMatchObject({ consent_granted: true });
+    await expect(deleteAgentData()).resolves.toMatchObject({ deleted_runs: 1, deleted_threads: 2, consent_revoked: true });
+
+    expect(fetchMock.mock.calls[0]![0]).toBe('http://127.0.0.1:8000/api/v1/agent/privacy');
+    expect(fetchMock.mock.calls[1]![0]).toBe('http://127.0.0.1:8000/api/v1/agent/privacy/consent');
+    expect(JSON.parse(String(fetchMock.mock.calls[1]![1]?.body))).toEqual({ granted: true, policy_version: 'policy-7' });
+    expect(fetchMock.mock.calls[2]![0]).toBe('http://127.0.0.1:8000/api/v1/agent/privacy/data');
+    expect(fetchMock.mock.calls[2]![1]?.method).toBe('DELETE');
+    expect(fetchMock.mock.calls[2]![1]?.body).toBeUndefined();
+  });
+
+  test('privacy-related server errors are readable to the user', () => {
+    expect(getAgentErrorMessage(new ApiError('raw', 'consent_required', 403))).toMatch(/明确授权/);
+    expect(getAgentErrorMessage(new ApiError('raw', 'consent_outdated', 403))).toMatch(/隐私政策已更新/);
+    expect(getAgentErrorMessage(new ApiError('raw', 'agent_external_disabled', 503))).toMatch(/已关闭/);
+    expect(getAgentErrorMessage(new ApiNetworkError('请求超时'))).toMatch(/结果尚未确认.*刷新状态/);
+    expect(getAgentErrorMessage(new Error('timeout'))).toMatch(/操作未确认完成/);
+    expect(getAgentErrorMessage(new Error('timeout'))).not.toMatch(/消息尚未发送/);
   });
 
   test('stable API error envelope and network failure stay distinguishable', async () => {

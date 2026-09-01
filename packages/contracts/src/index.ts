@@ -443,6 +443,39 @@ export type AgentRunTrace = {
   confirmation_progress: AgentConfirmationProgress | null;
 };
 
+/**
+ * Server-controlled disclosure and consent state for external Agent providers.
+ * Consent is intentionally not part of the local replica or session payload;
+ * clients must read and write it through the privacy endpoints.
+ */
+export type AgentPrivacyStatus = {
+  provider: string;
+  external: boolean;
+  enabled: boolean;
+  policy_version: string;
+  consent_granted: boolean;
+  granted_at: ISODateTime | null;
+  retention_days: number;
+  notice: string;
+  data_sent: string[];
+  provider_policy_url: string | null;
+  provider_retention_notice: string;
+  deletion_notice: string;
+};
+
+export type AgentConsentRequest = {
+  granted: boolean;
+  policy_version: string;
+};
+
+export type AgentDataDeletion = {
+  deleted_runs: number;
+  deleted_threads: number;
+  consent_revoked: true;
+  provider_data_deleted: false;
+  message: string;
+};
+
 export type FoodImageScaleReferenceType =
   | 'none'
   | 'journey_card'

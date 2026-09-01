@@ -1,8 +1,10 @@
 import json
 from dataclasses import replace
+from datetime import UTC, datetime
 from pathlib import Path
 
 import httpx
+import pytest
 from openai import APIConnectionError
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -22,11 +24,37 @@ from app.agent.model_router import (
 from app.agent.workflows import run_knowledge
 from app.core.database import engine
 from app.core.settings import get_settings
-from app.knowledge.retriever import retrieve
+from app.knowledge.retriever import RetrievedChunk, retrieve
+from app.models.agent_privacy import AgentConsent
 from app.models.knowledge import KnowledgeChunk
-from app.schemas.agent import FoodParsed
+from app.models.user import User
+from app.schemas.agent import FoodParsed, KnowledgeGenerated
+from app.services.agent_privacy import policy_version
+from tests.privacy_helpers import synthetic_review
 
 EVALS = Path(__file__).parent / "evals"
+
+
+def consented_router(db, *, settings, adapter):
+    """Synthetic identity with explicit consent, never a production bypass."""
+    settings = replace(
+        settings,
+        agent_provider=adapter.provider,
+        agent_external_enabled=True,
+        agent_provider_policy_url="https://example.invalid/privacy",
+        agent_provider_retention_notice="Synthetic test-only retention and deletion policy.",
+    )
+    settings = replace(settings, agent_provider_review_json=synthetic_review(settings))
+    user = User()
+    db.add(user)
+    db.flush()
+    db.add(
+        AgentConsent(
+            user_id=user.id, policy_version=policy_version(settings), granted_at=datetime.now(UTC)
+        )
+    )
+    db.flush()
+    return ModelRouter(db, settings=settings, adapter=adapter, user_id=user.id)
 
 
 class UnavailableProviderAdapter(ModelAdapter):
@@ -41,6 +69,30 @@ class SuccessfulProviderAdapter(ModelAdapter):
 
     def invoke_structured(self, **kwargs):
         return kwargs["fallback_factory"](), 1_000_000, 1_000_000
+
+
+class KnowledgeOutputAdapter(ModelAdapter):
+    provider = "deepseek"
+
+    def __init__(self, output: KnowledgeGenerated):
+        self.output = output
+
+    def invoke_structured(self, **kwargs):
+        return self.output, 1, 1
+
+
+def _knowledge_chunk(chunk_id: str = "chunk-1") -> RetrievedChunk:
+    return RetrievedChunk(
+        chunk_id=chunk_id,
+        document_id="document-1",
+        source_slug="healthy-diet",
+        title="受控知识",
+        source_url="https://example.com/healthy-diet",
+        version="2026-01",
+        region="global",
+        text="规律饮食有助于维持日常能量和恢复。",
+        score=0.9,
+    )
 
 
 class FailIfCalledAdapter(ModelAdapter):
@@ -233,7 +285,7 @@ def test_invalid_structured_output_returns_same_valid_fallback() -> None:
 
 def test_provider_connection_error_returns_safe_fallback() -> None:
     with Session(engine) as db:
-        router = ModelRouter(
+        router = consented_router(
             db,
             settings=replace(
                 get_settings(),
@@ -261,7 +313,7 @@ def test_provider_connection_error_returns_safe_fallback() -> None:
 
 def test_model_specific_pricing_is_used_for_pro_capability() -> None:
     with Session(engine) as db:
-        router = ModelRouter(
+        router = consented_router(
             db,
             settings=replace(
                 get_settings(),
@@ -281,7 +333,7 @@ def test_model_specific_pricing_is_used_for_pro_capability() -> None:
             "recommendation",
             FoodParsed,
             system_prompt="test",
-            user_prompt="synthetic test",
+            user_prompt='{"context": {}, "chunks": []}',
             fallback_factory=lambda: FoodParsed(meal_type="other", name="test", energy_kcal=100),
         )
 
@@ -300,6 +352,91 @@ def test_rag_no_answer_does_not_generate_without_evidence(seeded_knowledge) -> N
     assert result.citations == []
     assert result.invocation.error_code == "insufficient_context"
     assert result.invocation.input_tokens == result.invocation.output_tokens == 0
+
+
+@pytest.mark.parametrize("cited_chunk_ids", [[], ["chunk-not-found"]])
+def test_rag_citation_verifier_falls_back_when_model_citations_are_missing_or_invalid(
+    cited_chunk_ids: list[str],
+) -> None:
+    chunk = _knowledge_chunk()
+    with Session(engine) as db:
+        result = run_knowledge(
+            db,
+            consented_router(
+                db,
+                settings=replace(get_settings(), agent_daily_budget_usd=1),
+                adapter=KnowledgeOutputAdapter(
+                    KnowledgeGenerated(
+                        answer="模型答案没有可验证引用",
+                        cited_chunk_ids=cited_chunk_ids,
+                    )
+                ),
+            ),
+            "饮食如何支持恢复？",
+            chunks_override=[chunk],
+        )
+
+    assert result.answer == chunk.text
+    assert [item.chunk_id for item in result.citations] == [chunk.chunk_id]
+    assert result.invocation.fallback_used is True
+    assert result.invocation.error_code is None
+    assert result.node_traces[-1]["output_summary"] == {
+        "citation_count": 1,
+        "citation_fallback_used": True,
+        "citation_verification": "passed",
+    }
+
+
+def test_rag_citation_verifier_preserves_valid_model_citation() -> None:
+    chunk = _knowledge_chunk()
+    answer = "模型答案带有真实引用"
+    with Session(engine) as db:
+        result = run_knowledge(
+            db,
+            consented_router(
+                db,
+                settings=replace(get_settings(), agent_daily_budget_usd=1),
+                adapter=KnowledgeOutputAdapter(
+                    KnowledgeGenerated(answer=answer, cited_chunk_ids=[chunk.chunk_id])
+                ),
+            ),
+            "饮食如何支持恢复？",
+            chunks_override=[chunk],
+        )
+
+    assert result.answer == answer
+    assert [item.chunk_id for item in result.citations] == [chunk.chunk_id]
+    assert result.invocation.fallback_used is False
+    assert result.node_traces[-1]["output_summary"] == {
+        "citation_count": 1,
+        "citation_fallback_used": False,
+        "citation_verification": "passed",
+    }
+
+
+def test_rag_citation_verifier_abstains_when_fallback_has_no_valid_chunk_id() -> None:
+    chunk = _knowledge_chunk(chunk_id="")
+    with Session(engine) as db:
+        result = run_knowledge(
+            db,
+            consented_router(
+                db,
+                settings=replace(get_settings(), agent_daily_budget_usd=1),
+                adapter=KnowledgeOutputAdapter(KnowledgeGenerated(answer="模型答案没有可验证引用")),
+            ),
+            "饮食如何支持恢复？",
+            chunks_override=[chunk],
+        )
+
+    assert result.answer.startswith("insufficient_context：")
+    assert result.citations == []
+    assert result.invocation.error_code == "citation_verification_failed"
+    assert result.node_traces[-1]["error_code"] == "citation_verification_failed"
+    assert result.node_traces[-1]["output_summary"] == {
+        "citation_count": 0,
+        "citation_fallback_used": True,
+        "citation_verification": "failed",
+    }
 
 
 def test_knowledge_ingestion_is_idempotent_and_keeps_chunk_ids(seeded_knowledge) -> None:

@@ -1,6 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -8,7 +8,16 @@ import type { ActivityIntensity, FoodRecordCreate, MealType, WeightRecordCreate 
 import { journeySpacing, journeyTypography } from '@journey/design-tokens';
 
 import { Button, Card, Chip, Field, Notice, SectionTitle } from '@/components/ui';
-import { ApiError, confirmAgentCandidate, fetchAgentRunTrace, resumeAgentRun, type RecordKind } from '@/lib/api';
+import {
+  ApiError,
+  confirmAgentCandidate,
+  fetchAgentRunTrace,
+  getAgentDataRevision,
+  getAgentErrorMessage,
+  resumeAgentRun,
+  subscribeToAgentDataDeleted,
+  type RecordKind,
+} from '@/lib/api';
 import { intensityLabels, mealLabels } from '@/lib/format';
 import type { ReplicaRecord } from '@/lib/local-replica';
 import { useSync } from '@/providers/sync-provider';
@@ -29,11 +38,14 @@ export default function RecordFormScreen() {
   const kindValue = first(params.kind);
   const kind: RecordKind = kindValue === 'activity' || kindValue === 'weight' ? kindValue : 'food';
   const id = first(params.id);
-  const candidateId = first(params.candidateId);
-  const confirmationToken = first(params.confirmationToken);
+  const initialCandidateId = first(params.candidateId);
+  const initialConfirmationToken = first(params.confirmationToken);
   const runId = first(params.runId);
   const resumeRequired = first(params.resumeRequired) === 'true';
   const candidateSource = first(params.candidateSource);
+  const [invalidatedCandidateId, setInvalidatedCandidateId] = useState<string>();
+  const candidateId = initialCandidateId !== invalidatedCandidateId ? initialCandidateId : undefined;
+  const confirmationToken = candidateId ? initialConfirmationToken : undefined;
   const isAgentCandidate = Boolean(candidateId && confirmationToken);
   const isImageCandidate = isAgentCandidate && candidateSource === 'image';
   const isEditing = Boolean(id);
@@ -49,6 +61,21 @@ export default function RecordFormScreen() {
   const [weight, setWeight] = useState(first(params.weight) ?? '');
   const [pending, setPending] = useState(false);
   const [error, setError] = useState('');
+  const deletionGeneration = useRef(getAgentDataRevision());
+
+  useEffect(() => subscribeToAgentDataDeleted(() => {
+    const nextGeneration = getAgentDataRevision();
+    if (nextGeneration <= deletionGeneration.current) return;
+    deletionGeneration.current = nextGeneration;
+    if (!isAgentCandidate) return;
+    // A deleted candidate must not remain editable or keep its confirmation
+    // token alive while an async confirmation/resume request is in flight.
+    setInvalidatedCandidateId(initialCandidateId);
+    setName(''); setEnergy(''); setDetail(''); setPortion(''); setPortionUnit('');
+    setDuration(''); setWeight(''); setMeal('other'); setIntensity('moderate');
+    setPending(false); setError('');
+    router.back();
+  }), [initialCandidateId, isAgentCandidate]);
 
   const title = kind === 'food' ? '饮食记录' : kind === 'activity' ? '运动记录' : '体重记录';
   const validation = useMemo(() => {
@@ -133,6 +160,7 @@ export default function RecordFormScreen() {
   async function save() {
     if (validation) { setError(validation); return; }
     if (isAgentCandidate && !sync.isOnline) { setError('Agent 候选确认需要联网；请恢复网络后重试。'); return; }
+    const requestGeneration = getAgentDataRevision();
     setPending(true); setError('');
     try {
       if (isEditing && id) {
@@ -152,7 +180,9 @@ export default function RecordFormScreen() {
           kind,
           payload: body,
         }, `agent-${candidateId}`);
+        if (requestGeneration !== getAgentDataRevision()) return;
         await invalidate();
+        if (requestGeneration !== getAgentDataRevision()) return;
         if (runId) {
           queryClient.setQueryData(['agent-confirmation-update'], {
             runId,
@@ -164,11 +194,13 @@ export default function RecordFormScreen() {
           queryClient.setQueryData(['agent-resume-needed'], runId);
           try {
             const continuation = await resumeAgentRun(runId);
+            if (requestGeneration !== getAgentDataRevision()) return;
             queryClient.setQueryData(['agent-continuation'], continuation);
             queryClient.removeQueries({ queryKey: ['agent-resume-needed'], exact: true });
             notifyAndReturn('已确认并继续', `${title}已同步，Agent 已基于最新数据完成后续步骤。`, '查看结果');
-          } catch (reason) {
+          } catch {
             const trace = await fetchAgentRunTrace(runId).catch(() => null);
+            if (requestGeneration !== getAgentDataRevision()) return;
             if (trace && trace.status !== 'waiting_for_user') {
               queryClient.removeQueries({ queryKey: ['agent-resume-needed'], exact: true });
               notifyAndReturn('已确认并完成', `${title}已同步，Agent 已在后台完成；可到 Journey 查看并重新生成总结。`, '返回首页');
@@ -185,10 +217,13 @@ export default function RecordFormScreen() {
         Alert.alert(result === 'saved' ? '已保存' : '已加入待同步', result === 'saved' ? `${title}已同步。` : '联网后会自动上传，不需要重复提交。', [{ text: '完成', onPress: () => router.back() }]);
       }
     } catch (reason) {
+      if (isAgentCandidate && requestGeneration !== getAgentDataRevision()) return;
       if (isAgentCandidate && runId && reason instanceof ApiError &&
           (reason.code === 'idempotency_conflict' || reason.code === 'confirmation_already_used')) {
         const trace = await fetchAgentRunTrace(runId).catch(() => null);
+        if (requestGeneration !== getAgentDataRevision()) return;
         await invalidate();
+        if (requestGeneration !== getAgentDataRevision()) return;
         if (trace?.confirmation_progress) {
           queryClient.setQueryData(['agent-confirmation-update'], {
             runId,
@@ -205,9 +240,11 @@ export default function RecordFormScreen() {
           '返回',
         );
       } else {
-        setError(reason instanceof ApiError ? reason.message : '保存失败，请稍后重试');
+        setError(isAgentCandidate ? getAgentErrorMessage(reason) : reason instanceof ApiError ? reason.message : '保存失败，请稍后重试');
       }
-    } finally { setPending(false); }
+    } finally {
+      if (!isAgentCandidate || requestGeneration === getAgentDataRevision()) setPending(false);
+    }
   }
 
   function confirmDelete() {

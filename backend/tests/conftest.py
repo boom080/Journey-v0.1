@@ -19,6 +19,7 @@ from app.main import app  # noqa: E402
 
 TRUNCATE_SQL = """
 TRUNCATE TABLE
+  agent_consents, agent_deleted_costs,
   life_inspirations,
   agent_tool_runs, agent_confirmations, agent_runs,
   agent_threads,

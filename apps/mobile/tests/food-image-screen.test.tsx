@@ -1,4 +1,4 @@
-import { fireEvent, render, waitFor } from '@testing-library/react-native';
+import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
 
 import type { FoodImageAnalysisResponse } from '@journey/contracts';
 
@@ -10,6 +10,9 @@ const mockRouterPush = jest.fn();
 const mockRouterBack = jest.fn();
 const mockRouterReplace = jest.fn();
 const mockSyncState = { isOnline: true };
+const mockAgentDataDeletedListeners = new Set<() => void>();
+let mockAgentDataRevision = 0;
+let mockFoodImageEnabled = true;
 
 jest.mock('expo-router', () => ({
   router: {
@@ -40,8 +43,16 @@ jest.mock('@/lib/api', () => {
     ApiError,
     ApiNetworkError,
     analyzeFoodImage: (...args: unknown[]) => mockAnalyzeFoodImage(...args),
+    getAgentDataRevision: () => mockAgentDataRevision,
+    subscribeToAgentDataDeleted: (listener: () => void) => {
+      mockAgentDataDeletedListeners.add(listener);
+      return () => mockAgentDataDeletedListeners.delete(listener);
+    },
   };
 });
+jest.mock('@/config/environment', () => ({
+  isFoodImageAnalysisEnabled: () => mockFoodImageEnabled,
+}));
 
 import FoodImageScreen from '@/app/food-image';
 
@@ -91,6 +102,8 @@ const response: FoodImageAnalysisResponse = {
 describe('Food image flow', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockAgentDataDeletedListeners.clear();
+    mockAgentDataRevision = 0;
     mockSyncState.isOnline = true;
     mockLaunchLibrary.mockResolvedValue({
       canceled: false,
@@ -98,11 +111,11 @@ describe('Food image flow', () => {
     });
     mockRequestCamera.mockResolvedValue({ granted: true });
     mockAnalyzeFoodImage.mockResolvedValue(response);
-    delete process.env.EXPO_PUBLIC_FOOD_IMAGE_ANALYSIS_ENABLED;
+    mockFoodImageEnabled = true;
   });
 
   test('feature flag disables every image acquisition action', async () => {
-    process.env.EXPO_PUBLIC_FOOD_IMAGE_ANALYSIS_ENABLED = 'false';
+    mockFoodImageEnabled = false;
     const screen = await render(<FoodImageScreen />);
     expect(screen.getByText(/图片估算当前已关闭/)).toBeTruthy();
     expect(screen.queryByRole('button', { name: '拍照' })).toBeNull();
@@ -202,6 +215,40 @@ describe('Food image flow', () => {
     expect(screen.getByText(/当前离线/)).toBeTruthy();
     await fireEvent.press(screen.getByRole('button', { name: '直接手动记录饮食' }));
     expect(mockRouterPush).toHaveBeenCalledWith('/record/food');
+  });
+
+  test('deletion clears image Agent results but preserves the selected photo', async () => {
+    const screen = await render(<FoodImageScreen />);
+    await fireEvent.press(screen.getByRole('button', { name: '从相册选择' }));
+    await fireEvent.press(screen.getByRole('button', { name: '同意上传并生成候选' }));
+    await waitFor(() => expect(screen.getByText('合成鸡肉饭')).toBeTruthy());
+    expect(screen.getByLabelText('待分析食物照片')).toBeTruthy();
+
+    mockAgentDataRevision = 1;
+    await act(async () => {
+      mockAgentDataDeletedListeners.forEach((listener) => listener());
+    });
+    expect(screen.queryByText('合成鸡肉饭')).toBeNull();
+    expect(screen.getByLabelText('待分析食物照片')).toBeTruthy();
+  });
+
+  test('does not show a late image analysis response after deletion', async () => {
+    let resolveAnalysis: ((value: FoodImageAnalysisResponse) => void) | undefined;
+    mockAnalyzeFoodImage.mockImplementation(() => new Promise<FoodImageAnalysisResponse>((resolve) => { resolveAnalysis = resolve; }));
+    const screen = await render(<FoodImageScreen />);
+    await fireEvent.press(screen.getByRole('button', { name: '从相册选择' }));
+    await fireEvent.press(screen.getByRole('button', { name: '同意上传并生成候选' }));
+    await waitFor(() => expect(mockAnalyzeFoodImage).toHaveBeenCalled());
+
+    mockAgentDataRevision = 1;
+    await act(async () => {
+      mockAgentDataDeletedListeners.forEach((listener) => listener());
+    });
+    await act(async () => {
+      resolveAnalysis?.(response);
+    });
+    expect(screen.queryByText('合成鸡肉饭')).toBeNull();
+    expect(screen.getByLabelText('待分析食物照片')).toBeTruthy();
   });
 
   test('picker cancellation leaves no image and explains that nothing was uploaded', async () => {

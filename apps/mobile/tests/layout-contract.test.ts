@@ -13,6 +13,7 @@ describe('cross-platform layout invariants', () => {
     'app/record/[kind].tsx',
     'app/settings/profile.tsx',
     'app/settings/goal.tsx',
+    'app/settings/agent-privacy.tsx',
   ])('%s retains safe area, keyboard handling, scrolling and phone-width cap', (file) => {
     const source = read(file);
     expect(source).toContain('SafeAreaView');

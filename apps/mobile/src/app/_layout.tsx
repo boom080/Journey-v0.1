@@ -24,6 +24,7 @@ function RootNavigator() {
           <Stack.Screen name="inspirations" options={{ presentation: 'modal' }} />
           <Stack.Screen name="settings/profile" options={{ presentation: 'modal' }} />
           <Stack.Screen name="settings/goal" options={{ presentation: 'modal' }} />
+          <Stack.Screen name="settings/agent-privacy" options={{ presentation: 'modal' }} />
         </Stack.Protected>
         <Stack.Protected guard={!session}>
           <Stack.Screen name="sign-in" />

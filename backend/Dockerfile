@@ -24,6 +24,7 @@ COPY backend/app ./app
 COPY backend/tests ./tests
 COPY backend/blackbox_tests ./blackbox_tests
 COPY evals ./evals
+COPY infra/privacy /infra/privacy
 
 ENTRYPOINT []
 CMD ["pytest", "-q"]

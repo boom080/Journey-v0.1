@@ -214,7 +214,7 @@ export function AgentStatusStrip({ isOnline, isPending, hasError, resultStatus, 
     detail = '内容仍在输入框中，可以修改后重试';
   } else if (resultStatus === 'completed') {
     title = '这件事已处理完成';
-    detail = '结果、工具和校验信息都在下方';
+    detail = '结果和需要确认的内容都在下方';
   }
 
   return (

@@ -1,6 +1,6 @@
 import json
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import TypedDict
 
 from langgraph.graph import END, START, StateGraph
@@ -35,23 +35,44 @@ class WorkflowResult:
     node_traces: list[dict]
 
 
+_INSUFFICIENT_CONTEXT_ANSWER = (
+    "insufficient_context：受控知识库中没有足够相关资料。你可以改写问题，或咨询合格专业人员。"
+)
+_CITATION_VERIFICATION_ERROR = "citation_verification_failed"
+
+
+def _has_valid_chunk_id(value: object) -> bool:
+    return isinstance(value, str) and bool(value.strip())
+
+
 def _citations(chunks: list[RetrievedChunk], cited_ids: list[str]) -> list[AgentCitation]:
-    allowed = {chunk.chunk_id: chunk for chunk in chunks}
-    selected = [allowed[item] for item in cited_ids if item in allowed]
-    return [
-        AgentCitation(
-            chunk_id=chunk.chunk_id,
-            document_id=chunk.document_id,
-            source_slug=chunk.source_slug,
-            title=chunk.title,
-            source_url=chunk.source_url,
-            version=chunk.version,
-            region=chunk.region,
-            score=chunk.score,
-            excerpt=chunk.text[:300],
-        )
-        for chunk in selected
-    ]
+    allowed = {
+        chunk.chunk_id: chunk
+        for chunk in chunks
+        if _has_valid_chunk_id(getattr(chunk, "chunk_id", None))
+    }
+    citations: list[AgentCitation] = []
+    for item in cited_ids:
+        chunk = allowed.get(item)
+        if chunk is None:
+            continue
+        try:
+            citations.append(
+                AgentCitation(
+                    chunk_id=chunk.chunk_id,
+                    document_id=chunk.document_id,
+                    source_slug=chunk.source_slug,
+                    title=chunk.title,
+                    source_url=chunk.source_url,
+                    version=chunk.version,
+                    region=chunk.region,
+                    score=chunk.score,
+                    excerpt=chunk.text[:300],
+                )
+            )
+        except (AttributeError, TypeError, ValueError):
+            continue
+    return citations
 
 
 def run_knowledge(
@@ -72,15 +93,10 @@ def run_knowledge(
     ]
 
     if not chunks:
-        output = KnowledgeGenerated(
-            answer=(
-                "insufficient_context：受控知识库中没有足够相关资料。"
-                "你可以改写问题，或咨询合格专业人员。"
-            )
-        )
+        output = KnowledgeGenerated(answer=_INSUFFICIENT_CONTEXT_ANSWER)
         invocation = ModelInvocation(
             output=output,
-            provider=model_router.adapter.provider,
+            provider=model_router.provider,
             model=model_router.model_for("knowledge_answer"),
             input_tokens=0,
             output_tokens=0,
@@ -104,12 +120,23 @@ def run_knowledge(
         return WorkflowResult(output.answer, [], invocation, None, node_traces)
 
     def fallback() -> KnowledgeGenerated:
-        answer = chunks[0].text
+        fallback_chunk = next(
+            (chunk for chunk in chunks if _has_valid_chunk_id(getattr(chunk, "chunk_id", None))),
+            None,
+        )
+        if fallback_chunk is None:
+            return KnowledgeGenerated(answer=_INSUFFICIENT_CONTEXT_ANSWER)
+
+        answer = getattr(fallback_chunk, "text", None)
+        if not isinstance(answer, str) or not answer:
+            answer = _INSUFFICIENT_CONTEXT_ANSWER
+        else:
+            answer = answer[:1200]
         if any(word in question for word in ("疾病", "药", "处方", "胸痛", "晕厥", "孕期")):
             answer = (
                 "这个问题可能涉及医疗判断。Journey 不提供诊断或治疗建议；请优先咨询合格专业人员。"
             )
-        return KnowledgeGenerated(answer=answer, cited_chunk_ids=[chunks[0].chunk_id])
+        return KnowledgeGenerated(answer=answer, cited_chunk_ids=[fallback_chunk.chunk_id])
 
     started = time.perf_counter()
     invocation = model_router.generate(
@@ -127,16 +154,37 @@ def run_knowledge(
     )
     generated = KnowledgeGenerated.model_validate(invocation.output)
     citations = _citations(chunks, generated.cited_chunk_ids)
-    if generated.cited_chunk_ids and not citations:
+    citation_fallback_used = False
+    citation_verification_failed = False
+    if not citations:
         fallback_output = fallback()
         generated = fallback_output
         citations = _citations(chunks, fallback_output.cited_chunk_ids)
+        citation_fallback_used = True
+        if not citations:
+            generated = KnowledgeGenerated(answer=_INSUFFICIENT_CONTEXT_ANSWER)
+            invocation = replace(
+                invocation,
+                fallback_used=True,
+                error_code=_CITATION_VERIFICATION_ERROR,
+            )
+            citation_verification_failed = True
+        else:
+            invocation = replace(invocation, fallback_used=True)
     node_traces.append(
         {
             "name": "knowledge.generate",
             "latency_ms": int((time.perf_counter() - started) * 1000),
-            "output_summary": {"citation_count": len(citations)},
-            "error_code": invocation.error_code,
+            "output_summary": {
+                "citation_count": len(citations),
+                "citation_fallback_used": citation_fallback_used,
+                "citation_verification": "failed" if citation_verification_failed else "passed",
+            },
+            "error_code": (
+                _CITATION_VERIFICATION_ERROR
+                if citation_verification_failed
+                else invocation.error_code
+            ),
         }
     )
     return WorkflowResult(generated.answer, citations, invocation, None, node_traces)
