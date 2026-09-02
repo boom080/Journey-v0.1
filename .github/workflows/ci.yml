@@ -203,7 +203,14 @@ jobs:
           done
       - name: Export Web
         env:
+          APP_VARIANT: development
           EXPO_PUBLIC_API_BASE_URL: http://127.0.0.1:8000
+          EXPO_PUBLIC_AGENT_DEBUG_DETAILS_ENABLED: "true"
+          EXPO_PUBLIC_FOOD_IMAGE_ANALYSIS_ENABLED: "true"
+          SEED_TEST_ACCOUNT: "true"
+          TEST_ACCOUNT_EMAIL: demo@journey.local
+          TEST_ACCOUNT_USERNAME: journey_demo
+          TEST_ACCOUNT_PASSWORD: JourneyDemo2026
         run: npm run mobile:web:build
       - name: Core browser E2E
         run: npm run mobile:e2e:web

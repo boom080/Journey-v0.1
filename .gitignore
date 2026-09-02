@@ -57,5 +57,6 @@ pnpm-debug.log*
 !docs/v*开发文档.md
 !docs/v*问题文档.md
 !docs/问题总文档.md
+!docs/作品集演示视频录制流程.md
 !AGENTS.md
 *.env

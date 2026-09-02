@@ -47,7 +47,7 @@ test('资料目标、Multi-Agent 复合输入、确认门、Journey 周总结闭
   await page.getByRole('button', { name: '打开并确认候选' }).click();
   await page.getByRole('button', { name: /确认候选并/ }).click();
   await expect(page.getByText(/近 7 天记录覆盖/)).toBeVisible();
-  await expect(page.getByText(/当前使用 Mock/)).toBeVisible();
+  await expect(page.getByText(/运行模式：MOCK/)).toBeVisible();
 
   await page.goto('/journey');
   await expect(page.getByText(/牛肉面/).first()).toBeVisible();
