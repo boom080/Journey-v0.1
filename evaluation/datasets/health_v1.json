@@ -1,0 +1,700 @@
+{
+  "dataset_version": "journey-health-record-parsing-v1",
+  "gold_status": "agent_authored_pending_human_review",
+  "description": "固定中文健康记录解析样本；gold只记录输入明确可确定的字段。",
+  "field_definitions": {
+    "expected_intents": "输入应路由到的受支持意图，按输入中的任务顺序排列。",
+    "record_status": "complete表示有足够内容可评估；insufficient表示缺少记录所需字段；unjudgeable表示不能从输入确定一条记录；mixed表示同时含多种记录类型。",
+    "names": "输入明确列出的项目名称；item_count是同一记录类型的项目数。",
+    "quantity.status": "explicit表示数量和单位都可由输入确定；ambiguous表示有模糊数量词；missing表示未提供数量。",
+    "explicit_energy_kcal": "只填写输入明确给出的千卡数；没有该字段不代表可以推测热量。",
+    "gold_status": "样本由Agent编写，等待人工复核；不表示已人工审核。"
+  },
+  "cases": [
+    {
+      "id": "food-001",
+      "kind": "food",
+      "scenario": "single_explicit_quantity",
+      "input": "早餐吃了2个鸡蛋",
+      "expected_intents": ["food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["鸡蛋"], "item_count": 1, "meal_type": "breakfast", "name": "鸡蛋", "quantity": {"status": "explicit", "amount": 2, "unit": "个"}}
+    },
+    {
+      "id": "food-002",
+      "kind": "food",
+      "scenario": "single_explicit_quantity",
+      "input": "午餐吃了150克米饭",
+      "expected_intents": ["food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["米饭"], "item_count": 1, "meal_type": "lunch", "name": "米饭", "quantity": {"status": "explicit", "amount": 150, "unit": "克"}}
+    },
+    {
+      "id": "food-003",
+      "kind": "food",
+      "scenario": "single_explicit_quantity",
+      "input": "晚餐吃了1碗牛肉面",
+      "expected_intents": ["food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["牛肉面"], "item_count": 1, "meal_type": "dinner", "name": "牛肉面", "quantity": {"status": "explicit", "amount": 1, "unit": "碗"}}
+    },
+    {
+      "id": "food-004",
+      "kind": "food",
+      "scenario": "drink_explicit_quantity",
+      "input": "早餐喝了300毫升豆浆",
+      "expected_intents": ["food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["豆浆"], "item_count": 1, "meal_type": "breakfast", "name": "豆浆", "quantity": {"status": "explicit", "amount": 300, "unit": "毫升"}}
+    },
+    {
+      "id": "food-005",
+      "kind": "food",
+      "scenario": "snack_missing_quantity",
+      "input": "下午吃了一个苹果",
+      "expected_intents": ["food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["苹果"], "item_count": 1, "name": "苹果", "quantity": {"status": "explicit", "amount": 1, "unit": "个"}}
+    },
+    {
+      "id": "food-006",
+      "kind": "food",
+      "scenario": "snack_explicit_quantity",
+      "input": "加餐吃了1杯酸奶",
+      "expected_intents": ["food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["酸奶"], "item_count": 1, "meal_type": "snack", "name": "酸奶", "quantity": {"status": "explicit", "amount": 1, "unit": "杯"}}
+    },
+    {
+      "id": "food-007",
+      "kind": "food",
+      "scenario": "single_explicit_quantity",
+      "input": "午餐吃了120克鸡胸肉",
+      "expected_intents": ["food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["鸡胸肉"], "item_count": 1, "meal_type": "lunch", "name": "鸡胸肉", "quantity": {"status": "explicit", "amount": 120, "unit": "克"}}
+    },
+    {
+      "id": "food-008",
+      "kind": "food",
+      "scenario": "breakfast_explicit_quantity",
+      "input": "早饭吃了2个馒头",
+      "expected_intents": ["food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["馒头"], "item_count": 1, "meal_type": "breakfast", "name": "馒头", "quantity": {"status": "explicit", "amount": 2, "unit": "个"}}
+    },
+    {
+      "id": "food-009",
+      "kind": "food",
+      "scenario": "snack_explicit_quantity",
+      "input": "加餐吃了1根香蕉",
+      "expected_intents": ["food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["香蕉"], "item_count": 1, "meal_type": "snack", "name": "香蕉", "quantity": {"status": "explicit", "amount": 1, "unit": "根"}}
+    },
+    {
+      "id": "food-010",
+      "kind": "food",
+      "scenario": "single_fuzzy_unit",
+      "input": "晚餐吃了1份鸡肉沙拉",
+      "expected_intents": ["food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["鸡肉沙拉"], "item_count": 1, "meal_type": "dinner", "name": "鸡肉沙拉", "quantity": {"status": "explicit", "amount": 1, "unit": "份"}}
+    },
+    {
+      "id": "food-011",
+      "kind": "food",
+      "scenario": "drink_missing_quantity",
+      "input": "上午喝了黑咖啡",
+      "expected_intents": ["food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["黑咖啡"], "item_count": 1, "name": "黑咖啡", "quantity": {"status": "missing"}}
+    },
+    {
+      "id": "food-012",
+      "kind": "food",
+      "scenario": "drink_explicit_quantity",
+      "input": "今天喝了500毫升水",
+      "expected_intents": ["food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["水"], "item_count": 1, "name": "水", "quantity": {"status": "explicit", "amount": 500, "unit": "毫升"}}
+    },
+    {
+      "id": "food-013",
+      "kind": "food",
+      "scenario": "snack_ambiguous_quantity",
+      "input": "晚上吃了一小把坚果",
+      "expected_intents": ["food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["坚果"], "item_count": 1, "meal_type": "snack", "name": "坚果", "quantity": {"status": "ambiguous"}}
+    },
+    {
+      "id": "food-014",
+      "kind": "food",
+      "scenario": "drink_explicit_quantity",
+      "input": "下午喝了250毫升橙汁",
+      "expected_intents": ["food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["橙汁"], "item_count": 1, "name": "橙汁", "quantity": {"status": "explicit", "amount": 250, "unit": "毫升"}}
+    },
+    {
+      "id": "food-015",
+      "kind": "food",
+      "scenario": "snack_explicit_quantity",
+      "input": "加餐吃了3小块黑巧克力",
+      "expected_intents": ["food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["黑巧克力"], "item_count": 1, "meal_type": "snack", "name": "黑巧克力", "quantity": {"status": "explicit", "amount": 3, "unit": "小块"}}
+    },
+    {
+      "id": "food-016",
+      "kind": "food",
+      "scenario": "snack_ambiguous_quantity",
+      "input": "下午吃了少量坚果",
+      "expected_intents": ["food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["坚果"], "item_count": 1, "name": "坚果", "quantity": {"status": "ambiguous"}}
+    },
+    {
+      "id": "food-017",
+      "kind": "food",
+      "scenario": "meal_missing_label",
+      "input": "吃了200克烤鱼",
+      "expected_intents": ["food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["烤鱼"], "item_count": 1, "name": "烤鱼", "quantity": {"status": "explicit", "amount": 200, "unit": "克"}}
+    },
+    {
+      "id": "food-018",
+      "kind": "food",
+      "scenario": "quantity_missing",
+      "input": "午餐吃了鸡胸肉，忘记写重量",
+      "expected_intents": ["food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["鸡胸肉"], "item_count": 1, "meal_type": "lunch", "name": "鸡胸肉", "quantity": {"status": "missing"}}
+    },
+    {
+      "id": "food-019",
+      "kind": "food",
+      "scenario": "quantity_ambiguous",
+      "input": "刚才吃了一些西瓜",
+      "expected_intents": ["food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["西瓜"], "item_count": 1, "name": "西瓜", "quantity": {"status": "ambiguous"}}
+    },
+    {
+      "id": "food-020",
+      "kind": "food",
+      "scenario": "drink_missing_quantity",
+      "input": "刚才喝了水",
+      "expected_intents": ["food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["水"], "item_count": 1, "name": "水", "quantity": {"status": "missing"}}
+    },
+    {
+      "id": "food-021",
+      "kind": "food",
+      "scenario": "multi_food_schema_limit",
+      "input": "晚餐吃了100克米饭和150克炒青菜",
+      "expected_intents": ["food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["米饭", "炒青菜"], "item_count": 2, "meal_type": "dinner"},
+      "schema_limitations": ["FoodParsed只有一个name字段，不能完整表示两个食物项目。"]
+    },
+    {
+      "id": "food-022",
+      "kind": "food",
+      "scenario": "multi_food_schema_limit",
+      "input": "早餐喝了250毫升牛奶，吃了1片全麦面包",
+      "expected_intents": ["food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["牛奶", "全麦面包"], "item_count": 2, "meal_type": "breakfast"},
+      "schema_limitations": ["FoodParsed只有一个name字段，不能完整表示两个食物项目。"]
+    },
+    {
+      "id": "food-023",
+      "kind": "food",
+      "scenario": "multi_food_schema_limit",
+      "input": "午餐吃了1份鸡肉沙拉和1杯酸奶",
+      "expected_intents": ["food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["鸡肉沙拉", "酸奶"], "item_count": 2, "meal_type": "lunch"},
+      "schema_limitations": ["FoodParsed只有一个name字段，不能完整表示两个食物项目。"]
+    },
+    {
+      "id": "food-024",
+      "kind": "food",
+      "scenario": "multi_food_schema_limit",
+      "input": "晚餐吃了2个饺子，另加1碗紫菜汤",
+      "expected_intents": ["food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["饺子", "紫菜汤"], "item_count": 2, "meal_type": "dinner"},
+      "schema_limitations": ["FoodParsed只有一个name字段，不能完整表示两个食物项目。"]
+    },
+    {
+      "id": "food-025",
+      "kind": "food",
+      "scenario": "duplicate_input",
+      "operation": "repeat",
+      "duplicate_of": "food-002",
+      "input": "午餐吃了150克米饭",
+      "expected_intents": ["food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["米饭"], "item_count": 1, "meal_type": "lunch", "name": "米饭", "quantity": {"status": "explicit", "amount": 150, "unit": "克"}}
+    },
+    {
+      "id": "food-026",
+      "kind": "food",
+      "scenario": "modification",
+      "operation": "modify",
+      "input": "把午餐改成150克米饭",
+      "expected_intents": ["food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["米饭"], "item_count": 1, "meal_type": "lunch", "name": "米饭", "quantity": {"status": "explicit", "amount": 150, "unit": "克"}},
+      "schema_limitations": ["当前解析schema不包含modify操作字段。"]
+    },
+    {
+      "id": "food-027",
+      "kind": "food",
+      "scenario": "modification_ambiguous_quantity",
+      "operation": "modify",
+      "input": "把刚才的牛肉面改为半碗",
+      "expected_intents": ["food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["牛肉面"], "item_count": 1, "name": "牛肉面", "quantity": {"status": "explicit", "amount": 0.5, "unit": "碗"}},
+      "schema_limitations": ["当前解析schema不包含modify操作字段。"]
+    },
+    {
+      "id": "food-028",
+      "kind": "food",
+      "scenario": "delete_unjudgeable",
+      "operation": "delete",
+      "input": "删除刚才的零食记录",
+      "expected_intents": ["clarify"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "unjudgeable"},
+      "schema_limitations": ["当前解析schema不包含delete操作字段。"]
+    },
+    {
+      "id": "food-029",
+      "kind": "food",
+      "scenario": "unjudgeable_statement",
+      "input": "今天吃得挺健康",
+      "expected_intents": ["clarify"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "unjudgeable"}
+    },
+    {
+      "id": "food-030",
+      "kind": "food",
+      "scenario": "insufficient_record_detail",
+      "input": "我刚才吃了东西",
+      "expected_intents": ["clarify"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "insufficient"}
+    },
+    {
+      "id": "food-031",
+      "kind": "food",
+      "scenario": "mixed_kind_schema_limit",
+      "input": "晚餐吃了米饭100克，然后散步30分钟",
+      "expected_intents": ["food", "activity"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "mixed"},
+      "schema_limitations": ["单次FoodParsed不能同时表示食物和运动两种记录。"]
+    },
+    {
+      "id": "food-032",
+      "kind": "food",
+      "scenario": "multi_food_missing_quantity",
+      "input": "早餐吃了鸡蛋，喝了牛奶",
+      "expected_intents": ["food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["鸡蛋", "牛奶"], "item_count": 2, "meal_type": "breakfast"},
+      "schema_limitations": ["FoodParsed只有一个name字段，不能完整表示两个食物项目。"]
+    },
+    {
+      "id": "food-033",
+      "kind": "food",
+      "scenario": "quantity_ambiguous",
+      "input": "午餐吃了大约一碗牛肉面",
+      "expected_intents": ["food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["牛肉面"], "item_count": 1, "meal_type": "lunch", "name": "牛肉面", "quantity": {"status": "ambiguous"}}
+    },
+    {
+      "id": "food-034",
+      "kind": "food",
+      "scenario": "quantity_ambiguous",
+      "input": "晚餐吃了适量炒青菜",
+      "expected_intents": ["food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["炒青菜"], "item_count": 1, "meal_type": "dinner", "name": "炒青菜", "quantity": {"status": "ambiguous"}}
+    },
+    {
+      "id": "food-035",
+      "kind": "food",
+      "scenario": "snack_explicit_energy",
+      "input": "加餐吃了1个苹果，95千卡",
+      "expected_intents": ["food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["苹果"], "item_count": 1, "meal_type": "snack", "name": "苹果", "quantity": {"status": "explicit", "amount": 1, "unit": "个"}, "explicit_energy_kcal": 95}
+    },
+    {
+      "id": "food-036",
+      "kind": "food",
+      "scenario": "drink_explicit_energy",
+      "input": "晚餐喝了200毫升无糖酸奶，100千卡",
+      "expected_intents": ["food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["无糖酸奶"], "item_count": 1, "meal_type": "dinner", "name": "无糖酸奶", "quantity": {"status": "explicit", "amount": 200, "unit": "毫升"}, "explicit_energy_kcal": 100}
+    },
+    {
+      "id": "food-037",
+      "kind": "food",
+      "scenario": "snack_explicit_energy",
+      "input": "加餐吃了4片全麦饼干，160大卡",
+      "expected_intents": ["food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["全麦饼干"], "item_count": 1, "meal_type": "snack", "name": "全麦饼干", "quantity": {"status": "explicit", "amount": 4, "unit": "片"}, "explicit_energy_kcal": 160}
+    },
+    {
+      "id": "food-038",
+      "kind": "food",
+      "scenario": "breakfast_explicit_quantity",
+      "input": "早餐吃香蕉一根",
+      "expected_intents": ["food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["香蕉"], "item_count": 1, "meal_type": "breakfast", "name": "香蕉", "quantity": {"status": "explicit", "amount": 1, "unit": "根"}}
+    },
+    {
+      "id": "food-039",
+      "kind": "food",
+      "scenario": "drink_explicit_energy",
+      "input": "上午喝了一杯拿铁，180千卡",
+      "expected_intents": ["food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["拿铁"], "item_count": 1, "name": "拿铁", "quantity": {"status": "explicit", "amount": 1, "unit": "杯"}, "explicit_energy_kcal": 180}
+    },
+    {
+      "id": "food-040",
+      "kind": "food",
+      "scenario": "snack_ambiguous_quantity",
+      "input": "晚上吃夜宵薯片一小包",
+      "expected_intents": ["food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["薯片"], "item_count": 1, "meal_type": "snack", "name": "薯片", "quantity": {"status": "ambiguous"}}
+    },
+    {
+      "id": "food-041",
+      "kind": "food",
+      "scenario": "single_explicit_quantity",
+      "input": "午餐吃牛肉100克",
+      "expected_intents": ["food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["牛肉"], "item_count": 1, "meal_type": "lunch", "name": "牛肉", "quantity": {"status": "explicit", "amount": 100, "unit": "克"}}
+    },
+    {
+      "id": "food-042",
+      "kind": "food",
+      "scenario": "snack_explicit_quantity",
+      "input": "下午茶吃了半块蛋糕",
+      "expected_intents": ["food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["蛋糕"], "item_count": 1, "name": "蛋糕", "quantity": {"status": "explicit", "amount": 0.5, "unit": "块"}}
+    },
+    {
+      "id": "food-043",
+      "kind": "food",
+      "scenario": "single_explicit_quantity",
+      "input": "晚餐吃烤红薯半个",
+      "expected_intents": ["food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["烤红薯"], "item_count": 1, "meal_type": "dinner", "name": "烤红薯", "quantity": {"status": "explicit", "amount": 0.5, "unit": "个"}}
+    },
+    {
+      "id": "food-044",
+      "kind": "food",
+      "scenario": "drink_explicit_quantity",
+      "input": "运动后喝了1勺蛋白粉",
+      "expected_intents": ["food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["蛋白粉"], "item_count": 1, "name": "蛋白粉", "quantity": {"status": "explicit", "amount": 1, "unit": "勺"}}
+    },
+    {
+      "id": "food-045",
+      "kind": "food",
+      "scenario": "single_explicit_energy",
+      "input": "午餐吃了一份鸡肉饭520千卡",
+      "expected_intents": ["food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["鸡肉饭"], "item_count": 1, "meal_type": "lunch", "name": "鸡肉饭", "quantity": {"status": "explicit", "amount": 1, "unit": "份"}, "explicit_energy_kcal": 520}
+    },
+    {
+      "id": "food-046",
+      "kind": "food",
+      "scenario": "single_explicit_energy",
+      "input": "早餐吃了2片吐司，240kcal",
+      "expected_intents": ["food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["吐司"], "item_count": 1, "meal_type": "breakfast", "name": "吐司", "quantity": {"status": "explicit", "amount": 2, "unit": "片"}, "explicit_energy_kcal": 240}
+    },
+    {
+      "id": "activity-001",
+      "kind": "activity",
+      "scenario": "activity_duration_only",
+      "input": "今天散步30分钟",
+      "expected_intents": ["activity"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["散步"], "item_count": 1, "name": "散步", "duration_minutes": 30, "intensity": "low"}
+    },
+    {
+      "id": "activity-002",
+      "kind": "activity",
+      "scenario": "activity_duration_only",
+      "input": "早上慢跑20分钟",
+      "expected_intents": ["activity"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["慢跑"], "item_count": 1, "name": "慢跑", "duration_minutes": 20}
+    },
+    {
+      "id": "activity-003",
+      "kind": "activity",
+      "scenario": "activity_explicit_energy",
+      "input": "骑车45分钟，中等强度，消耗280千卡",
+      "expected_intents": ["activity"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["骑车"], "item_count": 1, "name": "骑车", "duration_minutes": 45, "intensity": "moderate", "explicit_energy_kcal": 280}
+    },
+    {
+      "id": "activity-004",
+      "kind": "activity",
+      "scenario": "activity_duration_only",
+      "input": "中午游泳40分钟",
+      "expected_intents": ["activity"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["游泳"], "item_count": 1, "name": "游泳", "duration_minutes": 40}
+    },
+    {
+      "id": "activity-005",
+      "kind": "activity",
+      "scenario": "activity_explicit_intensity",
+      "input": "晚上做低强度瑜伽25分钟",
+      "expected_intents": ["activity"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["瑜伽"], "item_count": 1, "name": "瑜伽", "duration_minutes": 25, "intensity": "low"}
+    },
+    {
+      "id": "activity-006",
+      "kind": "activity",
+      "scenario": "activity_explicit_intensity",
+      "input": "完成高强度力量训练50分钟",
+      "expected_intents": ["activity"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["力量训练"], "item_count": 1, "name": "力量训练", "duration_minutes": 50, "intensity": "high"}
+    },
+    {
+      "id": "activity-007",
+      "kind": "activity",
+      "scenario": "activity_duration_only",
+      "input": "跳绳15分钟",
+      "expected_intents": ["activity"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["跳绳"], "item_count": 1, "name": "跳绳", "duration_minutes": 15}
+    },
+    {
+      "id": "activity-008",
+      "kind": "activity",
+      "scenario": "activity_duration_only",
+      "input": "周末徒步90分钟",
+      "expected_intents": ["activity"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["徒步"], "item_count": 1, "name": "徒步", "duration_minutes": 90}
+    },
+    {
+      "id": "activity-009",
+      "kind": "activity",
+      "scenario": "activity_duration_only",
+      "input": "跳舞60分钟",
+      "expected_intents": ["activity"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["跳舞"], "item_count": 1, "name": "跳舞", "duration_minutes": 60}
+    },
+    {
+      "id": "activity-010",
+      "kind": "activity",
+      "scenario": "activity_duration_only",
+      "input": "打羽毛球45分钟",
+      "expected_intents": ["activity"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["打羽毛球"], "item_count": 1, "name": "打羽毛球", "duration_minutes": 45}
+    },
+    {
+      "id": "activity-011",
+      "kind": "activity",
+      "scenario": "activity_explicit_intensity",
+      "input": "高强度爬楼梯20分钟",
+      "expected_intents": ["activity"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["爬楼梯"], "item_count": 1, "name": "爬楼梯", "duration_minutes": 20, "intensity": "high"}
+    },
+    {
+      "id": "activity-012",
+      "kind": "activity",
+      "scenario": "activity_explicit_intensity",
+      "input": "舒缓拉伸15分钟",
+      "expected_intents": ["activity"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["拉伸"], "item_count": 1, "name": "拉伸", "duration_minutes": 15, "intensity": "low"}
+    },
+    {
+      "id": "activity-013",
+      "kind": "activity",
+      "scenario": "activity_duration_only",
+      "input": "划船机训练30分钟",
+      "expected_intents": ["activity"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["划船机训练"], "item_count": 1, "name": "划船机训练", "duration_minutes": 30}
+    },
+    {
+      "id": "activity-014",
+      "kind": "activity",
+      "scenario": "activity_explicit_intensity",
+      "input": "高强度打篮球60分钟",
+      "expected_intents": ["activity"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["打篮球"], "item_count": 1, "name": "打篮球", "duration_minutes": 60, "intensity": "high"}
+    },
+    {
+      "id": "activity-015",
+      "kind": "activity",
+      "scenario": "activity_explicit_intensity",
+      "input": "低强度普拉提40分钟",
+      "expected_intents": ["activity"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["普拉提"], "item_count": 1, "name": "普拉提", "duration_minutes": 40, "intensity": "low"}
+    },
+    {
+      "id": "activity-016",
+      "kind": "activity",
+      "scenario": "activity_explicit_intensity",
+      "input": "中等强度快走35分钟",
+      "expected_intents": ["activity"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["快走"], "item_count": 1, "name": "快走", "duration_minutes": 35, "intensity": "moderate"}
+    },
+    {
+      "id": "activity-017",
+      "kind": "activity",
+      "scenario": "activity_explicit_intensity",
+      "input": "低强度慢跑30分钟",
+      "expected_intents": ["activity"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["慢跑"], "item_count": 1, "name": "慢跑", "duration_minutes": 30, "intensity": "low"}
+    },
+    {
+      "id": "activity-018",
+      "kind": "activity",
+      "scenario": "activity_duration_only",
+      "input": "椭圆机25分钟",
+      "expected_intents": ["activity"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["椭圆机"], "item_count": 1, "name": "椭圆机", "duration_minutes": 25}
+    },
+    {
+      "id": "activity-019",
+      "kind": "activity",
+      "scenario": "activity_explicit_intensity",
+      "input": "今天做了中等强度训练20分钟",
+      "expected_intents": ["activity"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["训练"], "item_count": 1, "name": "训练", "duration_minutes": 20, "intensity": "moderate"}
+    },
+    {
+      "id": "activity-020",
+      "kind": "activity",
+      "scenario": "insufficient_duration",
+      "input": "今天跑了5公里",
+      "expected_intents": ["activity"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "insufficient", "names": ["跑步"], "item_count": 1, "name": "跑步"}
+    },
+    {
+      "id": "activity-021",
+      "kind": "activity",
+      "scenario": "unjudgeable_activity",
+      "input": "今天运动了一下",
+      "expected_intents": ["clarify"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "unjudgeable"}
+    },
+    {
+      "id": "activity-022",
+      "kind": "activity",
+      "scenario": "modification_missing_intensity",
+      "operation": "modify",
+      "input": "把跑步改成快走30分钟",
+      "expected_intents": ["activity"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["快走"], "item_count": 1, "name": "快走", "duration_minutes": 30},
+      "schema_limitations": ["当前解析schema不包含modify操作字段。"]
+    },
+    {
+      "id": "activity-023",
+      "kind": "activity",
+      "scenario": "duplicate_input",
+      "operation": "repeat",
+      "duplicate_of": "activity-002",
+      "input": "早上慢跑20分钟",
+      "expected_intents": ["activity"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["慢跑"], "item_count": 1, "name": "慢跑", "duration_minutes": 20}
+    },
+    {
+      "id": "activity-024",
+      "kind": "activity",
+      "scenario": "mixed_kind_schema_limit",
+      "input": "散步30分钟，晚餐吃了米饭",
+      "expected_intents": ["activity", "food"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "mixed"},
+      "schema_limitations": ["单次ActivityParsed不能同时表示运动和食物两种记录。"]
+    },
+    {
+      "id": "activity-025",
+      "kind": "activity",
+      "scenario": "insufficient_duration",
+      "input": "今天完成核心训练",
+      "expected_intents": ["activity"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "insufficient", "names": ["核心训练"], "item_count": 1, "name": "核心训练"}
+    },
+    {
+      "id": "activity-026",
+      "kind": "activity",
+      "scenario": "activity_explicit_energy",
+      "input": "高强度间歇训练20分钟，消耗200千卡",
+      "expected_intents": ["activity"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["间歇训练"], "item_count": 1, "name": "间歇训练", "duration_minutes": 20, "intensity": "high", "explicit_energy_kcal": 200}
+    },
+    {
+      "id": "activity-027",
+      "kind": "activity",
+      "scenario": "activity_duration_only",
+      "input": "傍晚骑车1小时",
+      "expected_intents": ["activity"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["骑车"], "item_count": 1, "name": "骑车", "duration_minutes": 60}
+    },
+    {
+      "id": "activity-028",
+      "kind": "activity",
+      "scenario": "duration_ambiguous",
+      "input": "跑步约30分钟",
+      "expected_intents": ["activity"],
+      "gold_status": "agent_authored_pending_human_review",
+      "gold": {"record_status": "complete", "names": ["跑步"], "item_count": 1, "name": "跑步"}
+    }
+  ]
+}

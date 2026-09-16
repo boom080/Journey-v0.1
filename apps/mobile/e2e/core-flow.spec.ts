@@ -5,7 +5,7 @@ const SYNTHETIC_PNG = Buffer.from(
   'base64',
 );
 
-test('资料目标、Multi-Agent 复合输入、确认门、Journey 周总结闭环', async ({ page }) => {
+test('资料目标、Multi-Agent 复合输入、确认门、Journey 总结门槛闭环', async ({ page }) => {
   page.on('dialog', async (dialog) => dialog.accept());
   await page.goto('/');
   await expect(page.getByText('把今天轻轻记下来')).toBeVisible();
@@ -30,31 +30,24 @@ test('资料目标、Multi-Agent 复合输入、确认门、Journey 周总结闭
   await expect(page.getByText('目标体重 65 kg · 每日能量 2000 kcal')).toBeVisible();
 
   await page.goto('/');
-  await page.getByLabel('统一记录输入').fill('今天中午吃了一份牛肉面，晚上跑了5公里，我这周减脂情况怎么样？');
+  await page.getByLabel('统一记录输入').fill('午餐吃了牛肉面，跑步三十分钟，我这周减脂情况怎么样？');
   await page.getByRole('button', { name: '理解并处理' }).click();
-  await expect(page.getByText('Agent 执行计划')).toBeVisible();
-  await expect(page.getByText(/Orchestrator → Record Agent → Summary Agent → Knowledge Agent/)).toBeVisible();
-  await expect(page.getByText('Record Agent · food.parse_candidate', { exact: true })).toBeVisible();
-  await expect(page.getByText('Record Agent · activity.parse_candidate', { exact: true })).toBeVisible();
-  await expect(page.getByText('Summary Agent · weekly_summary.generate', { exact: true })).toBeVisible();
-  await expect(page.getByText(/校验：写入候选已生成/)).toBeVisible();
-  await expect(page.getByRole('button', { name: '打开并确认候选' })).toHaveCount(2);
-  await page.getByRole('button', { name: '打开并确认候选' }).first().click();
-  await expect(page.getByText('这是 Agent 生成的候选。请核对并修改字段；只有点击下方按钮后才会写入。')).toBeVisible();
-  await page.getByRole('button', { name: /确认候选并/ }).click();
-
-  await expect(page.getByRole('button', { name: '打开并确认候选' })).toHaveCount(1);
-  await page.getByRole('button', { name: '打开并确认候选' }).click();
-  await page.getByRole('button', { name: /确认候选并/ }).click();
+  await expect(page.getByText('牛肉面', { exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: '餐别：午餐，点击修改' })).toBeVisible();
+  await expect(page.getByText(/1 碗 · 约/)).toBeVisible();
+  await expect(page.getByText(/分钟 · .* · 约/)).toBeVisible();
+  await expect(page.getByText('Agent 执行计划')).toHaveCount(0);
+  await expect(page.getByText(/Orchestrator → Record Agent/)).toHaveCount(0);
+  await page.getByRole('button', { name: '确认并记录 2 条' }).click();
+  await expect(page.getByText(/已记录 2 条，今天的变化已更新/)).toBeVisible();
   await expect(page.getByText(/近 7 天记录覆盖/)).toBeVisible();
-  await expect(page.getByText(/运行模式：MOCK/)).toBeVisible();
 
   await page.goto('/journey');
   await expect(page.getByText(/牛肉面/).first()).toBeVisible();
-  await expect(page.getByText(/跑了5公里/).first()).toBeVisible();
-  await page.getByRole('button', { name: '生成' }).click();
-  await expect(page.getByText(/近 7 天记录覆盖/)).toBeVisible();
-  await expect(page.getByText(/依据：/).first()).toBeVisible();
+  await expect(page.getByText(/跑步/).first()).toBeVisible();
+  await expect(page.getByText('AI 7天总结')).toBeVisible();
+  await expect(page.getByText(/至少需要2天/)).toBeVisible();
+  await expect(page.getByRole('button', { name: '生成AI 7天总结' })).toBeDisabled();
 });
 
 test('食物图片只生成 Mock 候选，用户校正后才写入', async ({ page }) => {

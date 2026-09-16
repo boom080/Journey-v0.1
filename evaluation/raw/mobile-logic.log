@@ -1,0 +1,44 @@
+
+> @journey/mobile@0.1.0 test:logic
+> node --experimental-default-type=module --experimental-strip-types --test src/lib/mock-intent.test.ts
+
+TAP version 13
+# Subtest: 饮食输入只生成待确认候选
+ok 1 - 饮食输入只生成待确认候选
+  ---
+  duration_ms: 0.960959
+  type: 'test'
+  ...
+# Subtest: 运动输入提取时长和热量
+ok 2 - 运动输入提取时长和热量
+  ---
+  duration_ms: 0.113959
+  type: 'test'
+  ...
+# Subtest: 体重输入提取合理数值
+ok 3 - 体重输入提取合理数值
+  ---
+  duration_ms: 0.468209
+  type: 'test'
+  ...
+# Subtest: 离线常识使用版本化固定内容
+ok 4 - 离线常识使用版本化固定内容
+  ---
+  duration_ms: 0.092292
+  type: 'test'
+  ...
+# Subtest: 未知输入不会伪造 Agent 结果
+ok 5 - 未知输入不会伪造 Agent 结果
+  ---
+  duration_ms: 0.0585
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 75.607167

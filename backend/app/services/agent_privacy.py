@@ -17,7 +17,7 @@ from sqlalchemy.orm import Session
 from app.api.errors import APIError
 from app.core.provider_review import review_is_current
 from app.core.settings import Settings, get_settings
-from app.models.agent import AgentRun, AgentThread
+from app.models.agent import AgentRun, AgentSummaryCache, AgentThread
 from app.models.agent_privacy import AgentConsent, AgentDeletedCost
 from app.models.audit import AuditEvent
 from app.models.idempotency import IdempotencyKey
@@ -48,6 +48,7 @@ def disclosure_version(settings: Settings) -> str:
         "policy_url": settings.agent_provider_policy_url,
         "retention_notice": settings.agent_provider_retention_notice,
         "local_retention": settings.agent_data_retention_days,
+        "provider_review_required": settings.agent_provider_review_required,
         "data": DATA_SENT,
         "deletion": DELETION_NOTICE,
     }
@@ -61,6 +62,8 @@ def policy_version(settings: Settings) -> str:
 
 
 def provider_review_ready(settings: Settings) -> bool:
+    if settings.environment == "local" and not settings.agent_provider_review_required:
+        return True
     return review_is_current(settings.agent_provider_review_json, disclosure_version(settings))
 
 
@@ -131,9 +134,16 @@ def privacy_status(
         granted_at=consent.granted_at if granted else None,
         retention_days=settings.agent_data_retention_days,
         notice=(
-            "外部 AI 为可选功能。拒绝或撤回不影响手动记录、同步与离线常识查询。"
-            "请勿在输入中包含姓名、联系方式、证件号或密钥；"
-            "过滤器不能保证识别所有自由文本敏感信息。"
+            (
+                "当前为仅限本机的个人使用模式，不要求企业级供应商审核证明。"
+                "文字仍会发送给外部 AI；拒绝或撤回不影响手动记录。"
+            )
+            if settings.environment == "local" and not settings.agent_provider_review_required
+            else (
+                "外部 AI 为可选功能。拒绝或撤回不影响手动记录、同步与离线常识查询。"
+                "请勿在输入中包含姓名、联系方式、证件号或密钥；"
+                "过滤器不能保证识别所有自由文本敏感信息。"
+            )
         ),
         data_sent=DATA_SENT,
         provider_policy_url=settings.agent_provider_policy_url or None,
@@ -194,6 +204,10 @@ def purge_user_data(
         )
     if runs:
         db.execute(delete(AgentRun).where(AgentRun.id.in_([run.id for run in runs])))
+    summary_cache_query = delete(AgentSummaryCache).where(AgentSummaryCache.user_id == user_id)
+    if cutoff is not None:
+        summary_cache_query = summary_cache_query.where(AgentSummaryCache.updated_at < cutoff)
+    db.execute(summary_cache_query)
     threads = list(db.scalars(select(AgentThread).where(AgentThread.user_id == user_id)))
     deleted_threads = 0
     for thread in threads:
@@ -247,6 +261,11 @@ def purge_expired_agent_data() -> None:
     with SessionLocal() as db:
         users = set(db.scalars(select(AgentRun.user_id).where(AgentRun.created_at < cutoff)))
         users.update(db.scalars(select(AgentThread.user_id).where(AgentThread.updated_at < cutoff)))
+        users.update(
+            db.scalars(
+                select(AgentSummaryCache.user_id).where(AgentSummaryCache.updated_at < cutoff)
+            )
+        )
         users.update(
             db.scalars(
                 select(IdempotencyKey.user_id).where(

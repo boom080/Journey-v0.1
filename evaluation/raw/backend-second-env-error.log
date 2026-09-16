@@ -1,0 +1,272 @@
+..............................F......................................... [ 51%]
+F..................................F..............F.................     [100%]
+=================================== FAILURES ===================================
+____ test_thirty_day_summary_uses_backend_statistics_and_fingerprint_cache _____
+
+client = <starlette.testclient.TestClient object at 0x1164fcfb0>
+register_user = <function register_user.<locals>.register at 0x116604b80>
+
+    def test_thirty_day_summary_uses_backend_statistics_and_fingerprint_cache(
+        client: TestClient, register_user
+    ) -> None:
+        account = register_user()
+        headers = _auth(account)
+        now = datetime.now(UTC)
+        goal = client.put(
+            "/api/v1/goals/current",
+            headers={**headers, "If-Match-Version": "0"},
+            json={
+                "kind": "lose_fat",
+                "target_weight_kg": 65,
+                "daily_energy_target_kcal": 2000,
+                "starts_on": now.date().isoformat(),
+            },
+        )
+        assert goal.status_code == 200, goal.text
+    
+        _food(client, account, at=now - timedelta(days=10), kcal=600, key="summary-food-old")
+        _food(client, account, at=now, kcal=500, key="summary-food-new")
+        for days_ago in range(1, 7):
+            _food(
+                client,
+                account,
+                at=now - timedelta(days=days_ago),
+                kcal=100,
+                key=f"summary-food-day-{days_ago}",
+            )
+        activity = client.post(
+            "/api/v1/activity-records",
+            headers=_auth(account, "summary-activity"),
+            json={
+                "recorded_at": now.isoformat(),
+                "name": "慢跑",
+                "duration_minutes": 30,
+                "intensity": "moderate",
+                "energy_kcal": 200,
+            },
+        )
+        assert activity.status_code == 201, activity.text
+        for index, (measured_at, weight) in enumerate(((now - timedelta(days=10), 70), (now, 69.5))):
+            response = client.post(
+                "/api/v1/weight-records",
+                headers=_auth(account, f"summary-weight-{index}"),
+                json={"measured_at": measured_at.isoformat(), "weight_kg": weight},
+            )
+            assert response.status_code == 201, response.text
+    
+        first = client.post("/api/v1/agent/summaries/30-day", headers=headers)
+        assert first.status_code == 200, first.text
+        body = first.json()
+        assert body["period_days"] == 30
+        assert body["cache_hit"] is False
+        month = body["statistics"]["last_30_days"]
+        assert {
+            key: month[key]
+            for key in (
+                "record_count",
+                "total_intake_kcal",
+                "total_activity_kcal",
+                "days_with_records",
+                "weight_change_kg",
+            )
+        } == {
+            "record_count": 11,
+            "total_intake_kcal": 1700,
+            "total_activity_kcal": 200,
+            "days_with_records": 8,
+            "weight_change_kg": -0.5,
+        }
+        week = body["statistics"]["last_7_days"]
+        assert {
+            key: week[key]
+            for key in (
+                "record_count",
+                "total_intake_kcal",
+                "total_activity_kcal",
+                "days_with_records",
+                "weight_change_kg",
+            )
+        } == {
+            "record_count": 9,
+            "total_intake_kcal": 1100,
+            "total_activity_kcal": 200,
+            "days_with_records": 7,
+            "weight_change_kg": None,
+        }
+        assert body["statistics"]["goal"]["kind"] == "lose_fat"
+        assert len(body["content"]["key_findings"]) == 3
+        assert 2 <= len(body["content"]["next_7_days"]) <= 3
+        assert all(
+            set(item) == {"title", "evidence", "interpretation"}
+            for item in body["content"]["key_findings"]
+        )
+        assert all(
+            set(item) == {"title", "plan", "reason", "success_metric"}
+            and any(character.isdigit() for character in item["success_metric"])
+            for item in body["content"]["next_7_days"]
+        )
+        assert "先补齐可判断的数据" in {item["title"] for item in body["content"]["next_7_days"]}
+        assert body["citations"] == []
+    
+        second = client.post("/api/v1/agent/summaries/30-day", headers=headers)
+        assert second.status_code == 200, second.text
+        assert second.json()["cache_hit"] is True
+>       assert second.json()["generated_at"] == body["generated_at"]
+E       AssertionError: assert '2026-09-11T1....203341+08:00' == '2026-09-11T02:11:44.203341Z'
+E         
+E         - 2026-09-11T02:11:44.203341Z
+E         ?             -             ^
+E         + 2026-09-11T10:11:44.203341+08:00
+E         ?            +              ^^^^^^
+
+backend/tests/test_agent_summary.py:164: AssertionError
+_ test_profile_goal_agent_records_home_journey_recommendation_and_weekly_summary _
+
+client = <starlette.testclient.TestClient object at 0x1169e7e00>
+register_user = <function register_user.<locals>.register at 0x1169cd120>
+seeded_knowledge = None
+
+    def test_profile_goal_agent_records_home_journey_recommendation_and_weekly_summary(
+        client: TestClient,
+        register_user,
+        seeded_knowledge,
+    ) -> None:
+        """Core demo flow through public HTTP contracts with Mock Agent only."""
+        account = register_user(display_name="Stage 7 E2E")
+        headers = auth(account)
+        now = datetime.now(UTC)
+    
+        profile = client.patch(
+            "/api/v1/profile",
+            headers={**headers, "If-Match-Version": "1"},
+            json={
+                "display_name": "Stage 7 E2E",
+                "timezone": "Asia/Shanghai",
+                "locale": "zh-CN",
+                "sex": "undisclosed",
+                "height_cm": 170,
+                "preferred_unit": "metric",
+            },
+        )
+        assert profile.status_code == 200, profile.text
+    
+        goal = client.put(
+            "/api/v1/goals/current",
+            headers={**headers, "If-Match-Version": "0"},
+            json={
+                "kind": "maintain",
+                "target_weight_kg": 65,
+                "daily_energy_target_kcal": 2000,
+                "starts_on": now.date().isoformat(),
+            },
+        )
+        assert goal.status_code == 200, goal.text
+    
+        run = client.post(
+            "/api/v1/agent/runs",
+            headers=headers,
+            json={"message": "午餐吃了鸡肉饭 520 千卡，然后跑步 30 分钟 240 千卡"},
+        )
+        assert run.status_code == 200, run.text
+        candidates = run.json()["candidates"]
+        assert {candidate["kind"] for candidate in candidates} == {"food", "activity"}
+    
+        before = client.get("/api/v1/home/today", headers=headers).json()
+        assert before["counts"]["food"] == before["counts"]["activity"] == 0
+    
+        for candidate in candidates:
+            confirmed = client.post(
+                f"/api/v1/agent/confirmations/{candidate['candidate_id']}",
+                headers=auth(account, f"e2e-confirm-{candidate['candidate_id']}"),
+                json={
+                    "confirmation_token": candidate["confirmation_token"],
+                    "kind": candidate["kind"],
+                    "payload": candidate["payload"],
+                },
+            )
+            assert confirmed.status_code == 201, confirmed.text
+            assert confirmed.json()["record"]["source"] == "agent"
+    
+        weight = client.post(
+            "/api/v1/weight-records",
+            headers=auth(account, "e2e-weight"),
+            json={
+                "measured_at": now.isoformat(),
+                "weight_kg": 65,
+                "source": "manual",
+            },
+        )
+        assert weight.status_code == 201, weight.text
+    
+        home = client.get("/api/v1/home/today", headers=headers)
+        assert home.status_code == 200
+        assert home.json()["counts"] == {"food": 1, "activity": 1, "weight": 1}
+        assert home.json()["intake_kcal"] == 520
+        assert home.json()["activity_kcal"] == 240
+    
+        journey = client.get("/api/v1/journey?limit=7", headers=headers)
+        assert journey.status_code == 200
+        assert any(day["food_records"] and day["activity_records"] for day in journey.json()["items"])
+    
+        for message, expected_nodes in (
+            (
+                "根据今天记录给我建议",
+                {
+                    "recommendation.context",
+                    "recommendation.retrieve",
+                    "recommendation.generate",
+                },
+            ),
+            (
+                "请生成本周总结",
+                {
+                    "weekly_summary.context",
+                    "weekly_summary.retrieve",
+                    "weekly_summary.generate",
+                },
+            ),
+        ):
+            response = client.post("/api/v1/agent/runs", headers=headers, json={"message": message})
+            assert response.status_code == 200, response.text
+            body = response.json()
+            assert body["answer"] and body["citations"]
+            assert body["usage"]["provider"] == "mock"
+>           assert body["usage"]["estimated_cost_usd"] == 0
+E           assert 0.00039298 == 0
+
+backend/tests/test_core_e2e.py:118: AssertionError
+_ test_isolated_restore_scrub_revokes_old_tokens_without_changing_saved_health _
+
+client = <starlette.testclient.TestClient object at 0x116b35af0>
+register_user = <function register_user.<locals>.register at 0x116423920>
+
+    def test_isolated_restore_scrub_revokes_old_tokens_without_changing_saved_health(
+        client, register_user
+    ):
+        # This test operates exclusively on the existing disposable test database.
+>       assert engine.url.database == "journey_test"
+E       AssertionError: assert 'journey_resume_eval' == 'journey_test'
+E         
+E         - journey_test
+E         + journey_resume_eval
+
+backend/tests/test_restore_privacy.py:22: AssertionError
+__________________ test_food_image_defaults_to_zero_cost_mock __________________
+
+    def test_food_image_defaults_to_zero_cost_mock() -> None:
+        settings = get_settings()
+        assert settings.food_image_analysis_enabled is True
+        assert settings.food_image_provider == "mock"
+        assert settings.food_image_model == "journey-food-image-mock-v1"
+>       assert settings.food_image_daily_budget_usd == 0
+E       AssertionError: assert 0.138889 == 0
+E        +  where 0.138889 = Settings(environment='test', database_url='postgresql+psycopg://p668@127.0.0.1:55439/journey_resume_eval', secret_key=...个人本地使用模式：文字输入会发送给 DeepSeek；供应商保留与删除以其当前隐私政策和账号规则为准。', agent_data_retention_days=7, agent_provider_review_required=True).food_image_daily_budget_usd
+
+backend/tests/test_settings.py:198: AssertionError
+- generated xml file: /Users/p668/Documents/journeyapp/evaluation/raw/backend.xml -
+=========================== short test summary info ============================
+FAILED backend/tests/test_agent_summary.py::test_thirty_day_summary_uses_backend_statistics_and_fingerprint_cache
+FAILED backend/tests/test_core_e2e.py::test_profile_goal_agent_records_home_journey_recommendation_and_weekly_summary
+FAILED backend/tests/test_restore_privacy.py::test_isolated_restore_scrub_revokes_old_tokens_without_changing_saved_health
+FAILED backend/tests/test_settings.py::test_food_image_defaults_to_zero_cost_mock
+4 failed, 136 passed in 23.25s

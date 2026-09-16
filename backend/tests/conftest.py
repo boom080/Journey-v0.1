@@ -21,6 +21,7 @@ TRUNCATE_SQL = """
 TRUNCATE TABLE
   agent_consents, agent_deleted_costs,
   life_inspirations,
+  agent_summary_caches,
   agent_tool_runs, agent_confirmations, agent_runs,
   agent_threads,
   knowledge_chunks, knowledge_documents, knowledge_sources,

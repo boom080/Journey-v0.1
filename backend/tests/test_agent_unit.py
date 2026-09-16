@@ -9,6 +9,7 @@ from openai import APIConnectionError
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.agent.context import _weight_change_kg
 from app.agent.intent_router import (
     ROUTER_PROMPT_VERSION,
     ROUTER_SYSTEM_PROMPT,
@@ -21,6 +22,7 @@ from app.agent.model_router import (
     ModelAdapter,
     ModelRouter,
 )
+from app.agent.tools import _default_food_portion, _food_meal_type
 from app.agent.workflows import run_knowledge
 from app.core.database import engine
 from app.core.settings import get_settings
@@ -229,6 +231,19 @@ def test_intent_router_prompt_distinguishes_profile_query_from_weight_write() ->
     assert "提供明确体重数值" in ROUTER_SYSTEM_PROMPT
 
 
+def test_food_candidate_defaults_use_local_meal_time_and_common_portion() -> None:
+    assert _food_meal_type("吃了牛肉面", "other", 12) == "lunch"
+    assert _food_meal_type("晚饭吃牛肉面", "other", 12) == "dinner"
+    assert _default_food_portion("牛肉面") == (1, "碗")
+    assert _default_food_portion("苹果") == (1, "份")
+
+
+def test_weight_change_requires_two_measurements() -> None:
+    assert _weight_change_kg([]) is None
+    assert _weight_change_kg([85.0]) is None
+    assert _weight_change_kg([85.0, 84.2]) == -0.8
+
+
 def test_rag_recall_at_three(seeded_knowledge) -> None:
     cases = json.loads((EVALS / "rag_cases.json").read_text(encoding="utf-8"))
     hits = 0
@@ -260,6 +275,26 @@ def test_model_timeout_returns_valid_structured_fallback() -> None:
     assert result.error_code == "model_timeout"
     assert result.estimated_cost_usd == 0
     assert result.retries == get_settings().agent_max_retries
+
+
+def test_model_retry_override_can_force_a_single_attempt() -> None:
+    with Session(engine) as db:
+        result = ModelRouter(
+            db,
+            settings=get_settings(),
+            adapter=MockModelAdapter(failure="timeout"),
+        ).generate(
+            "food_text_parse",
+            FoodParsed,
+            system_prompt="test",
+            user_prompt="test",
+            fallback_factory=lambda: FoodParsed(
+                meal_type="other", name="fallback", energy_kcal=100
+            ),
+            max_retries=0,
+        )
+    assert result.error_code == "model_timeout"
+    assert result.retries == 0
 
 
 def test_invalid_structured_output_returns_same_valid_fallback() -> None:

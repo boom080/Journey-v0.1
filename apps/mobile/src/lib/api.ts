@@ -5,6 +5,7 @@ import type {
   AgentDataDeletion,
   AgentPrivacyStatus,
   AgentRunResponse,
+  AgentSummaryResponse,
   AgentRunTrace,
   ActivityRecord,
   ActivityRecordCreate,
@@ -263,6 +264,11 @@ export const runAgent = (message: string, threadId?: string) =>
   rawRequest<AgentRunResponse>('/api/v1/agent/runs', {
     method: 'POST',
     body: JSON.stringify({ message, thread_id: threadId }),
+  }, { timeoutMs: AGENT_REQUEST_TIMEOUT_MS });
+
+export const generateJourneySummary = (periodDays: 7 | 30) =>
+  rawRequest<AgentSummaryResponse>(`/api/v1/agent/summaries/${periodDays}-day`, {
+    method: 'POST',
   }, { timeoutMs: AGENT_REQUEST_TIMEOUT_MS });
 
 export const fetchAgentPrivacy = () =>

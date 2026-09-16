@@ -437,15 +437,21 @@ def analyze_food_image(
             code="food_image_analysis_disabled",
             message="Food image analysis is disabled; use manual food entry",
         )
-    # The text-model consent contract does not authorize image egress. Keep
-    # external image analysis closed until it has its own reviewed contract.
-    if settings.food_image_provider != "mock" or (
+    # A personal local install may use an external image provider after the
+    # operator-level switch and the request's explicit confirm_upload=true.
+    # Test, staging and production remain fail-closed until a dedicated image
+    # privacy contract is implemented.
+    uses_external_image_provider = settings.food_image_provider != "mock" or (
         analyzer is not None and analyzer.provider != "mock"
-    ):
+    )
+    local_personal_image_mode = (
+        settings.environment == "local" and settings.food_image_external_upload_confirmed
+    )
+    if uses_external_image_provider and not local_personal_image_mode:
         raise APIError(
             status_code=503,
             code="food_image_external_disabled",
-            message="外部图片分析尚未完成独立隐私授权，请使用手动饮食记录",
+            message="外部图片分析仅在本机个人使用模式开放，请使用手动饮食记录",
         )
     # Mock image candidates share AgentRun storage and the deletion barrier.
     prepare_agent_access(db, user.id)

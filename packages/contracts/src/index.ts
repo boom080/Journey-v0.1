@@ -418,6 +418,55 @@ export type AgentRunResponse = {
   selected_agents: AgentSpecialist[];
 };
 
+export type AgentSummaryPeriodStatistics = {
+  period_days: 7 | 30;
+  start_date: ISODate;
+  end_date: ISODate;
+  record_count: number;
+  food_count: number;
+  activity_count: number;
+  weight_count: number;
+  total_intake_kcal: number;
+  total_activity_kcal: number;
+  days_with_records: number;
+  weight_change_kg: number | null;
+};
+
+export type AgentSummaryResponse = {
+  period_days: 7 | 30;
+  generated_at: ISODateTime;
+  cache_hit: boolean;
+  statistics: {
+    last_30_days: AgentSummaryPeriodStatistics;
+    last_7_days: AgentSummaryPeriodStatistics;
+    goal: {
+      kind: GoalKind;
+      target_weight_kg: number | null;
+      daily_energy_target_kcal: number | null;
+    } | null;
+  };
+  content: {
+    headline: string;
+    key_findings: Array<{
+      title: string;
+      evidence: string;
+      interpretation: string;
+    }>;
+    next_7_days: Array<{
+      title: string;
+      plan: string;
+      reason: string;
+      success_metric: string;
+    }>;
+  };
+  citations: AgentCitation[];
+  fallback_used: boolean;
+  usage: AgentUsage;
+};
+
+/** @deprecated Use AgentSummaryResponse for period-aware Journey summaries. */
+export type AgentThirtyDaySummaryResponse = AgentSummaryResponse;
+
 export type AgentConfirmationRequest = {
   confirmation_token: string;
   kind: ManualRecordKind;

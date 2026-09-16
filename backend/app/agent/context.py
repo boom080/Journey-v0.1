@@ -13,6 +13,12 @@ CONTEXT_VERSION = "journey-context-1.0.0"
 DEFAULT_CONTEXT_TOKEN_BUDGET = 1800
 
 
+def _weight_change_kg(values: list[float]) -> float | None:
+    if len(values) < 2:
+        return None
+    return round(values[-1] - values[0], 2)
+
+
 @dataclass(frozen=True)
 class ContextSnapshot:
     version: str
@@ -45,13 +51,10 @@ def build_context(
         [record for day in recent.items for record in day.weight_records],
         key=lambda record: record.measured_at,
     )
-    first_weight = float(weights[0].weight_kg) if weights else None
-    latest_weight = float(weights[-1].weight_kg) if weights else None
-    weight_change = (
-        round(latest_weight - first_weight, 2)
-        if first_weight is not None and latest_weight is not None
-        else None
-    )
+    weight_values = [float(record.weight_kg) for record in weights]
+    first_weight = weight_values[0] if len(weight_values) >= 2 else None
+    latest_weight = weight_values[-1] if weight_values else None
+    weight_change = _weight_change_kg(weight_values)
     total_intake = round(sum(item.intake_kcal for item in recent.items), 2)
     total_activity = round(sum(item.activity_kcal for item in recent.items), 2)
     daily_resting = today.resting_energy.kcal_per_day

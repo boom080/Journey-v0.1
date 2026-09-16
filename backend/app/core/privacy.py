@@ -97,6 +97,17 @@ SUMMARY_KEYS = {
     "failed_steps",
     "replan_count",
     "pending_confirmations",
+    "period_days",
+    "record_count_30d",
+    "record_count_7d",
+    "days_with_records_30d",
+    "conditional",
+    "query_present",
+    "raw_records_sent",
+    "knowledge_chunk_count",
+    "llm_call_count",
+    "finding_count",
+    "suggestion_count",
 }
 
 
@@ -164,6 +175,65 @@ def minimal_context(context: dict) -> dict:
     }
 
 
+def _minimal_summary_period(value: dict) -> dict:
+    return _pick(
+        value,
+        (
+            "period_days",
+            "start_date",
+            "end_date",
+            "record_count",
+            "food_count",
+            "activity_count",
+            "weight_count",
+            "total_intake_kcal",
+            "total_activity_kcal",
+            "days_with_records",
+            "weight_change_kg",
+        ),
+    )
+
+
+def minimal_summary_statistics(value: dict) -> dict:
+    return {
+        "last_30_days": _minimal_summary_period(value.get("last_30_days", {})),
+        "last_7_days": _minimal_summary_period(value.get("last_7_days", {})),
+        "goal": _pick(value.get("goal"), ("kind", "target_weight_kg", "daily_energy_target_kcal")),
+    }
+
+
+def _minimal_coach_window(value: dict) -> dict:
+    return _pick(
+        value,
+        (
+            "period_days",
+            "record_days",
+            "record_count",
+            "food_days",
+            "food_records",
+            "days_with_at_least_two_meals",
+            "average_intake_kcal_on_food_days",
+            "meal_counts",
+            "activity_days",
+            "activity_sessions",
+            "activity_minutes",
+            "moderate_or_high_sessions",
+            "weight_measurements",
+            "weight_change_kg",
+        ),
+    )
+
+
+def minimal_coach_signals(value: dict) -> dict:
+    """Allow only derived behavior signals; never forward record rows or names."""
+    return {
+        "skill": _pick(value.get("skill"), ("name", "version")),
+        "period": _minimal_coach_window(value.get("period", {})),
+        "recent_7_days": _minimal_coach_window(value.get("recent_7_days", {})),
+        "goal": _pick(value.get("goal"), ("kind", "target_weight_kg", "daily_energy_target_kcal")),
+    }
+
+
 def prepare_model_prompt(capability: str, prompt: str, private_values: tuple[str, ...] = ()) -> str:
     text_capabilities = {
         "intent_classification",
@@ -177,6 +247,7 @@ def prepare_model_prompt(capability: str, prompt: str, private_values: tuple[str
         "knowledge_answer": ("question", "chunks"),
         "recommendation": ("context_version", "context", "chunks"),
         "weekly_summary": ("context_version", "context", "chunks"),
+        "thirty_day_summary": ("period", "coach_signals", "knowledge"),
         "failure_replanning": (
             "step_id",
             "tool",
@@ -209,6 +280,15 @@ def prepare_model_prompt(capability: str, prompt: str, private_values: tuple[str
     if "chunks" in payload:
         payload["chunks"] = [
             _pick(item, ("chunk_id", "title", "text")) for item in payload["chunks"][:5]
+        ]
+    if "statistics" in payload:
+        payload["statistics"] = minimal_summary_statistics(payload["statistics"])
+    if "coach_signals" in payload:
+        payload["coach_signals"] = minimal_coach_signals(payload["coach_signals"])
+    if "knowledge" in payload:
+        payload["knowledge"] = [
+            _pick(item, ("chunk_id", "title", "version", "text"))
+            for item in payload["knowledge"][:3]
         ]
     if "recent_thread_memory" in payload:
         payload["recent_thread_memory"] = [

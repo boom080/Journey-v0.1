@@ -1,0 +1,28 @@
+
+> @journey/mobile@0.1.0 test:components
+> jest --runInBand --json --outputFile=/Users/p668/Documents/journeyapp/evaluation/raw/mobile.json
+
+PASS tests/home-screen.test.tsx
+PASS tests/sync-provider.test.tsx
+PASS tests/journey-screen.test.tsx
+PASS tests/food-image-screen.test.tsx
+PASS tests/api.test.ts
+PASS tests/agent-privacy-screen.test.tsx
+PASS tests/inspirations-screen.test.tsx
+PASS tests/local-replica.test.ts
+PASS tests/sign-in-screen.test.tsx
+PASS tests/record-agent-deletion.test.tsx
+PASS tests/profile-settings-screen.test.tsx
+PASS tests/pending-storage.test.ts
+PASS tests/auth-provider.test.tsx
+PASS tests/ui.test.tsx
+PASS tests/journey-summary.test.ts
+PASS tests/environment.test.ts
+PASS tests/layout-contract.test.ts
+
+Test Suites: 17 passed, 17 total
+Tests:       83 passed, 83 total
+Snapshots:   0 total
+Time:        4.38 s
+Ran all test suites.
+Test results written to: ../../evaluation/raw/mobile.json

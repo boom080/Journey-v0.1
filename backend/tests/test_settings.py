@@ -14,6 +14,24 @@ def test_secret_is_required(monkeypatch) -> None:
         get_settings.cache_clear()
 
 
+def test_provider_review_can_only_be_optional_for_local_personal_use(monkeypatch) -> None:
+    monkeypatch.setenv("APP_ENV", "local")
+    monkeypatch.setenv("AGENT_PROVIDER_REVIEW_REQUIRED", "false")
+    get_settings.cache_clear()
+    try:
+        assert get_settings().agent_provider_review_required is False
+    finally:
+        get_settings.cache_clear()
+
+    monkeypatch.setenv("APP_ENV", "test")
+    get_settings.cache_clear()
+    try:
+        with pytest.raises(RuntimeError, match="only be false when APP_ENV=local"):
+            get_settings()
+    finally:
+        get_settings.cache_clear()
+
+
 def test_sqlite_database_url_is_rejected(monkeypatch) -> None:
     monkeypatch.setenv("DATABASE_URL", "sqlite:///journey.db")
     get_settings.cache_clear()

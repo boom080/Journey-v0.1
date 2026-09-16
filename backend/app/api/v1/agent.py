@@ -12,12 +12,42 @@ from app.schemas.agent import (
     AgentRunRequest,
     AgentRunResponse,
     AgentRunTrace,
+    AgentSummaryResponse,
 )
 from app.schemas.agent_privacy import AgentConsentRequest, AgentDataDeletion, AgentPrivacyStatus
 from app.services.agent import confirm_candidate, get_run_trace, resume_agent_run, run_agent
 from app.services.agent_privacy import delete_agent_data, privacy_status, update_consent
+from app.services.agent_summary import generate_summary
 
 router = APIRouter(prefix="/agent", tags=["Agent"])
+
+
+@router.post("/summaries/7-day", response_model=AgentSummaryResponse)
+def create_seven_day_summary(
+    request: Request,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    return generate_summary(
+        db,
+        user,
+        period_days=7,
+        request_id=request.state.request_id,
+    )
+
+
+@router.post("/summaries/30-day", response_model=AgentSummaryResponse)
+def create_thirty_day_summary(
+    request: Request,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    return generate_summary(
+        db,
+        user,
+        period_days=30,
+        request_id=request.state.request_id,
+    )
 
 
 @router.get("/privacy", response_model=AgentPrivacyStatus)

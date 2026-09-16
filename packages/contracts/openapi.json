@@ -372,6 +372,78 @@
         "title": "AgentCitation",
         "type": "object"
       },
+      "AgentCoachAction": {
+        "properties": {
+          "plan": {
+            "description": "包含频率、数量或时间的7天执行计划",
+            "maxLength": 180,
+            "minLength": 1,
+            "title": "Plan",
+            "type": "string"
+          },
+          "reason": {
+            "description": "行动与当前证据的关系",
+            "maxLength": 180,
+            "minLength": 1,
+            "title": "Reason",
+            "type": "string"
+          },
+          "success_metric": {
+            "description": "带数字、可在7天后核对的完成标准",
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Success Metric",
+            "type": "string"
+          },
+          "title": {
+            "description": "明确的行动名称",
+            "maxLength": 48,
+            "minLength": 1,
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "plan",
+          "reason",
+          "success_metric"
+        ],
+        "title": "AgentCoachAction",
+        "type": "object"
+      },
+      "AgentCoachFinding": {
+        "properties": {
+          "evidence": {
+            "description": "支持结论的周期与数字证据",
+            "maxLength": 180,
+            "minLength": 1,
+            "title": "Evidence",
+            "type": "string"
+          },
+          "interpretation": {
+            "description": "证据对用户下一步决策的含义",
+            "maxLength": 180,
+            "minLength": 1,
+            "title": "Interpretation",
+            "type": "string"
+          },
+          "title": {
+            "description": "行为结论，不复述统计字段",
+            "maxLength": 48,
+            "minLength": 1,
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "evidence",
+          "interpretation"
+        ],
+        "title": "AgentCoachFinding",
+        "type": "object"
+      },
       "AgentConfirmationProgress": {
         "properties": {
           "confirmed": {
@@ -1410,6 +1482,242 @@
           "tools"
         ],
         "title": "AgentRunTrace",
+        "type": "object"
+      },
+      "AgentSummaryContent": {
+        "properties": {
+          "headline": {
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Headline",
+            "type": "string"
+          },
+          "key_findings": {
+            "items": {
+              "$ref": "#/components/schemas/AgentCoachFinding"
+            },
+            "maxItems": 3,
+            "minItems": 2,
+            "title": "Key Findings",
+            "type": "array"
+          },
+          "next_7_days": {
+            "items": {
+              "$ref": "#/components/schemas/AgentCoachAction"
+            },
+            "maxItems": 3,
+            "minItems": 2,
+            "title": "Next 7 Days",
+            "type": "array"
+          }
+        },
+        "required": [
+          "headline",
+          "key_findings",
+          "next_7_days"
+        ],
+        "title": "AgentSummaryContent",
+        "type": "object"
+      },
+      "AgentSummaryGoal": {
+        "properties": {
+          "daily_energy_target_kcal": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Daily Energy Target Kcal"
+          },
+          "kind": {
+            "enum": [
+              "lose_fat",
+              "gain_muscle",
+              "maintain"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "target_weight_kg": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Weight Kg"
+          }
+        },
+        "required": [
+          "kind"
+        ],
+        "title": "AgentSummaryGoal",
+        "type": "object"
+      },
+      "AgentSummaryPeriodStatistics": {
+        "properties": {
+          "activity_count": {
+            "minimum": 0.0,
+            "title": "Activity Count",
+            "type": "integer"
+          },
+          "days_with_records": {
+            "minimum": 0.0,
+            "title": "Days With Records",
+            "type": "integer"
+          },
+          "end_date": {
+            "format": "date",
+            "title": "End Date",
+            "type": "string"
+          },
+          "food_count": {
+            "minimum": 0.0,
+            "title": "Food Count",
+            "type": "integer"
+          },
+          "period_days": {
+            "enum": [
+              7,
+              30
+            ],
+            "title": "Period Days",
+            "type": "integer"
+          },
+          "record_count": {
+            "minimum": 0.0,
+            "title": "Record Count",
+            "type": "integer"
+          },
+          "start_date": {
+            "format": "date",
+            "title": "Start Date",
+            "type": "string"
+          },
+          "total_activity_kcal": {
+            "minimum": 0.0,
+            "title": "Total Activity Kcal",
+            "type": "number"
+          },
+          "total_intake_kcal": {
+            "minimum": 0.0,
+            "title": "Total Intake Kcal",
+            "type": "number"
+          },
+          "weight_change_kg": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Weight Change Kg"
+          },
+          "weight_count": {
+            "minimum": 0.0,
+            "title": "Weight Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "period_days",
+          "start_date",
+          "end_date",
+          "record_count",
+          "food_count",
+          "activity_count",
+          "weight_count",
+          "total_intake_kcal",
+          "total_activity_kcal",
+          "days_with_records"
+        ],
+        "title": "AgentSummaryPeriodStatistics",
+        "type": "object"
+      },
+      "AgentSummaryResponse": {
+        "properties": {
+          "cache_hit": {
+            "title": "Cache Hit",
+            "type": "boolean"
+          },
+          "citations": {
+            "items": {
+              "$ref": "#/components/schemas/AgentCitation"
+            },
+            "maxItems": 3,
+            "title": "Citations",
+            "type": "array"
+          },
+          "content": {
+            "$ref": "#/components/schemas/AgentSummaryContent"
+          },
+          "fallback_used": {
+            "default": false,
+            "title": "Fallback Used",
+            "type": "boolean"
+          },
+          "generated_at": {
+            "format": "date-time",
+            "title": "Generated At",
+            "type": "string"
+          },
+          "period_days": {
+            "enum": [
+              7,
+              30
+            ],
+            "title": "Period Days",
+            "type": "integer"
+          },
+          "statistics": {
+            "$ref": "#/components/schemas/AgentSummaryStatistics"
+          },
+          "usage": {
+            "$ref": "#/components/schemas/AgentUsage"
+          }
+        },
+        "required": [
+          "period_days",
+          "generated_at",
+          "cache_hit",
+          "statistics",
+          "content",
+          "usage"
+        ],
+        "title": "AgentSummaryResponse",
+        "type": "object"
+      },
+      "AgentSummaryStatistics": {
+        "properties": {
+          "goal": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AgentSummaryGoal"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "last_30_days": {
+            "$ref": "#/components/schemas/AgentSummaryPeriodStatistics"
+          },
+          "last_7_days": {
+            "$ref": "#/components/schemas/AgentSummaryPeriodStatistics"
+          }
+        },
+        "required": [
+          "last_30_days",
+          "last_7_days"
+        ],
+        "title": "AgentSummaryStatistics",
         "type": "object"
       },
       "AgentToolTrace": {
@@ -4899,6 +5207,178 @@
           }
         ],
         "summary": "Resume Run",
+        "tags": [
+          "Agent"
+        ]
+      }
+    },
+    "/api/v1/agent/summaries/30-day": {
+      "post": {
+        "operationId": "create_thirty_day_summary_api_v1_agent_summaries_30_day_post",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentSummaryResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Invalid request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Authentication failed"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Resource not found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Resource conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Validation failed"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unexpected server error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Create Thirty Day Summary",
+        "tags": [
+          "Agent"
+        ]
+      }
+    },
+    "/api/v1/agent/summaries/7-day": {
+      "post": {
+        "operationId": "create_seven_day_summary_api_v1_agent_summaries_7_day_post",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentSummaryResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Invalid request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Authentication failed"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Resource not found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Resource conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Validation failed"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unexpected server error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Create Seven Day Summary",
         "tags": [
           "Agent"
         ]

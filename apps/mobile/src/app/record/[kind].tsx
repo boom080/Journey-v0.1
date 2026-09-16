@@ -142,8 +142,8 @@ export default function RecordFormScreen() {
 
   async function invalidate() {
     await Promise.all([
-      queryClient.invalidateQueries({ queryKey: ['home'] }),
-      queryClient.invalidateQueries({ queryKey: ['journey'] }),
+      queryClient.invalidateQueries({ queryKey: ['home'], refetchType: 'all' }),
+      queryClient.invalidateQueries({ queryKey: ['journey'], refetchType: 'all' }),
       queryClient.invalidateQueries({ queryKey: ['profile'] }),
     ]);
   }
@@ -188,6 +188,7 @@ export default function RecordFormScreen() {
             runId,
             candidateId,
             progress: confirmation.confirmation_progress,
+            runStatus: confirmation.run_status,
           });
         }
         if (confirmation.resume_available && runId) {
@@ -229,6 +230,7 @@ export default function RecordFormScreen() {
             runId,
             candidateId,
             progress: trace.confirmation_progress,
+            runStatus: trace.status,
           });
         }
         if (trace && trace.status !== 'waiting_for_user') {

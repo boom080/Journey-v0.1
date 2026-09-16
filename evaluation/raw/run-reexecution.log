@@ -1,0 +1,31 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_______________________ test_same_run_request_reexecuted _______________________
+
+    def test_same_run_request_reexecuted():
+        with TestClient(app) as client:
+            register=client.post('/api/v1/auth/register',json=dict(email='eval-run-retry@example.com',username='eval_run_retry',password='EvalPassword2026',display_name='Synthetic Evaluation'))
+            assert register.status_code==201,register.text
+            headers={'Authorization':'Bearer '+register.json()['access_token'],'Idempotency-Key':'same-run-request'}
+            runs=[client.post('/api/v1/agent/runs',headers=headers,json={'message':'午餐吃了鸡肉饭 520 千卡'}) for _ in range(2)]
+            assert all(r.status_code==200 for r in runs)
+            with SessionLocal() as db:before=db.query(FoodRecord).count()
+            statuses=[]
+            for i,r in enumerate(runs):
+                candidate=r.json()['candidates'][0]
+                body={k:candidate[k] for k in ('confirmation_token','kind','payload')}
+                body['payload']['recorded_at']='2026-09-11T04:00:00Z'
+                response=client.post('/api/v1/agent/confirmations/'+candidate['candidate_id'],headers={**headers,'Idempotency-Key':f'run-confirm-{i}'},json=body)
+                statuses.append(response.status_code)
+            with SessionLocal() as db:after=db.query(FoodRecord).count()
+            row={'scenario':'same_run_request_reexecuted','rows_before':before,'rows_after':after,'extra_rows':max(0,after-before-1),'run_ids':[r.json()['run_id'] for r in runs],'confirmation_statuses':statuses}
+            with Path('evaluation/raw/reliability.jsonl').open('a') as f:f.write(json.dumps(row)+'\n')
+>           assert after-before==1, 'same run submission generated duplicate logical food records'
+E           AssertionError: same run submission generated duplicate logical food records
+E           assert (8 - 6) == 1
+
+scripts/evaluation/test_reliability.py:64: AssertionError
+- generated xml file: /Users/p668/Documents/journeyapp/evaluation/raw/run-reexecution.xml -
+=========================== short test summary info ============================
+FAILED scripts/evaluation/test_reliability.py::test_same_run_request_reexecuted
+1 failed in 2.56s

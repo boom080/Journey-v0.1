@@ -11,7 +11,7 @@ from app.core.settings import get_settings
 from app.media.food_image import FoodImageInvocation
 from app.models.agent import AgentRun, AgentToolRun
 from app.models.food_record import FoodRecord
-from app.schemas.media import FoodImageEstimate
+from app.schemas.media import FoodImageEstimate, FoodImageItem
 
 JPEG_BYTES = b"\xff\xd8\xff\xe0journey-synthetic-food-image\xff\xd9"
 JPEG_BASE64 = base64.b64encode(JPEG_BYTES).decode("ascii")
@@ -245,3 +245,69 @@ def test_external_image_cannot_reuse_text_consent_or_construct_provider(
     assert constructors == []
     with Session(engine) as db:
         assert db.query(AgentRun).count() == 0
+
+
+def test_local_personal_mode_allows_external_image_after_per_upload_confirmation(
+    client: TestClient, register_user, monkeypatch
+) -> None:
+    account = register_user()
+    settings = replace(
+        get_settings(),
+        environment="local",
+        food_image_provider="qwen",
+        food_image_model="qwen3.7-flash",
+        food_image_external_upload_confirmed=True,
+        food_image_daily_budget_usd=1,
+    )
+    monkeypatch.setattr("app.media.food_image.get_settings", lambda: settings)
+
+    class FakeExternalAnalyzer:
+        provider = "qwen"
+        model = "qwen3.7-flash"
+
+        def __init__(self, configured_settings) -> None:
+            assert configured_settings is settings
+
+        def analyze(self, **kwargs) -> FoodImageInvocation:
+            assert kwargs["data_url"].startswith("data:image/jpeg;base64,")
+            return FoodImageInvocation(
+                output=FoodImageEstimate(
+                    is_food=True,
+                    name="鸡肉饭",
+                    items=[
+                        FoodImageItem(
+                            name="鸡肉饭",
+                            portion_amount=1,
+                            portion_unit="碗",
+                            energy_kcal=520,
+                        )
+                    ],
+                    meal_type="lunch",
+                    portion_amount=1,
+                    portion_unit="碗",
+                    energy_kcal=520,
+                    energy_min_kcal=420,
+                    energy_max_kcal=650,
+                    confidence="medium",
+                    assumptions=["测试估算"],
+                    scale_reference_used=False,
+                ),
+                provider=self.provider,
+                model=self.model,
+                input_tokens=12,
+                output_tokens=24,
+                latency_ms=1,
+                estimated_cost_usd=0.001,
+                fallback_used=False,
+            )
+
+    monkeypatch.setattr(
+        "app.media.food_image.LangChainLiteLLMFoodImageAnalyzer", FakeExternalAnalyzer
+    )
+    response = client.post(
+        "/api/v1/food-images/analyses", headers=auth(account), json=image_request()
+    )
+    assert response.status_code == 200, response.text
+    assert response.json()["status"] == "candidate"
+    assert response.json()["usage"]["provider"] == "qwen"
+    assert response.json()["image_retained"] is False

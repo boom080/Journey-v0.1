@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="4" skipped="0" tests="140" time="23.253" timestamp="2026-09-11T10:11:36.093280+08:00" hostname="p668deMacBook-Air.local"><testcase classname="tests.test_agent_api" name="test_agent_multi_intent_candidates_require_confirmation" time="0.262" /><testcase classname="tests.test_agent_api" name="test_confirmation_is_owned_idempotent_and_writes_once" time="0.405" /><testcase classname="tests.test_agent_api" name="test_knowledge_citations_and_owner_only_trace" time="0.453" /><testcase classname="tests.test_agent_api" name="test_medical_question_uses_explainable_safety_fallback" time="0.247" /><testcase classname="tests.test_agent_api" name="test_unknown_input_requests_clarification" time="0.267" /><testcase classname="tests.test_agent_api" name="test_recommendation_and_weekly_workflow_nodes_are_traced" time="0.344" /><testcase classname="tests.test_agent_api" name="test_partial_multi_intent_failure_keeps_safe_candidate" time="0.276" /><testcase classname="tests.test_agent_privacy" name="test_unconsented_api_and_direct_router_never_construct_or_call_provider" time="0.312" /><testcase classname="tests.test_agent_privacy" name="test_local_personal_mode_skips_deployment_review_but_keeps_account_consent" time="0.318" /><testcase classname="tests.test_agent_privacy" name="test_consent_is_versioned_account_scoped_revocable_and_resume_is_gated" time="0.548" /><testcase classname="tests.test_agent_privacy" name="test_operator_kill_switch_and_invalid_policy_fail_closed" time="0.289" /><testcase classname="tests.test_agent_privacy" name="test_outbound_prompt_and_persisted_trace_exclude_identifiers" time="0.276" /><testcase classname="tests.test_agent_privacy" name="test_minimal_context_is_allowlisted_and_memory_does_not_send_run_ids" time="0.136" /><testcase classname="tests.test_agent_privacy" name="test_thirty_day_summary_prompt_only_sends_allowlisted_aggregates" time="0.081" /><testcase classname="tests.test_agent_privacy" name="test_delete_contract_removes_agent_graph_and_replays_but_preserves_records" time="0.525" /><testcase classname="tests.test_agent_privacy" name="test_retention_sweep_is_not_traffic_dependent" time="0.256" /><testcase classname="tests.test_agent_privacy" name="test_delete_cannot_reset_model_budget" time="0.229" /><testcase classname="tests.test_agent_privacy" name="test_delete_waits_for_inflight_run_and_prevents_resurrection[text]" time="0.348" /><testcase classname="tests.test_agent_privacy" name="test_delete_waits_for_inflight_run_and_prevents_resurrection[mock_image]" time="0.403" /><testcase classname="tests.test_agent_privacy" name="test_runtime_error_and_exception_logs_do_not_echo_payloads" time="0.038" /><testcase classname="tests.test_agent_privacy" name="test_provider_exception_is_not_recorded_in_otel_or_api_error" time="0.229" /><testcase classname="tests.test_agent_privacy" name="test_each_retry_rechecks_consent" time="0.243" /><testcase classname="tests.test_agent_privacy" name="test_retention_configuration_is_bounded[0]" time="0.120" /><testcase classname="tests.test_agent_privacy" name="test_retention_configuration_is_bounded[31]" time="0.039" /><testcase classname="tests.test_agent_privacy" name="test_real_sdk_telemetry_is_disabled" time="0.038" /><testcase classname="tests.test_agent_privacy" name="test_server_exception_and_access_logging_remain_safe_and_formattable" time="0.056" /><testcase classname="tests.test_agent_privacy" name="test_missing_provider_review_blocks_even_consented_accounts[]" time="0.284" /><testcase classname="tests.test_agent_privacy" name="test_missing_provider_review_blocks_even_consented_accounts[{}]" time="0.371" /><testcase classname="tests.test_agent_privacy" name="test_missing_provider_review_blocks_even_consented_accounts[not-json]" time="0.284" /><testcase classname="tests.test_agent_summary" name="test_coach_quality_gate_rejects_repetitive_advice" time="0.156" /><testcase classname="tests.test_agent_summary" name="test_thirty_day_summary_uses_backend_statistics_and_fingerprint_cache" time="0.314"><failure message="AssertionError: assert '2026-09-11T1....203341+08:00' == '2026-09-11T02:11:44.203341Z'&#10;  &#10;  - 2026-09-11T02:11:44.203341Z&#10;  ?             -             ^&#10;  + 2026-09-11T10:11:44.203341+08:00&#10;  ?            +              ^^^^^^">client = &lt;starlette.testclient.TestClient object at 0x1164fcfb0&gt;
+register_user = &lt;function register_user.&lt;locals&gt;.register at 0x116604b80&gt;
+
+    def test_thirty_day_summary_uses_backend_statistics_and_fingerprint_cache(
+        client: TestClient, register_user
+    ) -&gt; None:
+        account = register_user()
+        headers = _auth(account)
+        now = datetime.now(UTC)
+        goal = client.put(
+            "/api/v1/goals/current",
+            headers={**headers, "If-Match-Version": "0"},
+            json={
+                "kind": "lose_fat",
+                "target_weight_kg": 65,
+                "daily_energy_target_kcal": 2000,
+                "starts_on": now.date().isoformat(),
+            },
+        )
+        assert goal.status_code == 200, goal.text
+    
+        _food(client, account, at=now - timedelta(days=10), kcal=600, key="summary-food-old")
+        _food(client, account, at=now, kcal=500, key="summary-food-new")
+        for days_ago in range(1, 7):
+            _food(
+                client,
+                account,
+                at=now - timedelta(days=days_ago),
+                kcal=100,
+                key=f"summary-food-day-{days_ago}",
+            )
+        activity = client.post(
+            "/api/v1/activity-records",
+            headers=_auth(account, "summary-activity"),
+            json={
+                "recorded_at": now.isoformat(),
+                "name": "慢跑",
+                "duration_minutes": 30,
+                "intensity": "moderate",
+                "energy_kcal": 200,
+            },
+        )
+        assert activity.status_code == 201, activity.text
+        for index, (measured_at, weight) in enumerate(((now - timedelta(days=10), 70), (now, 69.5))):
+            response = client.post(
+                "/api/v1/weight-records",
+                headers=_auth(account, f"summary-weight-{index}"),
+                json={"measured_at": measured_at.isoformat(), "weight_kg": weight},
+            )
+            assert response.status_code == 201, response.text
+    
+        first = client.post("/api/v1/agent/summaries/30-day", headers=headers)
+        assert first.status_code == 200, first.text
+        body = first.json()
+        assert body["period_days"] == 30
+        assert body["cache_hit"] is False
+        month = body["statistics"]["last_30_days"]
+        assert {
+            key: month[key]
+            for key in (
+                "record_count",
+                "total_intake_kcal",
+                "total_activity_kcal",
+                "days_with_records",
+                "weight_change_kg",
+            )
+        } == {
+            "record_count": 11,
+            "total_intake_kcal": 1700,
+            "total_activity_kcal": 200,
+            "days_with_records": 8,
+            "weight_change_kg": -0.5,
+        }
+        week = body["statistics"]["last_7_days"]
+        assert {
+            key: week[key]
+            for key in (
+                "record_count",
+                "total_intake_kcal",
+                "total_activity_kcal",
+                "days_with_records",
+                "weight_change_kg",
+            )
+        } == {
+            "record_count": 9,
+            "total_intake_kcal": 1100,
+            "total_activity_kcal": 200,
+            "days_with_records": 7,
+            "weight_change_kg": None,
+        }
+        assert body["statistics"]["goal"]["kind"] == "lose_fat"
+        assert len(body["content"]["key_findings"]) == 3
+        assert 2 &lt;= len(body["content"]["next_7_days"]) &lt;= 3
+        assert all(
+            set(item) == {"title", "evidence", "interpretation"}
+            for item in body["content"]["key_findings"]
+        )
+        assert all(
+            set(item) == {"title", "plan", "reason", "success_metric"}
+            and any(character.isdigit() for character in item["success_metric"])
+            for item in body["content"]["next_7_days"]
+        )
+        assert "先补齐可判断的数据" in {item["title"] for item in body["content"]["next_7_days"]}
+        assert body["citations"] == []
+    
+        second = client.post("/api/v1/agent/summaries/30-day", headers=headers)
+        assert second.status_code == 200, second.text
+        assert second.json()["cache_hit"] is True
+&gt;       assert second.json()["generated_at"] == body["generated_at"]
+E       AssertionError: assert '2026-09-11T1....203341+08:00' == '2026-09-11T02:11:44.203341Z'
+E         
+E         - 2026-09-11T02:11:44.203341Z
+E         ?             -             ^
+E         + 2026-09-11T10:11:44.203341+08:00
+E         ?            +              ^^^^^^
+
+backend/tests/test_agent_summary.py:164: AssertionError</failure></testcase><testcase classname="tests.test_agent_summary" name="test_thirty_day_summary_only_retrieves_knowledge_when_goal_data_needs_it" time="0.438" /><testcase classname="tests.test_agent_summary" name="test_summary_periods_enforce_separate_recorded_day_thresholds" time="0.322" /><testcase classname="tests.test_agent_unit" name="test_deepseek_v4_uses_official_endpoint_and_model_specific_thinking" time="0.027" /><testcase classname="tests.test_agent_unit" name="test_qwen_profile_uses_openai_compatible_litellm_route" time="0.024" /><testcase classname="tests.test_agent_unit" name="test_intent_router_regression_accuracy" time="0.022" /><testcase classname="tests.test_agent_unit" name="test_intent_router_prompt_distinguishes_profile_query_from_weight_write" time="0.036" /><testcase classname="tests.test_agent_unit" name="test_food_candidate_defaults_use_local_meal_time_and_common_portion" time="0.023" /><testcase classname="tests.test_agent_unit" name="test_weight_change_requires_two_measurements" time="0.021" /><testcase classname="tests.test_agent_unit" name="test_rag_recall_at_three" time="0.041" /><testcase classname="tests.test_agent_unit" name="test_model_timeout_returns_valid_structured_fallback" time="0.025" /><testcase classname="tests.test_agent_unit" name="test_model_retry_override_can_force_a_single_attempt" time="0.026" /><testcase classname="tests.test_agent_unit" name="test_invalid_structured_output_returns_same_valid_fallback" time="0.055" /><testcase classname="tests.test_agent_unit" name="test_provider_connection_error_returns_safe_fallback" time="0.052" /><testcase classname="tests.test_agent_unit" name="test_model_specific_pricing_is_used_for_pro_capability" time="0.139" /><testcase classname="tests.test_agent_unit" name="test_rag_no_answer_does_not_generate_without_evidence" time="0.177" /><testcase classname="tests.test_agent_unit" name="test_rag_citation_verifier_falls_back_when_model_citations_are_missing_or_invalid[cited_chunk_ids0]" time="0.029" /><testcase classname="tests.test_agent_unit" name="test_rag_citation_verifier_falls_back_when_model_citations_are_missing_or_invalid[cited_chunk_ids1]" time="0.026" /><testcase classname="tests.test_agent_unit" name="test_rag_citation_verifier_preserves_valid_model_citation" time="0.027" /><testcase classname="tests.test_agent_unit" name="test_rag_citation_verifier_abstains_when_fallback_has_no_valid_chunk_id" time="0.030" /><testcase classname="tests.test_agent_unit" name="test_knowledge_ingestion_is_idempotent_and_keeps_chunk_ids" time="0.036" /><testcase classname="tests.test_agent_v2" name="test_deterministic_planner_builds_bounded_dependency_plan" time="0.024" /><testcase classname="tests.test_agent_v2" name="test_policy_rejects_confirmation_bypass_and_forward_dependency" time="0.046" /><testcase classname="tests.test_agent_v2" name="test_execution_graph_replans_once_and_continues_independent_step" time="0.036" /><testcase classname="tests.test_agent_v2" name="test_agent_v2_api_exposes_plan_thread_memory_and_owner_isolation" time="0.421" /><testcase classname="tests.test_agent_v2" name="test_confirmation_updates_structured_thread_memory" time="0.230" /><testcase classname="tests.test_agent_v2" name="test_agent_v2_feature_flag_returns_legacy_contract" time="0.289" /><testcase classname="tests.test_agent_v2" name="test_allure_payload_sanitizer_redacts_secrets_and_raw_input" time="0.047" /><testcase classname="tests.test_agent_v3" name="test_mixed_write_plan_pauses_confirms_and_resumes_with_fresh_data" time="0.246" /><testcase classname="tests.test_agent_v3" name="test_demo_compound_input_delegates_to_specialists_and_updates_journey" time="0.338" /><testcase classname="tests.test_agent_v3" name="test_resume_rejects_pending_foreign_and_expired_checkpoints" time="0.483" /><testcase classname="tests.test_agent_v3" name="test_execution_uses_allowlisted_recovery_and_stops_when_it_fails" time="0.104" /><testcase classname="tests.test_agent_v3" name="test_checkpoint_and_observations_do_not_store_raw_user_message" time="0.218" /><testcase classname="tests.test_agent_v3" name="test_agent_v3_flag_can_roll_back_to_v2" time="0.279" /><testcase classname="tests.test_auth" name="test_register_and_login_with_email_or_username" time="0.668" /><testcase classname="tests.test_auth" name="test_duplicate_email_and_username_are_rejected" time="0.204" /><testcase classname="tests.test_auth" name="test_refresh_rotation_and_logout_revoke_sessions" time="0.408" /><testcase classname="tests.test_auth" name="test_validation_and_auth_errors_use_stable_envelope" time="0.030" /><testcase classname="tests.test_auth" name="test_cors_allows_contract_headers_for_local_web" time="0.028" /><testcase classname="tests.test_auth" name="test_password_failures_lock_known_account" time="1.185" /><testcase classname="tests.test_bootstrap_and_contract" name="test_test_account_is_seeded_only_when_explicitly_enabled" time="0.453" /><testcase classname="tests.test_bootstrap_and_contract" name="test_openapi_contract_matches_snapshot" time="0.259" /><testcase classname="tests.test_core_e2e" name="test_profile_goal_agent_records_home_journey_recommendation_and_weekly_summary" time="0.260"><failure message="assert 0.00039298 == 0">client = &lt;starlette.testclient.TestClient object at 0x1169e7e00&gt;
+register_user = &lt;function register_user.&lt;locals&gt;.register at 0x1169cd120&gt;
+seeded_knowledge = None
+
+    def test_profile_goal_agent_records_home_journey_recommendation_and_weekly_summary(
+        client: TestClient,
+        register_user,
+        seeded_knowledge,
+    ) -&gt; None:
+        """Core demo flow through public HTTP contracts with Mock Agent only."""
+        account = register_user(display_name="Stage 7 E2E")
+        headers = auth(account)
+        now = datetime.now(UTC)
+    
+        profile = client.patch(
+            "/api/v1/profile",
+            headers={**headers, "If-Match-Version": "1"},
+            json={
+                "display_name": "Stage 7 E2E",
+                "timezone": "Asia/Shanghai",
+                "locale": "zh-CN",
+                "sex": "undisclosed",
+                "height_cm": 170,
+                "preferred_unit": "metric",
+            },
+        )
+        assert profile.status_code == 200, profile.text
+    
+        goal = client.put(
+            "/api/v1/goals/current",
+            headers={**headers, "If-Match-Version": "0"},
+            json={
+                "kind": "maintain",
+                "target_weight_kg": 65,
+                "daily_energy_target_kcal": 2000,
+                "starts_on": now.date().isoformat(),
+            },
+        )
+        assert goal.status_code == 200, goal.text
+    
+        run = client.post(
+            "/api/v1/agent/runs",
+            headers=headers,
+            json={"message": "午餐吃了鸡肉饭 520 千卡，然后跑步 30 分钟 240 千卡"},
+        )
+        assert run.status_code == 200, run.text
+        candidates = run.json()["candidates"]
+        assert {candidate["kind"] for candidate in candidates} == {"food", "activity"}
+    
+        before = client.get("/api/v1/home/today", headers=headers).json()
+        assert before["counts"]["food"] == before["counts"]["activity"] == 0
+    
+        for candidate in candidates:
+            confirmed = client.post(
+                f"/api/v1/agent/confirmations/{candidate['candidate_id']}",
+                headers=auth(account, f"e2e-confirm-{candidate['candidate_id']}"),
+                json={
+                    "confirmation_token": candidate["confirmation_token"],
+                    "kind": candidate["kind"],
+                    "payload": candidate["payload"],
+                },
+            )
+            assert confirmed.status_code == 201, confirmed.text
+            assert confirmed.json()["record"]["source"] == "agent"
+    
+        weight = client.post(
+            "/api/v1/weight-records",
+            headers=auth(account, "e2e-weight"),
+            json={
+                "measured_at": now.isoformat(),
+                "weight_kg": 65,
+                "source": "manual",
+            },
+        )
+        assert weight.status_code == 201, weight.text
+    
+        home = client.get("/api/v1/home/today", headers=headers)
+        assert home.status_code == 200
+        assert home.json()["counts"] == {"food": 1, "activity": 1, "weight": 1}
+        assert home.json()["intake_kcal"] == 520
+        assert home.json()["activity_kcal"] == 240
+    
+        journey = client.get("/api/v1/journey?limit=7", headers=headers)
+        assert journey.status_code == 200
+        assert any(day["food_records"] and day["activity_records"] for day in journey.json()["items"])
+    
+        for message, expected_nodes in (
+            (
+                "根据今天记录给我建议",
+                {
+                    "recommendation.context",
+                    "recommendation.retrieve",
+                    "recommendation.generate",
+                },
+            ),
+            (
+                "请生成本周总结",
+                {
+                    "weekly_summary.context",
+                    "weekly_summary.retrieve",
+                    "weekly_summary.generate",
+                },
+            ),
+        ):
+            response = client.post("/api/v1/agent/runs", headers=headers, json={"message": message})
+            assert response.status_code == 200, response.text
+            body = response.json()
+            assert body["answer"] and body["citations"]
+            assert body["usage"]["provider"] == "mock"
+&gt;           assert body["usage"]["estimated_cost_usd"] == 0
+E           assert 0.00039298 == 0
+
+backend/tests/test_core_e2e.py:118: AssertionError</failure></testcase><testcase classname="tests.test_food_image_api" name="test_mock_food_image_candidate_requires_correction_and_confirmation" time="0.252" /><testcase classname="tests.test_food_image_api" name="test_food_image_rejects_invalid_bytes_dimensions_and_missing_consent" time="0.226" /><testcase classname="tests.test_food_image_api" name="test_food_image_requires_authentication" time="0.026" /><testcase classname="tests.test_food_image_api" name="test_nonfood_and_provider_failure_return_manual_fallback" time="0.299" /><testcase classname="tests.test_food_image_api" name="test_food_image_feature_flag_has_manual_fallback_message" time="0.259" /><testcase classname="tests.test_food_image_api" name="test_external_image_cannot_reuse_text_consent_or_construct_provider" time="0.242" /><testcase classname="tests.test_food_image_api" name="test_local_personal_mode_allows_external_image_after_per_upload_confirmation" time="0.277" /><testcase classname="tests.test_food_image_unit" name="test_qwen_vision_uses_separate_langchain_litellm_route" time="0.032" /><testcase classname="tests.test_food_image_unit" name="test_qwen_invalid_enum_and_narrow_range_are_safely_normalized" time="0.035" /><testcase classname="tests.test_health" name="test_live_health_does_not_require_database_connection" time="0.028" /><testcase classname="tests.test_health" name="test_ready_health_degrades_when_database_is_unavailable" time="0.038" /><testcase classname="tests.test_health" name="test_ready_health_exposes_non_secret_demo_runtime_mode" time="0.123" /><testcase classname="tests.test_inspirations" name="test_preview_requires_auth_and_only_accepts_allowlisted_https" time="0.328" /><testcase classname="tests.test_inspirations" name="test_preview_returns_only_minimal_untrusted_metadata" time="0.252" /><testcase classname="tests.test_inspirations" name="test_user_must_confirm_before_save_and_can_list_delete_own_item" time="0.491" /><testcase classname="tests.test_inspirations" name="test_fetcher_blocks_private_dns_and_cross_domain_redirects" time="0.118" /><testcase classname="tests.test_inspirations" name="test_fetcher_enforces_size_timeout_and_prompt_injection_fallbacks" time="0.213" /><testcase classname="tests.test_inspirations" name="test_fetcher_extracts_only_title_and_short_description_without_cookies" time="0.031" /><testcase classname="tests.test_profile" name="test_profile_is_single_owned_resource_and_goal_is_upserted" time="0.218" /><testcase classname="tests.test_profile" name="test_profile_rejects_unknown_timezone" time="0.312" /><testcase classname="tests.test_provider_review" name="test_review_requires_matching_disclosure_and_owner_attestation" time="0.035" /><testcase classname="tests.test_provider_review" name="test_incomplete_expired_or_unbounded_reviews_fail_closed[status-pending]" time="0.023" /><testcase classname="tests.test_provider_review" name="test_incomplete_expired_or_unbounded_reviews_fail_closed[scope-images]" time="0.034" /><testcase classname="tests.test_provider_review" name="test_incomplete_expired_or_unbounded_reviews_fail_closed[deletion_evidence-]" time="0.024" /><testcase classname="tests.test_provider_review" name="test_incomplete_expired_or_unbounded_reviews_fail_closed[retention_evidence-]" time="0.026" /><testcase classname="tests.test_provider_review" name="test_incomplete_expired_or_unbounded_reviews_fail_closed[restore_evidence-]" time="0.026" /><testcase classname="tests.test_provider_review" name="test_incomplete_expired_or_unbounded_reviews_fail_closed[reviewed_by-]" time="0.027" /><testcase classname="tests.test_provider_review" name="test_incomplete_expired_or_unbounded_reviews_fail_closed[reviewed_at-2026-08-31T00:00:00]" time="0.062" /><testcase classname="tests.test_provider_review" name="test_incomplete_expired_or_unbounded_reviews_fail_closed[expires_at-2020-01-01T00:00:00Z]" time="0.025" /><testcase classname="tests.test_provider_review" name="test_incomplete_expired_or_unbounded_reviews_fail_closed[expires_at-2099-01-01T00:00:00Z]" time="0.027" /><testcase classname="tests.test_provider_review" name="test_incomplete_expired_or_unbounded_reviews_fail_closed[reviewed_at-2099-01-01T00:00:00Z]" time="0.082" /><testcase classname="tests.test_records_and_aggregates" name="test_record_idempotency_conflict_and_concurrent_replay" time="0.342" /><testcase classname="tests.test_records_and_aggregates" name="test_ownership_crud_home_and_journey_are_deterministic" time="0.501" /><testcase classname="tests.test_records_and_aggregates" name="test_invalid_record_parameters_are_rejected" time="0.222" /><testcase classname="tests.test_restore_privacy" name="test_isolated_restore_scrub_revokes_old_tokens_without_changing_saved_health" time="0.026"><failure message="AssertionError: assert 'journey_resume_eval' == 'journey_test'&#10;  &#10;  - journey_test&#10;  + journey_resume_eval">client = &lt;starlette.testclient.TestClient object at 0x116b35af0&gt;
+register_user = &lt;function register_user.&lt;locals&gt;.register at 0x116423920&gt;
+
+    def test_isolated_restore_scrub_revokes_old_tokens_without_changing_saved_health(
+        client, register_user
+    ):
+        # This test operates exclusively on the existing disposable test database.
+&gt;       assert engine.url.database == "journey_test"
+E       AssertionError: assert 'journey_resume_eval' == 'journey_test'
+E         
+E         - journey_test
+E         + journey_resume_eval
+
+backend/tests/test_restore_privacy.py:22: AssertionError</failure></testcase><testcase classname="tests.test_settings" name="test_secret_is_required" time="0.022" /><testcase classname="tests.test_settings" name="test_provider_review_can_only_be_optional_for_local_personal_use" time="0.022" /><testcase classname="tests.test_settings" name="test_sqlite_database_url_is_rejected" time="0.033" /><testcase classname="tests.test_settings" name="test_test_account_seed_is_rejected_outside_local_test[staging]" time="0.151" /><testcase classname="tests.test_settings" name="test_test_account_seed_is_rejected_outside_local_test[production]" time="0.192" /><testcase classname="tests.test_settings" name="test_mock_agent_is_rejected_outside_local_test[staging]" time="0.036" /><testcase classname="tests.test_settings" name="test_mock_agent_is_rejected_outside_local_test[production]" time="0.044" /><testcase classname="tests.test_settings" name="test_enabled_test_account_requires_nontrivial_password" time="0.040" /><testcase classname="tests.test_settings" name="test_external_agent_requires_key_and_positive_budget" time="0.027" /><testcase classname="tests.test_settings" name="test_openai_compatible_provider_requires_base_url" time="0.026" /><testcase classname="tests.test_settings" name="test_qwen_profile_requires_its_own_key_and_ignores_legacy_key" time="0.025" /><testcase classname="tests.test_settings" name="test_provider_profile_switch_selects_qwen_defaults" time="0.025" /><testcase classname="tests.test_settings" name="test_unpriced_future_profile_is_rejected" time="0.026" /><testcase classname="tests.test_settings" name="test_deepseek_v4_configuration_maps_models_and_redacts_key" time="0.025" /><testcase classname="tests.test_settings" name="test_food_image_defaults_to_zero_cost_mock" time="0.083"><failure message="AssertionError: assert 0.138889 == 0&#10; +  where 0.138889 = Settings(environment='test', database_url='postgresql+psycopg://p668@127.0.0.1:55439/journey_resume_eval', secret_key=...个人本地使用模式：文字输入会发送给 DeepSeek；供应商保留与删除以其当前隐私政策和账号规则为准。', agent_data_retention_days=7, agent_provider_review_required=True).food_image_daily_budget_usd">def test_food_image_defaults_to_zero_cost_mock() -&gt; None:
+        settings = get_settings()
+        assert settings.food_image_analysis_enabled is True
+        assert settings.food_image_provider == "mock"
+        assert settings.food_image_model == "journey-food-image-mock-v1"
+&gt;       assert settings.food_image_daily_budget_usd == 0
+E       AssertionError: assert 0.138889 == 0
+E        +  where 0.138889 = Settings(environment='test', database_url='postgresql+psycopg://p668@127.0.0.1:55439/journey_resume_eval', secret_key=...个人本地使用模式：文字输入会发送给 DeepSeek；供应商保留与删除以其当前隐私政策和账号规则为准。', agent_data_retention_days=7, agent_provider_review_required=True).food_image_daily_budget_usd
+
+backend/tests/test_settings.py:198: AssertionError</failure></testcase><testcase classname="tests.test_settings" name="test_food_image_rejects_text_only_or_unapproved_provider" time="0.212" /><testcase classname="tests.test_settings" name="test_external_food_image_requires_explicit_upload_confirmation" time="0.038" /><testcase classname="tests.test_settings" name="test_qwen_food_image_requires_confirmed_regional_endpoint" time="0.026" /><testcase classname="tests.test_sync_conflicts" name="test_profile_and_goal_require_current_versions" time="0.232" /><testcase classname="tests.test_sync_conflicts" name="test_concurrent_first_goal_creation_returns_stable_conflict" time="0.317" /><testcase classname="tests.test_sync_conflicts" name="test_record_update_and_delete_never_silently_overwrite" time="0.225" /><testcase classname="" name="test_router_selection_is_stratified_by_expected_intents" time="0.000" /><testcase classname="" name="test_score_passes_real_provider_results_without_fallback" time="0.000" /><testcase classname="" name="test_score_fails_mock_or_fallback_even_when_outputs_match" time="0.000" /><testcase classname="" name="test_versioned_rag_dataset_has_60_mixed_difficulty_cases" time="0.000" /><testcase classname="" name="test_retrieval_metrics_respect_rank_and_multiple_relevant_documents" time="0.000" /><testcase classname="" name="test_generation_scores_and_abstention_are_explicit" time="0.000" /><testcase classname="" name="test_baseline_comparison_rejects_different_dataset" time="0.001" /><testcase classname="" name="test_selected_real_agent_v2_cases_are_fixed_and_balanced" time="0.000" /><testcase classname="" name="test_score_requires_real_schema_safe_no_fallback_invocations" time="0.000" /><testcase classname="" name="test_lower_is_better_metric_rejects_excess" time="0.000" /><testcase classname="" name="test_selected_real_agent_v3_cases_are_fixed_checkpoint_cases" time="0.000" /></testsuite></testsuites>

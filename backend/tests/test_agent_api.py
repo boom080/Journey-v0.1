@@ -27,6 +27,10 @@ def test_agent_multi_intent_candidates_require_confirmation(
     body = result.json()
     assert {item["intent"] for item in body["intents"]} == {"food", "activity"}
     assert {item["kind"] for item in body["candidates"]} == {"food", "activity"}
+    food = next(item for item in body["candidates"] if item["kind"] == "food")
+    assert food["payload"]["meal_type"] == "lunch"
+    assert food["payload"]["portion_amount"] == 1
+    assert food["payload"]["portion_unit"] == "碗"
     assert body["fallback_used"] is True
     assert body["usage"]["provider"] == "mock"
     assert body["usage"]["estimated_cost_usd"] == 0

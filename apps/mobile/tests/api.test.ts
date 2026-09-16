@@ -30,6 +30,7 @@ import {
   fetchHomeToday,
   fetchJourney,
   fetchProfile,
+  generateJourneySummary,
   listActivityRecords,
   listFoodRecords,
   listWeightRecords,
@@ -103,6 +104,17 @@ describe('API client', () => {
     expect(REQUEST_TIMEOUT_MS).toBe(10_000);
     expect(AGENT_REQUEST_TIMEOUT_MS).toBe(120_000);
     expect(AGENT_REQUEST_TIMEOUT_MS).toBeGreaterThan(REQUEST_TIMEOUT_MS);
+  });
+
+  test.each([7, 30] as const)('%i-day summary uses its dedicated authenticated endpoint without a prompt body', async (periodDays) => {
+    const response = { period_days: periodDays, cache_hit: true };
+    const fetchMock = jest.spyOn(global, 'fetch').mockResolvedValue(jsonResponse(response));
+    await expect(generateJourneySummary(periodDays)).resolves.toEqual(response);
+    const [url, init] = fetchMock.mock.calls[0]!;
+    expect(url).toBe(`http://127.0.0.1:8000/api/v1/agent/summaries/${periodDays}-day`);
+    expect(init?.method).toBe('POST');
+    expect(init?.body).toBeUndefined();
+    expect(new Headers(init?.headers).get('Authorization')).toBe('Bearer access-test');
   });
 
   test('Agent privacy wrappers use the agreed authenticated contract', async () => {

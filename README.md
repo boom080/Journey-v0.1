@@ -8,8 +8,43 @@
   一个使用 Expo、FastAPI 和 PostgreSQL 构建的跨平台健身、营养与生活方式记录应用。
 </p>
 
-Journey 支持饮食、运动和体重记录，并通过 Agent 与受控知识库提供记录解析、建议和周总结。
+Journey 支持饮食、运动和体重记录，并通过 Agent 与受控知识库提供记录解析、建议和近30天精简总结。
 本地默认运行 Mock Agent，不需要模型密钥，也不会向外部 AI 服务发送数据。
+
+## 产品预览
+
+<table>
+  <tr>
+    <td align="center"><strong>首页 · 今日概览</strong></td>
+    <td align="center"><strong>首页 · 快速记录</strong></td>
+    <td align="center"><strong>首页 · 记录完成</strong></td>
+  </tr>
+  <tr>
+    <td><img src="docs/assets/readme/home-empty-overview.png" width="240" alt="Journey 首页今日概览" /></td>
+    <td><img src="docs/assets/readme/home-empty-actions.png" width="240" alt="Journey 首页快速手动记录" /></td>
+    <td><img src="docs/assets/readme/home-recorded.png" width="240" alt="Journey 首页记录完成状态" /></td>
+  </tr>
+  <tr>
+    <td align="center"><strong>Journey · 近 7 天</strong></td>
+    <td align="center"><strong>Journey · 近 30 天</strong></td>
+    <td align="center"><strong>Journey · AI 总结</strong></td>
+  </tr>
+  <tr>
+    <td><img src="docs/assets/readme/journey-7-day.png" width="240" alt="Journey 近 7 天趋势" /></td>
+    <td><img src="docs/assets/readme/journey-30-day.png" width="240" alt="Journey 近 30 天趋势" /></td>
+    <td><img src="docs/assets/readme/journey-ai-summary.png" width="240" alt="Journey AI 7 天总结" /></td>
+  </tr>
+  <tr>
+    <td align="center"><strong>Journey · 记录时间线</strong></td>
+    <td align="center"><strong>我的 · 画像与目标</strong></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td><img src="docs/assets/readme/journey-timeline.png" width="240" alt="Journey 饮食与运动记录时间线" /></td>
+    <td><img src="docs/assets/readme/profile-redacted.png" width="240" alt="Journey 个人画像和目标页面，账号信息已隐藏" /></td>
+    <td></td>
+  </tr>
+</table>
 
 ## 快速开始
 

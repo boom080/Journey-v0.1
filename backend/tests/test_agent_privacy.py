@@ -122,6 +122,33 @@ def test_unconsented_api_and_direct_router_never_construct_or_call_provider(
     assert RecordingAdapter.calls == []
 
 
+def test_local_personal_mode_skips_deployment_review_but_keeps_account_consent(
+    external, client, register_user, monkeypatch
+):
+    monkeypatch.setenv("APP_ENV", "local")
+    monkeypatch.setenv("AGENT_PROVIDER_REVIEW_REQUIRED", "false")
+    monkeypatch.delenv("AGENT_PROVIDER_REVIEW_JSON", raising=False)
+    get_settings.cache_clear()
+    account = register_user()
+
+    state = client.get(PRIVACY, headers=headers(account)).json()
+    assert state["enabled"] is True
+    assert state["consent_granted"] is False
+    assert "仅限本机" in state["notice"]
+
+    blocked = client.post(
+        "/api/v1/agent/runs", headers=headers(account), json={"message": "午餐吃了鸡肉"}
+    )
+    assert blocked.status_code == 403
+    assert blocked.json()["error"]["code"] == "consent_required"
+    assert RecordingAdapter.constructions == 0
+
+    grant(client, account)
+    create_run(client, account)
+    assert RecordingAdapter.constructions == 1
+    assert RecordingAdapter.calls
+
+
 def test_consent_is_versioned_account_scoped_revocable_and_resume_is_gated(
     external, client, register_user, monkeypatch
 ):
@@ -285,6 +312,41 @@ def test_minimal_context_is_allowlisted_and_memory_does_not_send_run_ids():
         ),
     )
     assert "private-id" not in memory and "private-notes" not in memory
+
+
+def test_thirty_day_summary_prompt_only_sends_allowlisted_aggregates():
+    payload = {
+        "period": "近30天",
+        "coach_signals": {
+            "skill": {"name": "journey_coach", "version": "1.0.0", "secret": "hidden"},
+            "period": {
+                "period_days": 30,
+                "record_count": 8,
+                "record_days": 7,
+                "food_days": 6,
+                "activity_minutes": 90,
+                "meal_counts": {"lunch": 5},
+                "raw_records": [{"name": "private-meal"}],
+            },
+            "recent_7_days": {"period_days": 7, "record_count": 3},
+            "goal": {"kind": "lose_fat", "user_id": "private-id"},
+            "profile": {"birth_date": "1990-01-01"},
+        },
+        "knowledge": [
+            {"chunk_id": "chunk-1", "title": "公开知识", "text": "public", "secret": "hidden"}
+        ],
+    }
+    result = json.loads(prepare_model_prompt("thirty_day_summary", json.dumps(payload)))
+    assert result["period"] == "近30天"
+    assert result["coach_signals"]["period"]["record_count"] == 8
+    assert result["coach_signals"]["period"]["activity_minutes"] == 90
+    assert result["coach_signals"]["goal"] == {"kind": "lose_fat"}
+    serialized = json.dumps(result)
+    assert "raw_records" not in serialized
+    assert "private-meal" not in serialized
+    assert "private-id" not in serialized
+    assert "birth_date" not in serialized
+    assert "secret" not in serialized
 
 
 def test_delete_contract_removes_agent_graph_and_replays_but_preserves_records(

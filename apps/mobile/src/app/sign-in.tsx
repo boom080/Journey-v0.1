@@ -11,6 +11,50 @@ import { ApiError } from '@/lib/api';
 import { useAuth } from '@/providers/auth-provider';
 import { useJourneyTheme } from '@/theme/theme-provider';
 
+const EMAIL_PATTERN = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+const USERNAME_PATTERN = /^[a-zA-Z][a-zA-Z0-9_]{2,31}$/;
+
+function utf8ByteLength(value: string) {
+  return Array.from(value).reduce((total, character) => {
+    const codePoint = character.codePointAt(0) ?? 0;
+    if (codePoint <= 0x7f) return total + 1;
+    if (codePoint <= 0x7ff) return total + 2;
+    if (codePoint <= 0xffff) return total + 3;
+    return total + 4;
+  }, 0);
+}
+
+function getDisplayNameError(value: string) {
+  if (!value) return '';
+  const normalized = value.trim();
+  if (!normalized) return '昵称不能只包含空格';
+  if (Array.from(normalized).length > 50) return '昵称不能超过 50 个字符';
+  return '';
+}
+
+function getEmailError(value: string) {
+  if (!value) return '';
+  if (!EMAIL_PATTERN.test(value.trim())) return '请输入有效邮箱，例如 name@example.com';
+  return '';
+}
+
+function getUsernameError(value: string) {
+  if (!value) return '';
+  if (!USERNAME_PATTERN.test(value.trim())) return '用户名需为 3—32 位，以字母开头，只能包含字母、数字或下划线';
+  return '';
+}
+
+function getPasswordError(value: string) {
+  if (!value) return '';
+  const byteLength = utf8ByteLength(value);
+  if (byteLength < 10) return '密码至少需要 10 个 UTF-8 字节';
+  if (byteLength > 72) return '密码不能超过 72 个 UTF-8 字节';
+  if (!/[a-z]/.test(value) || !/[A-Z]/.test(value) || !/\d/.test(value)) {
+    return '密码必须同时包含大写字母、小写字母和数字';
+  }
+  return '';
+}
+
 export default function SignInScreen() {
   const theme = useJourneyTheme();
   const { signIn, signUp } = useAuth();
@@ -23,6 +67,13 @@ export default function SignInScreen() {
   const [displayName, setDisplayName] = useState('');
   const [pending, setPending] = useState(false);
   const [error, setError] = useState('');
+  const displayNameError = getDisplayNameError(displayName);
+  const emailError = getEmailError(email);
+  const usernameError = getUsernameError(username);
+  const passwordError = getPasswordError(password);
+  const registrationComplete = Boolean(displayName.trim() && email.trim() && username.trim() && password);
+  const registrationValid = registrationComplete && !displayNameError && !emailError && !usernameError && !passwordError;
+  const visibleRegistrationErrorCount = [displayNameError, emailError, usernameError, passwordError].filter(Boolean).length;
 
   async function submit(testAccount?: LocalTestAccount) {
     setPending(true);
@@ -68,11 +119,14 @@ export default function SignInScreen() {
               </>
             ) : (
               <>
-                <Field label="昵称" value={displayName} onChangeText={setDisplayName} />
-                <Field label="邮箱" value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address" />
-                <Field label="用户名" hint="3—32 位，登录时也可使用" value={username} onChangeText={setUsername} autoCapitalize="none" />
-                <Field label="密码" hint="10—72 个 UTF-8 字节" value={password} onChangeText={setPassword} secureTextEntry />
-                <Button loading={pending} disabled={!displayName.trim() || !email.trim() || !username.trim() || password.length < 10} onPress={() => void submit()}>创建并登录</Button>
+                <Field label="昵称" error={displayNameError} value={displayName} onChangeText={setDisplayName} />
+                <Field label="邮箱" error={emailError} value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address" />
+                <Field label="用户名" hint="3—32 位，以字母开头，可使用字母、数字和下划线" error={usernameError} value={username} onChangeText={setUsername} autoCapitalize="none" />
+                <Field label="密码" hint="至少 10 位，包含大写字母、小写字母和数字" error={passwordError} value={password} onChangeText={setPassword} secureTextEntry />
+                {visibleRegistrationErrorCount > 0 && (
+                  <Notice tone="warning">还有 {visibleRegistrationErrorCount} 项格式不正确，请按红色提示修改。</Notice>
+                )}
+                <Button loading={pending} disabled={!registrationValid} onPress={() => void submit()}>创建并登录</Button>
               </>
             )}
             {!!error && <Notice tone="error">{error}</Notice>}

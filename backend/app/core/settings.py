@@ -75,6 +75,7 @@ class Settings:
     agent_provider_policy_url: str = ""
     agent_provider_retention_notice: str = ""
     agent_data_retention_days: int = 7
+    agent_provider_review_required: bool = True
     agent_provider_review_json: str = field(default="", repr=False)
 
 
@@ -284,6 +285,9 @@ def get_settings() -> Settings:
     agent_provider_policy_url = os.getenv("AGENT_PROVIDER_POLICY_URL", "").strip()
     agent_provider_retention_notice = os.getenv("AGENT_PROVIDER_RETENTION_NOTICE", "").strip()
     agent_data_retention_days = _positive_int("AGENT_DATA_RETENTION_DAYS", 7)
+    agent_provider_review_required = _boolean("AGENT_PROVIDER_REVIEW_REQUIRED", True)
+    if not agent_provider_review_required and environment != "local":
+        raise RuntimeError("AGENT_PROVIDER_REVIEW_REQUIRED can only be false when APP_ENV=local")
     if agent_data_retention_days > 30:
         raise RuntimeError("AGENT_DATA_RETENTION_DAYS must not exceed 30")
     if agent_external_enabled and agent_provider != "mock":
@@ -396,5 +400,6 @@ def get_settings() -> Settings:
         agent_provider_policy_url=agent_provider_policy_url,
         agent_provider_retention_notice=agent_provider_retention_notice,
         agent_data_retention_days=agent_data_retention_days,
+        agent_provider_review_required=agent_provider_review_required,
         agent_provider_review_json=os.getenv("AGENT_PROVIDER_REVIEW_JSON", ""),
     )

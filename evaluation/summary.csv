@@ -1,0 +1,57 @@
+section,metric,value,numerator,denominator,formula,note
+tests,executed_tests,235,,,count(testcase); repeated environment-debug runs excluded,
+tests,pass_rate,0.9914893617021276,233,235,passed / executed incl failure and error,Mixed unit/component/API tests; not all browser E2E
+reliability,write_success_rate,1.0,7,7,scenarios with at least one write / scenarios,At least one write does not imply exactly once
+reliability,exactly_once_rate,0.8571428571428571,6,7,scenarios with exactly one new row / scenarios,
+reliability,excess_duplicate_rows,1,,,"sum(max(new_rows - 1,0))",
+reliability,idempotency_rate,0.8,4,5,replay scenarios with exactly-once outcome / replay scenarios,
+reliability,simulated_recovery_rate,1.0,2,2,successful sequential retry/lost-response recovery / simulated recovery scenarios,No physical network fault or process restart
+rag,question_count,60,,,count(executed questions),
+rag,macro_recall_at_3,1.0,,40,mean(|top3 docs intersect gold docs| / |gold docs|),Existing gold pending human review
+rag,gold_document_citation_membership,0.8955223880597015,60,67,gold-matching citations / emitted citations on answerable questions,Proxy; valid extra documents can be penalized; not semantic citation correctness
+rag,reference_term_full_coverage_rate,0.9,36,40,answers covering every reference term group / answerable questions,"Lexical proxy, not human answer correctness"
+rag,unanswerable_abstention_marker_rate,1.0,20,20,unanswerable cases matching refusal markers / unanswerable cases,Includes retrieval-level no-context refusal
+rag,unanswerable_nonabstention_proxy,0.0,0,20,unanswerable cases without refusal marker / unanswerable cases,Not a measured semantic hallucination rate
+rag,semantic_citation_correctness,,,,human approved labels / applicable cases,当前无法测量：缺逐题人工语义审核标签
+rag,citation_answer_consistency,,,,human approved labels / applicable cases,当前无法测量：缺逐题人工语义审核标签
+rag,human_answer_correctness,,,,human approved labels / applicable cases,当前无法测量：缺逐题人工语义审核标签
+rag,semantic_hallucination_rate,,,,human approved labels / applicable cases,当前无法测量：缺逐题人工语义审核标签
+rag,mean_retrieval_ms,0.9887972002616152,,60,sum(retrieval_ms) / questions,
+parsing,sample_count,74,,,count(executed fixed cases),Gold labels are pending human review
+parsing,case_pass_rate,0.689189,51,74,passed case / executed cases,Pending human review
+parsing,intent_exact_rate,0.932432,69,74,exact intent matches / scored cases,Pending human review
+parsing.activity,duration_minutes_exact_rate,1.0,23,23,exact matches / explicitly scorable fields,Pending human review; null means no scorable sample
+parsing.activity,explicit_energy_kcal_exact_rate,1.0,2,2,exact matches / explicitly scorable fields,Pending human review; null means no scorable sample
+parsing.activity,intensity_exact_rate,1.0,12,12,exact matches / explicitly scorable fields,Pending human review; null means no scorable sample
+parsing.activity,item_recognition_exact_rate,0.653846,17,26,exact matches / explicitly scorable fields,Pending human review; null means no scorable sample
+parsing.activity,name_exact_rate,0.653846,17,26,exact matches / explicitly scorable fields,Pending human review; null means no scorable sample
+parsing.food,explicit_energy_kcal_exact_rate,1.0,6,6,exact matches / explicitly scorable fields,Pending human review; null means no scorable sample
+parsing.food,item_recognition_exact_rate,0.880952,37,42,exact matches / explicitly scorable fields,Pending human review; null means no scorable sample
+parsing.food,meal_type_exact_rate,0.966667,29,30,exact matches / explicitly scorable fields,Pending human review; null means no scorable sample
+parsing.food,name_exact_rate,1.0,37,37,exact matches / explicitly scorable fields,Pending human review; null means no scorable sample
+parsing.food,quantity_exact_rate,1.0,28,28,exact matches / explicitly scorable fields,Pending human review; null means no scorable sample
+parsing,model_invocation_success_rate,1.0,148,148,non-fallback invocations / all invocations,"Availability measure, not semantic correctness"
+performance.rag_workflow,mean_ms,953.9613783839741,,60,see performance definitions,
+performance.rag_workflow,p50_ms,1124.9278129835147,,60,see performance definitions,
+performance.rag_workflow,p95_ms,2047.7305820095353,,60,see performance definitions,
+performance.rag_workflow,mean_input_tokens_per_task,346.81666666666666,,60,see performance definitions,
+performance.rag_workflow,mean_output_tokens_per_task,131.78333333333333,,60,see performance definitions,
+performance.rag_workflow,mean_configured_cost_usd_per_task,8.545366666666666e-05,,60,see performance definitions,configured USD estimates are not billing; CNY unavailable
+performance.rag_workflow,cost_cny,,,60,see performance definitions,configured USD estimates are not billing; CNY unavailable
+performance.rag_workflow,actual_billed_cost,,,60,see performance definitions,configured USD estimates are not billing; CNY unavailable
+performance.thirty_day_summary_uncached,mean_ms,4415.120808349457,,20,see performance definitions,
+performance.thirty_day_summary_uncached,p50_ms,4478.591312494245,,20,see performance definitions,
+performance.thirty_day_summary_uncached,p95_ms,4956.2735829968005,,20,see performance definitions,
+performance.thirty_day_summary_uncached,mean_input_tokens_per_task,1202,,20,see performance definitions,
+performance.thirty_day_summary_uncached,mean_output_tokens_per_task,740.4,,20,see performance definitions,
+performance.thirty_day_summary_uncached,mean_configured_cost_usd_per_task,0.000375592,,20,see performance definitions,configured USD estimates are not billing; CNY unavailable
+performance.thirty_day_summary_uncached,cost_cny,,,20,see performance definitions,configured USD estimates are not billing; CNY unavailable
+performance.thirty_day_summary_uncached,actual_billed_cost,,,20,see performance definitions,configured USD estimates are not billing; CNY unavailable
+performance.health_parsing_case,mean_ms,2236,,74,see performance definitions,
+performance.health_parsing_case,p50_ms,2197,,74,see performance definitions,
+performance.health_parsing_case,p95_ms,2959,,74,see performance definitions,
+performance.health_parsing_case,mean_input_tokens_per_task,932.8648648648649,,74,see performance definitions,
+performance.health_parsing_case,mean_output_tokens_per_task,183.7027027027027,,74,see performance definitions,
+performance.health_parsing_case,mean_configured_cost_usd_per_task,0.00018203783783783784,,74,see performance definitions,configured USD estimates are not billing; CNY unavailable
+performance.health_parsing_case,cost_cny,,,74,see performance definitions,configured USD estimates are not billing; CNY unavailable
+performance.health_parsing_case,actual_billed_cost,,,74,see performance definitions,configured USD estimates are not billing; CNY unavailable

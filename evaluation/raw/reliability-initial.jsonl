@@ -1,0 +1,6 @@
+{"scenario": "normal", "rows_before": 0, "rows_after": 1, "extra_rows": 0, "status": 201, "replay_status": null}
+{"scenario": "edited", "rows_before": 1, "rows_after": 2, "extra_rows": 0, "status": 201, "replay_status": null}
+{"scenario": "double_click", "rows_before": 2, "rows_after": 3, "extra_rows": 0, "status": 201, "replay_status": 201}
+{"scenario": "retry", "rows_before": 3, "rows_after": 4, "extra_rows": 0, "status": 201, "replay_status": 201}
+{"scenario": "lost_response", "rows_before": 4, "rows_after": 5, "extra_rows": 0, "status": 201, "replay_status": 201}
+{"scenario": "same_task", "rows_before": 5, "rows_after": 6, "extra_rows": 0, "status": 201, "replay_status": 409}

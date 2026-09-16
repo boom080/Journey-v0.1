@@ -65,6 +65,32 @@ describe('sign-in page', () => {
     }));
   });
 
+  test('registration explains every invalid field before enabling submission', async () => {
+    const screen = await render(<SignInScreen />);
+    await fireEvent.press(screen.getByRole('button', { name: '创建账号' }));
+    await fireEvent.changeText(screen.getByLabelText('昵称'), 'Just-test01');
+    await fireEvent.changeText(screen.getByLabelText('邮箱'), '1321161233qq.com');
+    await fireEvent.changeText(screen.getByLabelText('用户名'), 'user-01');
+    await fireEvent.changeText(screen.getByLabelText('密码'), 'Test2026');
+
+    expect(screen.getByText('请输入有效邮箱，例如 name@example.com')).toBeTruthy();
+    expect(screen.getByText('用户名需为 3—32 位，以字母开头，只能包含字母、数字或下划线')).toBeTruthy();
+    expect(screen.getByText('密码至少需要 10 个 UTF-8 字节')).toBeTruthy();
+    expect(screen.getByText('还有 3 项格式不正确，请按红色提示修改。')).toBeTruthy();
+    await fireEvent.press(screen.getByRole('button', { name: '创建并登录' }));
+    expect(mockSignUp).not.toHaveBeenCalled();
+
+    await fireEvent.changeText(screen.getByLabelText('邮箱'), '1321161233@qq.com');
+    await fireEvent.changeText(screen.getByLabelText('用户名'), 'user_01');
+    await fireEvent.changeText(screen.getByLabelText('密码'), 'Journey2026');
+    expect(screen.queryByText(/格式不正确/)).toBeNull();
+    await fireEvent.press(screen.getByRole('button', { name: '创建并登录' }));
+
+    await waitFor(() => expect(mockSignUp).toHaveBeenCalledWith({
+      email: '1321161233@qq.com', username: 'user_01', password: 'Journey2026', display_name: 'Just-test01',
+    }));
+  });
+
   test('authentication failure renders an explicit error state', async () => {
     mockSignIn.mockRejectedValueOnce(new Error('offline'));
     const screen = await render(<SignInScreen />);

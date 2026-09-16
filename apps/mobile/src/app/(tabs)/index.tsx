@@ -1,17 +1,18 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { router, type Href, useFocusEffect } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { journeySpacing, journeyTypography } from '@journey/design-tokens';
-import type { AgentCandidate, AgentRunResponse, AgentSpecialist } from '@journey/contracts';
+import type { AgentCandidate, AgentConfirmationRequest, AgentRunResponse, MealType } from '@journey/contracts';
 
 import { AgentStatusStrip, WarmHomeHero, WarmHomeMetrics, warmHomeColors } from '@/components/home-overview';
 import { ScreenShell } from '@/components/screen-shell';
-import { Button, Card, EmptyState, ErrorState, LoadingState, Notice, SectionTitle } from '@/components/ui';
-import { isAgentDebugDetailsEnabled, isFoodImageAnalysisEnabled } from '@/config/environment';
+import { Button, Card, Chip, EmptyState, LoadingState, Notice, SectionTitle } from '@/components/ui';
+import { isFoodImageAnalysisEnabled } from '@/config/environment';
 import {
   ApiError,
+  confirmAgentCandidate,
   fetchAgentPrivacy,
   fetchAgentRunTrace,
   getAgentErrorMessage,
@@ -19,6 +20,7 @@ import {
   runAgent,
   subscribeToAgentDataDeleted,
 } from '@/lib/api';
+import { formatNumber, intensityLabels, mealLabels } from '@/lib/format';
 import { classifyMockInput, type MockCandidate } from '@/lib/mock-intent';
 import { useSync } from '@/providers/sync-provider';
 import { useJourneyTheme } from '@/theme/theme-provider';
@@ -29,29 +31,33 @@ function candidateParams(candidate: Exclude<MockCandidate, { kind: 'knowledge' }
   return { kind: 'weight', weight: String(candidate.weightKg) };
 }
 
-function agentCandidateParams(candidate: AgentCandidate, runId: string, resumeRequired: boolean) {
-  const common = { candidateId: candidate.candidate_id, confirmationToken: candidate.confirmation_token, runId, resumeRequired: resumeRequired ? 'true' : 'false' };
-  if (candidate.kind === 'food') return { ...common, kind: 'food', name: candidate.payload.name, energy: String(candidate.payload.energy_kcal), meal: candidate.payload.meal_type, portion: candidate.payload.portion_amount == null ? '' : String(candidate.payload.portion_amount), portionUnit: candidate.payload.portion_unit ?? '', timestamp: candidate.payload.recorded_at };
-  if (candidate.kind === 'activity') return { ...common, kind: 'activity', name: candidate.payload.name, energy: String(candidate.payload.energy_kcal), duration: String(candidate.payload.duration_minutes), intensity: candidate.payload.intensity, timestamp: candidate.payload.recorded_at };
-  return { ...common, kind: 'weight', weight: String(candidate.payload.weight_kg), timestamp: candidate.payload.measured_at };
+function agentConfirmationRequest(candidate: AgentCandidate): AgentConfirmationRequest {
+  return {
+    confirmation_token: candidate.confirmation_token,
+    kind: candidate.kind,
+    payload: candidate.payload,
+  } as AgentConfirmationRequest;
 }
 
-const specialistLabels: Record<AgentSpecialist, string> = {
-  orchestrator: 'Orchestrator',
-  record_agent: 'Record Agent',
-  health_knowledge_agent: 'Knowledge Agent',
-  journey_summary_agent: 'Summary Agent',
-};
-
-function observationDetail(summary: Record<string, unknown>): string {
-  if (typeof summary.candidate_count === 'number') return `候选 ${summary.candidate_count} 条`;
-  if (typeof summary.chunk_count === 'number') {
-    const score = typeof summary.retrieval_score === 'number' ? ` · 最高相关度 ${summary.retrieval_score.toFixed(3)}` : '';
-    return `检索 ${summary.chunk_count} 个片段${score}`;
+function agentCandidateDetail(candidate: AgentCandidate): string {
+  if (candidate.kind === 'food') {
+    const amount = candidate.payload.portion_amount ?? 1;
+    const unit = candidate.payload.portion_unit ?? '份';
+    return `${formatNumber(amount, 1)} ${unit} · 约 ${formatNumber(candidate.payload.energy_kcal)} kcal`;
   }
-  if (typeof summary.data_range_days === 'number') return `读取近 ${summary.data_range_days} 天结构化数据`;
-  if (typeof summary.citation_count === 'number') return `引用 ${summary.citation_count} 条`;
-  return '结构化结果已记录';
+  if (candidate.kind === 'activity') {
+    return `${candidate.payload.duration_minutes} 分钟 · ${intensityLabels[candidate.payload.intensity]} · 约 ${formatNumber(candidate.payload.energy_kcal)} kcal`;
+  }
+  return `${formatNumber(candidate.payload.weight_kg, 1)} kg`;
+}
+
+const mealOptions: MealType[] = ['breakfast', 'lunch', 'dinner', 'snack', 'other'];
+
+function runStatus(status: string | null, fallback: AgentRunResponse['status']): AgentRunResponse['status'] {
+  return status === 'completed' || status === 'degraded' ||
+    status === 'clarification_required' || status === 'waiting_for_user'
+    ? status
+    : fallback;
 }
 
 function isAgentPrivacyError(error: unknown): error is ApiError {
@@ -60,7 +66,6 @@ function isAgentPrivacyError(error: unknown): error is ApiError {
 
 export default function HomeScreen() {
   const theme = useJourneyTheme();
-  const debugDetailsEnabled = isAgentDebugDetailsEnabled();
   const sync = useSync();
   const queryClient = useQueryClient();
   const [input, setInput] = useState('');
@@ -69,6 +74,8 @@ export default function HomeScreen() {
   const [agentThreadId, setAgentThreadId] = useState<string>();
   const [agentPending, setAgentPending] = useState(false);
   const [agentError, setAgentError] = useState('');
+  const [agentMessage, setAgentMessage] = useState('');
+  const [openMealCandidateId, setOpenMealCandidateId] = useState<string>();
   const [resumeRunId, setResumeRunId] = useState<string>();
   const agentPrivacyChecked = useRef(false);
   const agentMemoryVersion = useRef(0);
@@ -87,6 +94,8 @@ export default function HomeScreen() {
     setAgentThreadId(undefined);
     setResumeRunId(undefined);
     setAgentError('');
+    setAgentMessage('');
+    setOpenMealCandidateId(undefined);
     agentPrivacyChecked.current = false;
   }), [queryClient]);
 
@@ -100,6 +109,7 @@ export default function HomeScreen() {
       runId: string;
       candidateId: string;
       progress: AgentRunResponse['confirmation_progress'];
+      runStatus?: string | null;
     }>(['agent-confirmation-update']);
     if (confirmationUpdate) {
       setAgentResult((current) => current?.run_id === confirmationUpdate.runId ? {
@@ -108,6 +118,7 @@ export default function HomeScreen() {
           (item) => item.candidate_id !== confirmationUpdate.candidateId,
         ),
         confirmation_progress: confirmationUpdate.progress,
+        status: runStatus(confirmationUpdate.runStatus ?? null, current.status),
       } : current);
       queryClient.removeQueries({ queryKey: ['agent-confirmation-update'], exact: true });
     }
@@ -145,7 +156,7 @@ export default function HomeScreen() {
 
   async function analyze() {
     const memoryVersion = agentMemoryVersion.current;
-    setAgentError(''); setAgentResult(null); setCandidate(null);
+    setAgentError(''); setAgentMessage(''); setAgentResult(null); setCandidate(null); setOpenMealCandidateId(undefined);
     if (!sync.isOnline) {
       const local = classifyMockInput(input);
       if (local?.kind === 'knowledge') setCandidate(local);
@@ -190,6 +201,98 @@ export default function HomeScreen() {
     setCandidate(null);
     setAgentResult(null);
     setAgentError('');
+    setAgentMessage('');
+    setOpenMealCandidateId(undefined);
+  }
+
+  function updateCandidateMeal(candidateId: string, mealType: MealType) {
+    setAgentResult((current) => current ? {
+      ...current,
+      candidates: current.candidates.map((item) => item.candidate_id === candidateId && item.kind === 'food'
+        ? { ...item, payload: { ...item.payload, meal_type: mealType } }
+        : item),
+    } : current);
+    setOpenMealCandidateId(undefined);
+  }
+
+  async function refreshConfirmedRecords() {
+    await sync.fetchJourney(7, undefined, 7);
+    await queryClient.invalidateQueries({ queryKey: ['journey'] });
+    await home.refetch();
+  }
+
+  async function confirmAllCandidates() {
+    if (!agentResult?.candidates.length || agentPending || !sync.isOnline) return;
+    const memoryVersion = agentMemoryVersion.current;
+    const candidates = [...agentResult.candidates];
+    let confirmed = 0;
+    let finalRunStatus: string | null = agentResult.status;
+    let resumeAvailable = false;
+    let continuationPending = false;
+    setAgentPending(true); setAgentError(''); setAgentMessage('');
+    try {
+      for (const item of candidates) {
+        const confirmation = await confirmAgentCandidate(
+          item.candidate_id,
+          agentConfirmationRequest(item),
+          `agent-${item.candidate_id}`,
+        );
+        if (memoryVersion !== agentMemoryVersion.current) return;
+        confirmed += 1;
+        setOpenMealCandidateId((current) => current === item.candidate_id ? undefined : current);
+        finalRunStatus = confirmation.run_status;
+        resumeAvailable = confirmation.resume_available;
+        setAgentResult((current) => current ? {
+          ...current,
+          candidates: current.candidates.filter(
+            (candidateItem) => candidateItem.candidate_id !== item.candidate_id,
+          ),
+          confirmation_progress: confirmation.confirmation_progress,
+          status: runStatus(confirmation.run_status, current.status),
+        } : current);
+      }
+      if (resumeAvailable) {
+        try {
+          const continuation = await resumeAgentRun(agentResult.run_id);
+          if (memoryVersion !== agentMemoryVersion.current) return;
+          setAgentResult(continuation);
+        } catch {
+          if (memoryVersion !== agentMemoryVersion.current) return;
+          const trace = await fetchAgentRunTrace(agentResult.run_id).catch(() => null);
+          if (memoryVersion !== agentMemoryVersion.current) return;
+          if (trace && trace.status !== 'waiting_for_user') {
+            setAgentResult(null);
+          } else {
+            continuationPending = true;
+            setResumeRunId(agentResult.run_id);
+            queryClient.setQueryData(['agent-resume-needed'], agentResult.run_id);
+          }
+        }
+      } else if (runStatus(finalRunStatus, agentResult.status) === 'completed') {
+        setAgentResult(null);
+      }
+      try {
+        await refreshConfirmedRecords();
+      } catch {
+        if (memoryVersion !== agentMemoryVersion.current) return;
+        setInput('');
+        setAgentMessage(`已记录 ${confirmed} 条；首页自动刷新失败时可点“刷新”。需要调整时可到 Journey 中编辑。`);
+        return;
+      }
+      if (memoryVersion !== agentMemoryVersion.current) return;
+      setInput('');
+      setAgentMessage(continuationPending
+        ? `已记录 ${confirmed} 条，今天的变化已更新；后续总结可点击“继续执行”。`
+        : `已记录 ${confirmed} 条，今天的变化已更新。需要调整时可到 Journey 中编辑。`);
+    } catch (reason) {
+      if (memoryVersion !== agentMemoryVersion.current) return;
+      if (confirmed > 0) await refreshConfirmedRecords().catch(() => undefined);
+      setAgentError(confirmed > 0
+        ? `已记录 ${confirmed}/${candidates.length} 条；剩余记录尚未保存，请再次点击确认。`
+        : getAgentErrorMessage(reason));
+    } finally {
+      if (memoryVersion === agentMemoryVersion.current) setAgentPending(false);
+    }
   }
 
   return (
@@ -210,59 +313,50 @@ export default function HomeScreen() {
       {!!resumeRunId && <View style={styles.resumeBlock}><Notice tone="info">候选已保存，但 Agent 后续步骤尚未执行。</Notice><Button variant="secondary" loading={agentPending} onPress={() => void continueRun()}>继续执行</Button></View>}
       {sync.pendingCount > 0 && <Notice tone={sync.status === 'error' ? 'error' : 'info'}>{sync.pendingCount} 条记录等待同步。{sync.isOnline ? '正在尝试上传。' : '联网后将自动上传。'}</Notice>}
       {!!agentError && <Notice tone="error">{agentError}</Notice>}
+      {!!agentMessage && <Notice tone="success">{agentMessage}</Notice>}
 
       {agentResult && (
         <Card>
           <SectionTitle>处理结果</SectionTitle>
-          {debugDetailsEnabled && (
-            <>
-              <Text style={[styles.explanation, { color: theme.colors.primaryStrong }]}>协作链路：{agentResult.selected_agents.map((item) => specialistLabels[item]).join(' → ')}</Text>
-              <Text style={[styles.explanation, { color: theme.colors.textMuted }]}>运行模式：{agentResult.usage.provider === 'mock' ? 'MOCK' : 'REAL'} · {agentResult.usage.provider}/{agentResult.usage.model}</Text>
-              {agentResult.plan && (
-                <View style={styles.planBlock}>
-                  <Text style={[styles.planTitle, { color: theme.colors.text }]}>Agent 执行计划</Text>
-                  {agentResult.plan.steps.map((step) => {
-                    const result = agentResult.step_results.find((item) => item.step_id === step.id);
-                    return (
-                      <View key={step.id} style={styles.planRow}>
-                        <Text style={[styles.planStatus, { color: theme.colors.primaryStrong }]}>
-                          {result?.status === 'completed' ? '✓' : result?.status === 'awaiting_confirmation' ? '待确认' : result?.status === 'failed' ? '失败' : result?.status === 'skipped' ? '跳过' : '计划'}
-                        </Text>
-                        <View style={styles.planCopy}>
-                          <Text style={[styles.explanation, { color: theme.colors.text }]}>{specialistLabels[result?.specialist ?? step.specialist ?? 'orchestrator']} · {step.tool}</Text>
-                          <Text style={[styles.explanation, { color: theme.colors.textMuted }]}>{result?.message ?? step.reason}{result ? ` · ${result.duration_ms} ms` : ''}</Text>
-                        </View>
-                      </View>
-                    );
-                  })}
-                  {agentResult.verification && <Text style={[styles.explanation, { color: theme.colors.textMuted }]}>校验：{agentResult.verification.reason} · 重规划 {agentResult.verification.replan_count}/2</Text>}
-                  {agentResult.observations.filter((item) => item.recoverable || item.step_id.startsWith('recovery-')).map((item) => (
-                    <Text key={`${item.step_id}-${item.status}`} style={[styles.explanation, { color: theme.colors.textMuted }]}>
-                      {item.step_id.startsWith('recovery-') ? '降级工具' : '可恢复异常'}：{item.tool} · {item.status}
-                    </Text>
-                  ))}
-                  {agentResult.observations.filter((item) => !item.recoverable && !item.step_id.startsWith('recovery-')).map((item) => (
-                    <Text key={`trace-${item.step_id}-${item.status}`} style={[styles.explanation, { color: theme.colors.textMuted }]}>Trace · {specialistLabels[item.specialist]} · {item.tool} · {observationDetail(item.output_summary)}</Text>
-                  ))}
-                  {agentResult.confirmation_progress && <Text style={[styles.explanation, { color: theme.colors.textMuted }]}>Confirmation · 已确认 {agentResult.confirmation_progress.confirmed}/{agentResult.confirmation_progress.total} · 待确认 {agentResult.confirmation_progress.pending}</Text>}
-                  {!!agentThreadId && <Text style={[styles.explanation, { color: theme.colors.textMuted }]}>当前为连续对话线程；后续输入会复用结构化摘要。</Text>}
-                </View>
-              )}
-            </>
-          )}
-          {agentResult.status === 'waiting_for_user' && <Notice tone="info">请确认全部候选，Journey 才会写入记录并继续生成建议。</Notice>}
+          {agentResult.status === 'waiting_for_user' && agentResult.candidates.length > 0 && <Notice tone="info">已按常见情况补全默认值。核对后一次确认即可写入全部记录。</Notice>}
           {!!agentResult.answer && <Text style={[styles.copy, { color: theme.colors.text }]}>{agentResult.answer}</Text>}
           {agentResult.candidates.map((item) => <View key={item.candidate_id} style={styles.resultBlock}>
             <Text style={[styles.candidateTitle, { color: theme.colors.text }]}>{item.kind === 'food' ? item.payload.name : item.kind === 'activity' ? item.payload.name : `${item.payload.weight_kg} kg`}</Text>
-            <Text style={[styles.explanation, { color: theme.colors.textMuted }]}>{item.explanation}</Text>
-            <Button onPress={() => router.push({ pathname: '/record/[kind]', params: agentCandidateParams(item, agentResult.run_id, Boolean(agentResult.plan && agentResult.step_results.length < agentResult.plan.steps.length)) })}>打开并确认候选</Button>
+            {item.kind === 'food' ? <>
+              <View style={styles.candidateDetailRow}>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel={`餐别：${mealLabels[item.payload.meal_type]}，点击修改`}
+                  onPress={() => setOpenMealCandidateId((current) => current === item.candidate_id ? undefined : item.candidate_id)}
+                  style={({ pressed }) => [styles.inlineSelect, {
+                    backgroundColor: theme.colors.background,
+                    borderColor: theme.colors.border,
+                    opacity: pressed ? 0.72 : 1,
+                  }]}
+                >
+                  <Text style={[styles.inlineSelectText, { color: theme.colors.primaryStrong }]}>{mealLabels[item.payload.meal_type]}⌄</Text>
+                </Pressable>
+                <Text style={[styles.candidateDetail, { color: theme.colors.text }]}>· {agentCandidateDetail(item)}</Text>
+              </View>
+              {openMealCandidateId === item.candidate_id && <View accessibilityLabel="选择餐别" style={styles.inlineOptions}>
+                {mealOptions.map((meal) => <Chip
+                  key={meal}
+                  label={mealLabels[meal]}
+                  selected={meal === item.payload.meal_type}
+                  onPress={() => updateCandidateMeal(item.candidate_id, meal)}
+                />)}
+              </View>}
+            </> : <Text style={[styles.candidateDetail, { color: theme.colors.text }]}>{agentCandidateDetail(item)}</Text>}
           </View>)}
+          {agentResult.candidates.length > 0 && <>
+            <Button loading={agentPending} disabled={!sync.isOnline} onPress={() => void confirmAllCandidates()}>确认并记录 {agentResult.candidates.length} 条</Button>
+            <Text style={[styles.explanation, { color: theme.colors.textMuted }]}>确认后立即更新“今天的变化”；如需调整，可到 Journey 打开记录编辑。</Text>
+          </>}
           {agentResult.citations.map((citation) => <View key={citation.chunk_id} style={styles.citation}>
             <Text style={[styles.citationTitle, { color: theme.colors.text }]}>{citation.title} · v{citation.version}</Text>
             <Text style={[styles.explanation, { color: theme.colors.textMuted }]}>{citation.excerpt}</Text>
           </View>)}
-          {debugDetailsEnabled && <Text style={[styles.explanation, { color: theme.colors.textMuted }]}>意图：{agentResult.intents.map((item) => item.intent).join('、')} · {agentResult.usage.provider}/{agentResult.usage.model} · {agentResult.usage.latency_ms} ms · ${agentResult.usage.estimated_cost_usd.toFixed(6)}</Text>}
-          {agentResult.fallback_used && <Notice tone="info">当前使用受限降级结果，请核对内容后再继续。</Notice>}
+          {agentResult.fallback_used && <Notice tone="info">这是估算结果，请结合实际情况判断。</Notice>}
           <Text style={[styles.explanation, { color: theme.colors.textMuted }]}>{agentResult.safety_notice}</Text>
           <Button variant="ghost" onPress={() => setAgentResult(null)}>关闭结果</Button>
         </Card>
@@ -284,7 +378,9 @@ export default function HomeScreen() {
         </Card>
       )}
 
-      {home.isLoading ? <LoadingState label="正在同步今日数据…" /> : home.isError ? <ErrorState message="今日数据暂时不可用" onRetry={() => void home.refetch()} /> : home.data ? (
+      {home.isLoading ? <LoadingState label="正在同步今日数据…" /> : home.isError ? (
+        <EmptyState title="今天还没有记录" message="先从下方记下一条，今天的变化就会更新。" />
+      ) : home.data ? (
         <>
           <WarmHomeMetrics data={home.data} onRefresh={() => void home.refetch()} />
           {home.data.counts.food + home.data.counts.activity + home.data.counts.weight === 0 && <EmptyState title="今天还没有记录" message="随手记下一条，今天的变化就会跟着更新。" />}
@@ -310,13 +406,13 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   copy: { fontSize: journeyTypography.small, lineHeight: 22 },
   candidateTitle: { fontSize: journeyTypography.subtitle, fontWeight: '800' },
+  candidateDetail: { fontSize: journeyTypography.body, lineHeight: 24, fontWeight: '700' },
+  candidateDetailRow: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: journeySpacing.xs },
+  inlineSelect: { minHeight: 34, borderWidth: 1, borderRadius: 999, paddingHorizontal: 12, paddingVertical: 6, justifyContent: 'center' },
+  inlineSelectText: { fontSize: journeyTypography.small, fontWeight: '800' },
+  inlineOptions: { flexDirection: 'row', flexWrap: 'wrap', gap: journeySpacing.xs },
   explanation: { fontSize: journeyTypography.caption, lineHeight: 18 },
   resultBlock: { gap: journeySpacing.sm, paddingVertical: journeySpacing.sm },
-  planBlock: { gap: journeySpacing.sm, borderBottomWidth: 1, borderBottomColor: '#D7EBE1', paddingBottom: journeySpacing.md },
-  planTitle: { fontSize: journeyTypography.small, fontWeight: '900' },
-  planRow: { flexDirection: 'row', gap: journeySpacing.sm, alignItems: 'flex-start' },
-  planStatus: { minWidth: 42, fontSize: journeyTypography.caption, fontWeight: '900' },
-  planCopy: { flex: 1, gap: 2 },
   citation: { gap: journeySpacing.xs, borderTopWidth: 1, borderTopColor: '#D7EBE1', paddingTop: journeySpacing.sm },
   citationTitle: { fontSize: journeyTypography.small, fontWeight: '800' },
   quickRow: { flexDirection: 'row', flexWrap: 'wrap', gap: journeySpacing.sm },

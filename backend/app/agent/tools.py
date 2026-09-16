@@ -3,6 +3,7 @@ import re
 import time
 import uuid
 from datetime import UTC, datetime, timedelta
+from zoneinfo import ZoneInfo
 
 from sqlalchemy.orm import Session
 
@@ -46,6 +47,39 @@ def _food_fallback(text: str) -> FoodParsed:
     )
     name = re.sub(r"\d+(?:\.\d+)?\s*(?:千卡|大卡|kcal)", "", name, flags=re.I).strip(" ，,")
     return FoodParsed(meal_type=meal_type, name=name[:120] or "一份食物", energy_kcal=energy)
+
+
+def _food_meal_type(text: str, parsed_meal_type: str, local_hour: int) -> str:
+    explicit = (
+        "breakfast"
+        if re.search(r"(早餐|早饭)", text)
+        else "lunch"
+        if re.search(r"(午餐|午饭)", text)
+        else "dinner"
+        if re.search(r"(晚餐|晚饭)", text)
+        else "snack"
+        if re.search(r"(加餐|夜宵)", text)
+        else None
+    )
+    if explicit is not None:
+        return explicit
+    if 5 <= local_hour < 10:
+        return "breakfast"
+    if 10 <= local_hour < 15:
+        return "lunch"
+    if 15 <= local_hour < 17:
+        return "snack"
+    if 17 <= local_hour < 22:
+        return "dinner"
+    return parsed_meal_type
+
+
+def _default_food_portion(name: str) -> tuple[float, str]:
+    if re.search(r"(面|粉|饭|粥|汤|羹|馄饨|抄手|麻辣烫)", name):
+        return 1, "碗"
+    if re.search(r"(水|茶|咖啡|奶|果汁|饮料)", name):
+        return 1, "杯"
+    return 1, "份"
 
 
 def _activity_fallback(text: str) -> ActivityParsed:
@@ -120,30 +154,46 @@ def build_write_candidate(
     step_id: str | None = None,
 ) -> tuple[AgentCandidate, ModelInvocation]:
     if intent == "food":
+        recorded_at = datetime.now(UTC)
         invocation = model_router.generate(
             "food_text_parse",
             FoodParsed,
-            system_prompt="解析饮食为结构化候选，不执行写入。",
+            system_prompt=(
+                "解析饮食为结构化候选，不执行写入。用户未说明餐别时可返回 other；"
+                "用户未说明份量时给出合理的常见单份估算。"
+            ),
             user_prompt=text,
             fallback_factory=lambda: _food_fallback(text),
         )
         parsed = FoodParsed.model_validate(invocation.output)
+        default_amount, default_unit = _default_food_portion(parsed.name)
+        portion_amount = parsed.portion_amount or default_amount
+        portion_unit = parsed.portion_unit or (
+            "克"
+            if parsed.portion_amount is not None and parsed.portion_amount > 10
+            else default_unit
+        )
+        meal_type = _food_meal_type(
+            text,
+            parsed.meal_type,
+            recorded_at.astimezone(ZoneInfo(user.profile.timezone)).hour,
+        )
         candidate_id, token = create_confirmation(db, user, run_id, intent, step_id=step_id)
         return FoodAgentCandidate(
             kind="food",
             candidate_id=candidate_id,
             confirmation_token=token,
             payload=FoodRecordCreate(
-                recorded_at=datetime.now(UTC),
-                meal_type=parsed.meal_type,
+                recorded_at=recorded_at,
+                meal_type=meal_type,
                 name=parsed.name,
                 energy_kcal=parsed.energy_kcal,
-                portion_amount=parsed.portion_amount,
-                portion_unit=parsed.portion_unit,
+                portion_amount=portion_amount,
+                portion_unit=portion_unit,
                 source="agent",
                 source_ref=str(candidate_id),
             ),
-            explanation="Agent 只生成候选；热量为估算值，保存前可修改。",
+            explanation="已填入默认餐别、份量和热量估算；确认后可在 Journey 编辑。",
         ), invocation
     if intent == "activity":
         invocation = model_router.generate(

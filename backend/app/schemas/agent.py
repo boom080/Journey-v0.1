@@ -1,5 +1,5 @@
 import uuid
-from datetime import datetime
+from datetime import date, datetime
 from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -305,6 +305,70 @@ class RecommendationGenerated(BaseModel):
 class WeeklySummaryGenerated(BaseModel):
     summary: str = Field(min_length=1, max_length=1500)
     cited_chunk_ids: list[str] = Field(default_factory=list, max_length=5)
+
+
+class AgentSummaryPeriodStatistics(BaseModel):
+    period_days: Literal[7, 30]
+    start_date: date
+    end_date: date
+    record_count: int = Field(ge=0)
+    food_count: int = Field(ge=0)
+    activity_count: int = Field(ge=0)
+    weight_count: int = Field(ge=0)
+    total_intake_kcal: float = Field(ge=0)
+    total_activity_kcal: float = Field(ge=0)
+    days_with_records: int = Field(ge=0)
+    weight_change_kg: float | None = None
+
+
+class AgentSummaryGoal(BaseModel):
+    kind: Literal["lose_fat", "gain_muscle", "maintain"]
+    target_weight_kg: float | None = None
+    daily_energy_target_kcal: float | None = None
+
+
+class AgentSummaryStatistics(BaseModel):
+    last_30_days: AgentSummaryPeriodStatistics
+    last_7_days: AgentSummaryPeriodStatistics
+    goal: AgentSummaryGoal | None = None
+
+
+class AgentCoachFinding(BaseModel):
+    title: str = Field(min_length=1, max_length=48, description="行为结论，不复述统计字段")
+    evidence: str = Field(min_length=1, max_length=180, description="支持结论的周期与数字证据")
+    interpretation: str = Field(
+        min_length=1, max_length=180, description="证据对用户下一步决策的含义"
+    )
+
+
+class AgentCoachAction(BaseModel):
+    title: str = Field(min_length=1, max_length=48, description="明确的行动名称")
+    plan: str = Field(min_length=1, max_length=180, description="包含频率、数量或时间的7天执行计划")
+    reason: str = Field(min_length=1, max_length=180, description="行动与当前证据的关系")
+    success_metric: str = Field(
+        min_length=1, max_length=120, description="带数字、可在7天后核对的完成标准"
+    )
+
+
+class AgentSummaryContent(BaseModel):
+    headline: str = Field(min_length=1, max_length=120)
+    key_findings: list[AgentCoachFinding] = Field(min_length=2, max_length=3)
+    next_7_days: list[AgentCoachAction] = Field(min_length=2, max_length=3)
+
+
+class AgentSummaryGenerated(AgentSummaryContent):
+    cited_chunk_ids: list[str] = Field(default_factory=list, max_length=3)
+
+
+class AgentSummaryResponse(BaseModel):
+    period_days: Literal[7, 30]
+    generated_at: datetime
+    cache_hit: bool
+    statistics: AgentSummaryStatistics
+    content: AgentSummaryContent
+    citations: list[AgentCitation] = Field(default_factory=list, max_length=3)
+    fallback_used: bool = False
+    usage: AgentUsage
 
 
 class KnowledgeGenerated(BaseModel):

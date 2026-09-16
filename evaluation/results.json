@@ -1,0 +1,2382 @@
+{
+  "evaluation_version": "journey-resume-v1",
+  "generated_at": "2026-09-11T07:42:41.037480+00:00",
+  "environment": {
+    "version": "resume-evaluation-v1",
+    "python": "3.12.11 (main, Sep 18 2025, 19:41:45) [Clang 20.1.4 ]",
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "node": "v22.23.1",
+    "git_head": "c6a1d14b375841308187e9be635f391310a18751",
+    "source_sha256": "c81e72c0fde6e4e54ae01170d2401dc7ba0603a3b18bed49609e65f5bcbd50f2",
+    "files": {
+      "apps/mobile/src/app/(tabs)/_layout.tsx": "fb6e9f8b7d64c4d09f861cfcdefb3f418b3368d37e68518d2690c49b7c0fa488",
+      "apps/mobile/src/app/(tabs)/index.tsx": "257ec04bb352bd0da766dee1edc264ae508c2256c67f23ea25593517fa485203",
+      "apps/mobile/src/app/(tabs)/journey.tsx": "0436177f0150c13b16d592f4239b076c6248b65b09b6c46fab924d2171f2d391",
+      "apps/mobile/src/app/(tabs)/profile.tsx": "947b273b4df3831607df33679ec3dc1d0826843eb3a653d9d68f569db780fcc9",
+      "apps/mobile/src/app/_layout.tsx": "09a5b32bc1c517616fbf82abeda3145513d2981ee9a38516a6a2da0086f1c96e",
+      "apps/mobile/src/app/food-image.tsx": "fcd79c25d3d96b25358073490f153a86111465288c0e9bc30b7cd0dda5fca6a9",
+      "apps/mobile/src/app/inspirations.tsx": "f5a8966848024913a1cf76d2fb4666907f9ac92b53ebcef5e24f1890faab56ab",
+      "apps/mobile/src/app/record/[kind].tsx": "bf797515fdb9137a63a056d47bdcbc26d83e3c388952e5231692f5448d152918",
+      "apps/mobile/src/app/settings/agent-privacy.tsx": "c81d6d8b1e2b201d35935cec3dff65c8e81ae7db3456d762039931109a56d807",
+      "apps/mobile/src/app/settings/goal.tsx": "b05c967dd3ea25a25034e30876e9d332ef184fd3afc44c8d063ff76b2e56c7a2",
+      "apps/mobile/src/app/settings/profile.tsx": "b9d0ff2942be0acdbc27a406553ae116cf3ab44de3c35d638770f19dbf03e201",
+      "apps/mobile/src/app/sign-in.tsx": "9699f383481041621d23fc4c26b065858f077326f78e9e4adb7f432aab2a602d",
+      "apps/mobile/src/components/home-overview.tsx": "92d18232667c24e78d5914c55d2bfd303bb1a25630582db0449aa1dda1180323",
+      "apps/mobile/src/components/screen-shell.tsx": "3bbaf064de6fd2d0a35291654fb33fd0b21da8130f46bfb6008fae86dd6888dd",
+      "apps/mobile/src/components/ui.tsx": "acd7911c417c075f063539aa7d8146af5d5aad5cfad954ce11d6a5584e6eca95",
+      "apps/mobile/src/config/environment.ts": "b3a9cf9adedb8fcfe1560b4bb1d418380c0c8603fecd47a0f093ad77c8d4448a",
+      "apps/mobile/src/content/local-knowledge.ts": "ae525ff99902f323838a4bc3bca0f8ecd3afe1b2facdff56fdd6bd0b062afb1b",
+      "apps/mobile/src/lib/api.ts": "8a8e016f2b05c2b2c9efc44ea8ea777973c56870d2faad5f3c1321f3515a4273",
+      "apps/mobile/src/lib/energy.ts": "b90ab48902c6a63be4cb665857433dbf1b07c70e2a6507fc241002a9436c10a0",
+      "apps/mobile/src/lib/format.ts": "ac3e0f06924acc3412efa3d0722c5ccb10e6cc34d85011c7bc08cd1327e46a28",
+      "apps/mobile/src/lib/journey-summary.ts": "5fbb2a4063ffb0822387fbadf29f642086eeb9303abff85fa948778ecf9f1513",
+      "apps/mobile/src/lib/local-replica.ts": "de42233244a217a0c864c455b90b68e015f6966083b44d03adda45764f2762de",
+      "apps/mobile/src/lib/mock-intent.test.ts": "34bd74575098580a13fafa6c74ecf1a97f9947d48458a1bdd1ccbfd78c7a7707",
+      "apps/mobile/src/lib/mock-intent.ts": "95a600c95334ba6364ceef5175b5c06b5669f38741e8551e9d9f6c9f168d2c22",
+      "apps/mobile/src/lib/pending-storage.ts": "14408d893e80f978bb72cfbf6174e5de1c7afa5a449237eef7429ad8a2d7a1c2",
+      "apps/mobile/src/lib/session-storage.ts": "a80734ff4c5c1f79f809fbce9fd2984bc2ef507941263d8c53d24b300a902905",
+      "apps/mobile/src/providers/auth-provider.tsx": "b271587134b80effd2e122a3c6cffdb66afb057a153acc7458f38f537e34fea7",
+      "apps/mobile/src/providers/query-provider.tsx": "bff6a849958ea0468367110de63bef764cc4fc4eb0f33da6e05111e0baa7d3ae",
+      "apps/mobile/src/providers/sync-provider.tsx": "ca2f89e8331746b416ce86c676c744d2849434b8f17549bf5b61b61d59fa9eba",
+      "apps/mobile/src/theme/theme-provider.tsx": "1b122e9e0c0c4071b91bd15dc7eafb4ffed709152e4f8fc3f9292d43f1ae1f3c",
+      "apps/mobile/tests/agent-privacy-screen.test.tsx": "9c83e770107b5dbd8cfbf544c931a9bfaae3ee56fe24ed37084d925d1a40376c",
+      "apps/mobile/tests/api.test.ts": "7d5bd7fd194f367367582abbe6015e23026ef4f92670e00e3cce0fe776fb429e",
+      "apps/mobile/tests/auth-provider.test.tsx": "426611ac4097ade21ee60d30b8bba9896953d5da1e0384e3f3555b7805d7054c",
+      "apps/mobile/tests/environment.test.ts": "eeb275ae1b2cba0e03d420b3e15d767b7f348d4b593a25d6cd59c646fdbcba46",
+      "apps/mobile/tests/food-image-screen.test.tsx": "d658bba380c9bfcb4fe7d530e56718f1d831cdd7527e21d8b8858aba830b3f0d",
+      "apps/mobile/tests/home-screen.test.tsx": "151a90ac24ee6cd3f7f53bc827f77d4d5d8a78bd8955d50b86806d4d6670139f",
+      "apps/mobile/tests/inspirations-screen.test.tsx": "e166854404664c802de5f182c5ec8675ca97c00793a466ed7bc4b335b9a00735",
+      "apps/mobile/tests/journey-screen.test.tsx": "9898010cb61950a8a2ab23565e195a52bb01c8bab352699db1043e4504e76ac6",
+      "apps/mobile/tests/journey-summary.test.ts": "052b6dbe6b3974d0330dfef65001dcdc548563b40eccb95c42b765fb79d56dc0",
+      "apps/mobile/tests/layout-contract.test.ts": "c3d20294a8725de6a0ac4514e2c5d2b8a093cf763cab31b21e36328feb5ec3dd",
+      "apps/mobile/tests/local-replica.test.ts": "1e97f2fc59fc2ba2400be287ae825afe724b3a68d654a4864eead9a129a54de7",
+      "apps/mobile/tests/pending-storage.test.ts": "54fa407897fc382d13d28bdaf58eda82c66fe5c2735e2a5ff577d24b6d1771ca",
+      "apps/mobile/tests/profile-settings-screen.test.tsx": "62eec7aedb6bda70bc779d0a816883c5aee4baca47e52a9170da1d8927e986cb",
+      "apps/mobile/tests/record-agent-deletion.test.tsx": "ef9d586a631180eea8fcbac4ce417a1f8a5dd87627492b21bfe81678428d2e02",
+      "apps/mobile/tests/sign-in-screen.test.tsx": "8186e812e7f1870874c55131b6add974fb3fb7e7e1d3872fd19dbcc6f9c9d262",
+      "apps/mobile/tests/sync-provider.test.tsx": "f89fd004686ebc374dfc115ec6641b59112d1d1f6bb87794b9225311d9e8e7b2",
+      "apps/mobile/tests/ui.test.tsx": "32b09fda73c39e292ee21b1a818188ebd931ac1e26203650121e8001e8131edc",
+      "backend/alembic/env.py": "fce03bf4d268b97a60bd816e0747c945cc431c0449ecfbac95d82ed01e1df778",
+      "backend/alembic/script.py.mako": "9e4ffdacdeffd4bdef1251bd989ce1471c2e5d5bd1ad9b250bc20f78640feeb3",
+      "backend/alembic/versions/0001_empty_baseline.py": "a24c12d2c91919346564c6ec67242c7440478e18e292dd23f1ec9a2b30c8e835",
+      "backend/alembic/versions/0002_core_api_create_stage_4_identity_and_core_.py": "80beaa04d1188eb1396213e32a7383b5120134e5831000ddb37ccfe3a9e8c701",
+      "backend/alembic/versions/0003_agent_rag.py": "2828d9998f844634c8ac632b77fcc6dde66a604481c19f2e024d5a411095d31c",
+      "backend/alembic/versions/0004_agent_v2.py": "a90b0cbd2bf252283e69e49ceacc0299c641614896a620a5c484bb9c071763ef",
+      "backend/alembic/versions/0005_agent_v3.py": "be205baf856e987cb101acae9188870d99f8e7a61d6d1ea9868e40360118c067",
+      "backend/alembic/versions/0006_local_first_versions.py": "cfb6768f7fba89d49dd864291f8290e5ac6c7c1c3be0ad1901812f519015a968",
+      "backend/alembic/versions/0007_life_inspirations.py": "46291ac9ef900887633d834a2830cb38fa2494ed9812d9fdfcee2136b3fce1e8",
+      "backend/alembic/versions/0008_agent_privacy.py": "e0e89cbdc18ae2d20467846160aeebfc13f8fbdd69b868184a43b3d651bd8335",
+      "backend/alembic/versions/0009_agent_summary_cache.py": "a98e2960b8fee4db5bb04d938fbd4832136d0aaf749dd1b33789d0533152149c",
+      "backend/app/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "backend/app/agent/__init__.py": "49ab15aaabffd8b11ba47779d5f383b4b7799802a6d16d84d6ddcca6c0dd3f0c",
+      "backend/app/agent/context.py": "694a789d06a15e32c365c931b1639c84d9f7bf01ef95c2778d4ebf8054c341f8",
+      "backend/app/agent/execution_graph.py": "d1adf82298d3a0637ebbafd90988ac63b9ec0a830d69308b641d16f7c80ad6d0",
+      "backend/app/agent/intent_router.py": "ef483ebfda736d798760ceb386c148107a113174a64c375113e42576e99899ea",
+      "backend/app/agent/memory.py": "cd554c142cb65f484fa0aee78653021d974ac67d5d879a2f37ea51cc6c9b590f",
+      "backend/app/agent/model_router.py": "e3ba79c18b092c8de492cae07614f31e2af82f9da82cb8407d13d25e79b1d8ad",
+      "backend/app/agent/planner.py": "5bab2ebb02657bdf5a88d658969006bffb42127e8bbccde3830dbe709995d393",
+      "backend/app/agent/policy.py": "ce6d5f8abd13607f4377513a24c25d08a59591cc0ebfcdc4836e2b01e7460bbb",
+      "backend/app/agent/provider_profiles.py": "66230ba1a17ee29981831a91148f3b75ba0db63d7ef1e2b7ccb8df00aecbf492",
+      "backend/app/agent/replanner.py": "5f52c4e16da503b199cf39c55d6681d586db357d79b86cc4e2f7fc8cefe2b8e5",
+      "backend/app/agent/skills/__init__.py": "6294852e7d0b2bfdf119d166476ad2307a8ec0a2580e96af47ebab116d1f2209",
+      "backend/app/agent/skills/journey_coach.py": "4a3c677a2800341d2c0f46967c9877348781613661d17e1b31ab3c51f6a6bcbc",
+      "backend/app/agent/specialists.py": "0f0fc831dfec0e79b33355b67f8d3d33ec1febeb51f0070e72b4a06652176aa4",
+      "backend/app/agent/tool_registry.py": "c47f67bc7275bf497dc2e9428fc5c7b5163cb5a56ffd250803de8f4f59ffd206",
+      "backend/app/agent/tools.py": "00484d6cf3226e9194a2c3c84835321bffff32ff06fed957fd9645432f07000f",
+      "backend/app/agent/workflows.py": "e2e55ec54b008e9b129370bd68c9ded0cf09917e10bba2d29fe814c0fae301d4",
+      "backend/app/api/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "backend/app/api/deps.py": "3979b6c5eb3d6812034659e4d6dd3f503d1f883922ebb75bb7bd6c70af9a7a56",
+      "backend/app/api/errors.py": "fa66833dc3bd909f51f85250349e227efc22f7fd6092b632b085d82dfb3c7f44",
+      "backend/app/api/middleware.py": "20b7b6923bb07c77f5d7e75a1bf50f993e20c969d73ad8766c312b5217de6ce8",
+      "backend/app/api/routes/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "backend/app/api/routes/health.py": "7a1df4a404751976ed76dd009f8e2583e8875780aeabdd92ff62a188eb8662df",
+      "backend/app/api/v1/__init__.py": "ecee0481a0c41e07cfab371bfa4579aafb89689e15e2abaa7c3a56e2f77d948f",
+      "backend/app/api/v1/activity_records.py": "75d60897a392d42d6272b7b904a80cf0ec774f3af4d2ad95a2a6b045472aeac2",
+      "backend/app/api/v1/agent.py": "586128d4b7c3ecf6acb9f7f41bec3174d5fb7fb32e08ac14b3f4a16c759c2e62",
+      "backend/app/api/v1/aggregates.py": "b4c985fb92ca6dfa1d04624deb621b1881f41bd08a8b69443adc74eec147448d",
+      "backend/app/api/v1/auth.py": "4932aadd2901f88c4410bdfcf8c172dc946932ad56f3b12b38d20248cc587727",
+      "backend/app/api/v1/food_images.py": "274cc82d54f047540f6e163f19bc86014bfbae42f2c5494abf3cb9c71366de05",
+      "backend/app/api/v1/food_records.py": "7f71c8a3a042dc1cd0ba96b13da679bd54369c578d823833265ff479424de545",
+      "backend/app/api/v1/inspirations.py": "f3981c8bacb51243c04efc115da5f72a243ee3b8ba2d3f1ad9a74679a608cb97",
+      "backend/app/api/v1/profile.py": "d3fc3a0f698189cbb73c20549d7e6d31d3450899fa2edf1192f1f4c85aea51d6",
+      "backend/app/api/v1/router.py": "417cdb9301e333ad9a372e6b336f24b11daabd820b334fdbcc898de5aa2a59b8",
+      "backend/app/api/v1/weight_records.py": "7881c39701da28d17d6a5c3f38fd8ee1d555eae63986ea1e2783863267b210fa",
+      "backend/app/bootstrap_test_account.py": "765bf31ac671765861b99e4aadf8ce4ce319bfb351a4d045ab605515aadee5b9",
+      "backend/app/check_agent_privacy_release.py": "6bcfa662438d97a4eb273376541db5430b0a7fd59a15b370e066d00edbc5707f",
+      "backend/app/core/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "backend/app/core/database.py": "64240fd31f0e3f72975d4f0194bb384bffa5129df80b8e7be73dce187ade6b87",
+      "backend/app/core/logging.py": "b410191ff09cf6209f97d70340fa9b583927d3d5e6944e6f122bd80f9235a6bf",
+      "backend/app/core/privacy.py": "d304daeda1c28a2faee3b21d2dcc8cb6011eeb76d2fe2150306d7e9f3d6b3520",
+      "backend/app/core/provider_review.py": "47f9c1d55ea50717ca4fad8588d476b094c94cfc96fa7e0d2672276f0a7b87a4",
+      "backend/app/core/security.py": "592878b016171cb04805b72e4ba9e851c97ebe8a6d9258319a5adcce8705e4c0",
+      "backend/app/core/settings.py": "e5096f0e77b550c146c78ecea5282b008b62ad458167970227ccccd5c1592f1b",
+      "backend/app/domain/__init__.py": "59cb8a7626b2e2c07c29d4ab266d9317c8ca31a9bc4bf8e29185746972fcbdbe",
+      "backend/app/domain/enums.py": "a0a543c4a00145da5c5f11f26ea73508feb84e6e3744001e2a012d9d72bcec71",
+      "backend/app/domain/identity.py": "91b890030dfc9318cd913318c23db2a8214b48cac6ed240b62ee636507b0f407",
+      "backend/app/knowledge/__init__.py": "e8849578d9df43b72ff0d11f1ac34415adaf4fc2feb45aa6c1e94783904283c1",
+      "backend/app/knowledge/embedding.py": "d94db58d26e8e641a253c865bea8fe442ca01bbc2e1d4cee33a30dc6b155e312",
+      "backend/app/knowledge/ingest.py": "05b567954b9e76afe2765da3570ab612ad2c181d10b70120075915c64954ae72",
+      "backend/app/knowledge/retriever.py": "402ae8a83cbeff86a784cc27ae1d261ec5118a8937a78e0314796b33f206f653",
+      "backend/app/knowledge/sources/journey_core_v1.json": "e4f10787aa8cb85626f1474d1591972e1981cc26e23c83dc8e4006330e90ff38",
+      "backend/app/main.py": "febc8251d7e63a408310cde2a74cefea23a93ff533d4648393612100f086a1d3",
+      "backend/app/media/__init__.py": "47949a35f21a3899044a10d13ecc273569bb6a0863e9c2fec932644e0e53faf9",
+      "backend/app/media/food_image.py": "e551d5b0e6dea919c678cd3d4b9c0e13e4c21fd753bda3a03a5e7c10a5b753b1",
+      "backend/app/models/__init__.py": "c1d83061ad5f26b59b61beeab6f54755b5b73edf832b42f38fbd35b4ea63c1a6",
+      "backend/app/models/activity_record.py": "969cc0855f330ee6ae6b5b1b3776bb465f9e2906470ee26e9f7cf097bc92bb66",
+      "backend/app/models/agent.py": "d67961a4ddf59f777cb19cb1f1625a04e29cedec5b03bbbd7ae5e916bdf30687",
+      "backend/app/models/agent_privacy.py": "678e59e867519c529138769cde446f0c0602ca38da4dccc40b22b49edbc9a255",
+      "backend/app/models/audit.py": "b30029372a9697352442e1fd2e4cdd455d5fe084b28c3f9a7dbe7752dd9cab3e",
+      "backend/app/models/auth_session.py": "85d53cca7f5662c355b148fcfb600a6622c8716d28d81233c2225a69c03b40d3",
+      "backend/app/models/food_record.py": "57de8d96a6ae9b6c7d7724dff0ed877c1595dabc943aa588da7fb2ba902e44d3",
+      "backend/app/models/goal.py": "99fe2b7753f22d0b0fbc489d058569af4b75771b739d7dd08c822f7e29db4b26",
+      "backend/app/models/idempotency.py": "24c8b55ee3eb3f3ae9dce8d48024d85f2e7a64b44de186487ca231864ea0fbdd",
+      "backend/app/models/inspiration.py": "6fbc5fc3ac7002309c9519d22312673ac07f9628615f360ac2f96be1c0f950bc",
+      "backend/app/models/knowledge.py": "de65946e2b530397967235ce2d740450d4a9222ef25026e613e9f6aebc02c157",
+      "backend/app/models/profile.py": "fcdb2407ccfb424c8b06c5053cb55b6fb0a4ae094d90e9ae09e1ffe8df8f1bc4",
+      "backend/app/models/user.py": "45334a9ff7e600343b743e4eeb2d6ab24c2e1dbffdb08771ddba2c20ff5f0d1a",
+      "backend/app/models/weight_record.py": "06110843f1ef59622f162f845242d23af48ca25b25e43fd332240ab093fe81d4",
+      "backend/app/purge_agent_data.py": "b8d5b131d2cac6ece0a8af2208518b2496eca7c45d2a4784f245080a9b1589a1",
+      "backend/app/repositories/__init__.py": "2a5b246e79ace94e96cab529e510bdf413fda48e0cef4f4daa2d07d4a53aec71",
+      "backend/app/repositories/records.py": "7d8018d76ceea5b43dd5090b8f68628310cfd2a153191bdb2baebda347bc0043",
+      "backend/app/repositories/users.py": "06449116846714299f9ad7a35e992220b3189a6783f595a9f3d2a024d07a275f",
+      "backend/app/schemas/__init__.py": "ee3922f63184cddd256698a5984fc868d34a4f8018f65cc2c004d59966e44f20",
+      "backend/app/schemas/agent.py": "ceb4cddd19db44341dfa52ca5506a7f9cf345a7fab872eee5efd8cd008905550",
+      "backend/app/schemas/agent_privacy.py": "b5998f6c923cd269b8fd17ec121dbc4230286e80c2f95b9964ebce32aeb75fdc",
+      "backend/app/schemas/aggregates.py": "f6717236be16213a5b3c94d9381d4bed84039227df75e47b1d016376d6198f8a",
+      "backend/app/schemas/auth.py": "3870e4b9f4848a06797447ab424625e43ec38a215b8111b528edbeca2fac6e7b",
+      "backend/app/schemas/common.py": "2e4927f3ab219983c89feb42f5728d61b8c9874f2a748795db7baf462c9c66c9",
+      "backend/app/schemas/inspirations.py": "b890dc1b95cd423b3871502a3ec0af9aa198f6b49d9416b7e6b6a7e13bb0e8e7",
+      "backend/app/schemas/media.py": "ff3f8939ecfdcee51969f1e26f16b434fa8728c4ed9f6b903528863fcf3c72e0",
+      "backend/app/schemas/profile.py": "75ad4868d4164cda8eb48daf9bae362f37d1bd970b1a91280a296f92b944ceea",
+      "backend/app/schemas/records.py": "cee7d51cd3b1bca416ccf7f1f5d00e1a5bee3be3e92c57bb9d75d43978f5122d",
+      "backend/app/services/agent.py": "c71c64ced5c5bae5be71d456a925afdac697f63f73d916a3f4b349a68967bce1",
+      "backend/app/services/agent_privacy.py": "6e6aed1258b08d8f06dc4228be32423fded3dc9135cee8a558db29561039583f",
+      "backend/app/services/agent_summary.py": "6f19d6a2de46f9376e166d15c0b817ca482e69952359627ede48d46f1129c830",
+      "backend/app/services/aggregates.py": "d5b803e9345d08a5c744b7470cbe06f167eb9db89eec07e4876e8ce5d2474b7f",
+      "backend/app/services/auth.py": "9b75f42ebe128057f89c2ed779b9b149e94d66d768d894a49ad9193da2611dd1",
+      "backend/app/services/common.py": "661043c00ce36604e63cd2d3b9ff431ea61e5852cdbc186a1dd270de7b1c5e38",
+      "backend/app/services/energy.py": "cff4e604e449468de3dba99e88139e1ebaeebf9c25b17c5ea133c752d5813e43",
+      "backend/app/services/inspirations.py": "5d9837784898c115e8f8da9d5245a99d8e9a2fff69c39b1e7b3afba089267de9",
+      "backend/app/services/profile.py": "24e721600e9e3a49992957ee882995a4cabfefa2b315083b1d7877d85be86c7b",
+      "backend/app/services/records.py": "f44591fd433061986fb08ba5e2269688d070e8aa8759c592eec7ef716a1cd8ee",
+      "backend/tests/allure_helpers.py": "d3b67598900684078bfc4491ce77daa3b428563762c2e5c99283a92de634802d",
+      "backend/tests/conftest.py": "20f24bdee924229ac05a9fe8d517ac977f04f9069cdc0623168385a15f2d9748",
+      "backend/tests/evals/intent_cases.json": "85e41b90b95643bd8f4571028cdd2393d12848a079aa88615dcc0d8224b245be",
+      "backend/tests/evals/rag_cases.json": "e4df68228eea90efc2b8a8562927edddff80afcfdf0e302560413f2bf4f5d7d4",
+      "backend/tests/privacy_helpers.py": "0f1fd7b0d6fdc1507b6fed2489ef58c10c5672a90f92f61a34e2601f6cf6dbea",
+      "backend/tests/snapshots/openapi.json": "99cacc970ea2017fcb3d1083c6739d460308a10f6f1a4085211cee4dcdb42f80",
+      "backend/tests/test_agent_api.py": "b5f64c78d9050d9cff78613d786ebcb9e5e6cf774c4ca1d4408fd2e35a11ef7a",
+      "backend/tests/test_agent_privacy.py": "a800f3fb3cbea305de5820640765ccf61b82be73e37d3a134a302c04f6f638ac",
+      "backend/tests/test_agent_summary.py": "7ddc5bf4dde7440ef4b3ef316f3b86a74aa50b7b4869bb2f1c1dbf789d4d81c8",
+      "backend/tests/test_agent_unit.py": "3914575699c0f1fbfbd25faf07a7007ba7350dd91dc0925ced80796778a9e204",
+      "backend/tests/test_agent_v2.py": "53eced761f2a63a2aa4a1fcad3106e7a7d693018f5e9c8e44a7681d43f4324fe",
+      "backend/tests/test_agent_v3.py": "0e0d48c49e753bc4e3ac8f512ec093ff4abb45e3897b8aab16b8f7893675c4e4",
+      "backend/tests/test_auth.py": "4f579dffaac29a952cdd0c2083dbd6d58626a4ea72d5b0379c24a2323a1f5469",
+      "backend/tests/test_bootstrap_and_contract.py": "284a54399c49a39154f3d13cf437cf91971d6843f95c8b575b27d2e28cc9917c",
+      "backend/tests/test_core_e2e.py": "5a4785b20ac3e6db277b9c3fac5143983737056424a58f28146e6cd3ef8d340c",
+      "backend/tests/test_food_image_api.py": "ce7ec070421ffd477a1adcac503eef452b0bb1b79bf43e8915668adc2846c2a6",
+      "backend/tests/test_food_image_unit.py": "c1389da86390fd3ac5b332f2ebbbe8599f5a5e374734b88e96fbf1d3c1c8375a",
+      "backend/tests/test_health.py": "dc531575acc3ed254dbafa016bd13df4807757e5a443d180b84d1cdb076bd3e0",
+      "backend/tests/test_inspirations.py": "8f4193543a7f28c72001f63ff0f7ae7d32d03fa6714592333a8c94f1a92cf72f",
+      "backend/tests/test_profile.py": "90e367f9f4fc151c8a2825de5c096f9343c27e8a18db8d6a375d9fee2c039881",
+      "backend/tests/test_provider_review.py": "1d33a45a54ce4ba51665f7ac6bbda5c96361403ed2e81094b8b0d7c9e02bdd3e",
+      "backend/tests/test_records_and_aggregates.py": "1112cb57e900b30f5ae0a497a01617b7270dd279192d50cc428f6a44e8a7c3f1",
+      "backend/tests/test_restore_privacy.py": "f76d7623089d5fd856cd63775a964b5b4c87ee76d72b86079aa6bd33d75a64f0",
+      "backend/tests/test_settings.py": "f2afc04117c466d1cb4c87efa3b03fd88881817d13a721374d76f4e4e28cffdc",
+      "backend/tests/test_sync_conflicts.py": "7816a1ed53d7802dceadddbb70ada576dc57946c7443142fcc37c3de72d42d96",
+      "evals/datasets/activity_parsing.json": "88b71793023533760d2932e8420d4a6922bcc86a2c7237106d03c8adcc8fe775",
+      "evals/datasets/agent_v2_plans.json": "fecc5b19cc0faae5252db89333fa1961821d1bdaf9e9dae96e63058c2f50c14e",
+      "evals/datasets/agent_v3_control_loop.json": "09b56dbf353157ecb54aa082da09e56013bccf2dd9681fdba380d627ac289b53",
+      "evals/datasets/build_datasets.py": "e691d0b5a20a8717d5ff7459b2c9cc7db3288467b6cdd7ee4f8c354723529e2e",
+      "evals/datasets/failure_fallback.json": "d0ab00ce8a624b595ccb5d2e0923f663215f751edc6d1f62c4f49468f39f25b7",
+      "evals/datasets/food_image_contract.json": "aa1a4003a30339f188db2d3e82c36e7b51842480284962917ceaa3f7635ca9aa",
+      "evals/datasets/food_parsing.json": "ab81d5320ee31bab5f59b1640028ce161d17b73ac77b85efed8f2737bc962904",
+      "evals/datasets/intent_router.json": "6f783a6a82b118b45ba7530b86c24584adc81e30c7c4d5ecf99abc4dd64dbae1",
+      "evals/datasets/mixed_intents.json": "3280795e10f76c2160de85f6455c38c52fdfb419bd4d6be341ade3d9f3ce481f",
+      "evals/datasets/rag_eval_v1.json": "473a14842fcd269722d5ff775d6a4009191278fd8c4b09795d44a7bd2f02222c",
+      "evals/datasets/rag_gold.json": "19808156b10d2bf364dbae84dd933d9e4f4bb24ab6d8c38829421627f1d1e9ab",
+      "evals/datasets/safety.json": "c85dc9b4f0e36445a1d3a5320f1495e0b9f3903738c36e7937b0f169d202c180",
+      "evaluation/datasets/rag_v1.json": "473a14842fcd269722d5ff775d6a4009191278fd8c4b09795d44a7bd2f02222c",
+      "scripts/evaluation/manifest.py": "ddc88edd58f7d14c26c6645569008d3b97647684c7170ac3fb277190ceebb033",
+      "scripts/evaluation/rag.py": "ad68fb4d2d54a398f6de64fc8b63d7f084f9b61f41734c923a8c6dcb2f5e61fa",
+      "scripts/evaluation/run_backend.py": "cc571eccbb4223bca469c1b1f7caa0b33a03b12d235727b9201ba0a1ce969cf8",
+      "scripts/evaluation/runtime.py": "6385ec9468dcc6b909d024a82b5af7132de25959071a8769a9c12bd40824284e",
+      "scripts/evaluation/test_reliability.py": "bc9e500832e6200a70ed599bf497d3376472a9a6e7c96ce0d2bd756e20bad348"
+    },
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "model_map": {
+      "recommendation": "deepseek-v4-pro",
+      "weekly_summary": "deepseek-v4-pro"
+    },
+    "temperature": 0,
+    "max_output_tokens": 2048,
+    "timeout_seconds": 30,
+    "retries": 1,
+    "configured_pricing_usd_per_million": {
+      "deepseek-v4-flash": [
+        0.14,
+        0.28
+      ],
+      "deepseek-v4-pro": [
+        0.435,
+        0.87
+      ]
+    },
+    "default_rates": [
+      0.14,
+      0.28
+    ],
+    "database": "isolated PostgreSQL 18.6, 127.0.0.1:55439, journey_resume_eval",
+    "gold_status": "agent_authored_pending_human_review",
+    "random_seed": "no dataset randomness; provider seed unsupported/not set; temperature 0 does not guarantee bitwise repeatability"
+  },
+  "gold_status": "pending_human_review",
+  "metrics": [
+    {
+      "section": "tests",
+      "metric": "executed_tests",
+      "value": 235,
+      "numerator": null,
+      "denominator": null,
+      "formula": "count(testcase); repeated environment-debug runs excluded",
+      "note": ""
+    },
+    {
+      "section": "tests",
+      "metric": "pass_rate",
+      "value": 0.9914893617021276,
+      "numerator": 233,
+      "denominator": 235,
+      "formula": "passed / executed incl failure and error",
+      "note": "Mixed unit/component/API tests; not all browser E2E"
+    },
+    {
+      "section": "reliability",
+      "metric": "write_success_rate",
+      "value": 1.0,
+      "numerator": 7,
+      "denominator": 7,
+      "formula": "scenarios with at least one write / scenarios",
+      "note": "At least one write does not imply exactly once"
+    },
+    {
+      "section": "reliability",
+      "metric": "exactly_once_rate",
+      "value": 0.8571428571428571,
+      "numerator": 6,
+      "denominator": 7,
+      "formula": "scenarios with exactly one new row / scenarios",
+      "note": ""
+    },
+    {
+      "section": "reliability",
+      "metric": "excess_duplicate_rows",
+      "value": 1,
+      "numerator": null,
+      "denominator": null,
+      "formula": "sum(max(new_rows - 1,0))",
+      "note": ""
+    },
+    {
+      "section": "reliability",
+      "metric": "idempotency_rate",
+      "value": 0.8,
+      "numerator": 4,
+      "denominator": 5,
+      "formula": "replay scenarios with exactly-once outcome / replay scenarios",
+      "note": ""
+    },
+    {
+      "section": "reliability",
+      "metric": "simulated_recovery_rate",
+      "value": 1.0,
+      "numerator": 2,
+      "denominator": 2,
+      "formula": "successful sequential retry/lost-response recovery / simulated recovery scenarios",
+      "note": "No physical network fault or process restart"
+    },
+    {
+      "section": "rag",
+      "metric": "question_count",
+      "value": 60,
+      "numerator": null,
+      "denominator": null,
+      "formula": "count(executed questions)",
+      "note": ""
+    },
+    {
+      "section": "rag",
+      "metric": "macro_recall_at_3",
+      "value": 1.0,
+      "numerator": null,
+      "denominator": 40,
+      "formula": "mean(|top3 docs intersect gold docs| / |gold docs|)",
+      "note": "Existing gold pending human review"
+    },
+    {
+      "section": "rag",
+      "metric": "gold_document_citation_membership",
+      "value": 0.8955223880597015,
+      "numerator": 60,
+      "denominator": 67,
+      "formula": "gold-matching citations / emitted citations on answerable questions",
+      "note": "Proxy; valid extra documents can be penalized; not semantic citation correctness"
+    },
+    {
+      "section": "rag",
+      "metric": "reference_term_full_coverage_rate",
+      "value": 0.9,
+      "numerator": 36,
+      "denominator": 40,
+      "formula": "answers covering every reference term group / answerable questions",
+      "note": "Lexical proxy, not human answer correctness"
+    },
+    {
+      "section": "rag",
+      "metric": "unanswerable_abstention_marker_rate",
+      "value": 1.0,
+      "numerator": 20,
+      "denominator": 20,
+      "formula": "unanswerable cases matching refusal markers / unanswerable cases",
+      "note": "Includes retrieval-level no-context refusal"
+    },
+    {
+      "section": "rag",
+      "metric": "unanswerable_nonabstention_proxy",
+      "value": 0.0,
+      "numerator": 0,
+      "denominator": 20,
+      "formula": "unanswerable cases without refusal marker / unanswerable cases",
+      "note": "Not a measured semantic hallucination rate"
+    },
+    {
+      "section": "rag",
+      "metric": "semantic_citation_correctness",
+      "value": null,
+      "numerator": null,
+      "denominator": null,
+      "formula": "human approved labels / applicable cases",
+      "note": "当前无法测量：缺逐题人工语义审核标签"
+    },
+    {
+      "section": "rag",
+      "metric": "citation_answer_consistency",
+      "value": null,
+      "numerator": null,
+      "denominator": null,
+      "formula": "human approved labels / applicable cases",
+      "note": "当前无法测量：缺逐题人工语义审核标签"
+    },
+    {
+      "section": "rag",
+      "metric": "human_answer_correctness",
+      "value": null,
+      "numerator": null,
+      "denominator": null,
+      "formula": "human approved labels / applicable cases",
+      "note": "当前无法测量：缺逐题人工语义审核标签"
+    },
+    {
+      "section": "rag",
+      "metric": "semantic_hallucination_rate",
+      "value": null,
+      "numerator": null,
+      "denominator": null,
+      "formula": "human approved labels / applicable cases",
+      "note": "当前无法测量：缺逐题人工语义审核标签"
+    },
+    {
+      "section": "rag",
+      "metric": "mean_retrieval_ms",
+      "value": 0.9887972002616152,
+      "numerator": null,
+      "denominator": 60,
+      "formula": "sum(retrieval_ms) / questions",
+      "note": ""
+    },
+    {
+      "section": "parsing",
+      "metric": "sample_count",
+      "value": 74,
+      "numerator": null,
+      "denominator": null,
+      "formula": "count(executed fixed cases)",
+      "note": "Gold labels are pending human review"
+    },
+    {
+      "section": "parsing",
+      "metric": "case_pass_rate",
+      "value": 0.689189,
+      "numerator": 51,
+      "denominator": 74,
+      "formula": "passed case / executed cases",
+      "note": "Pending human review"
+    },
+    {
+      "section": "parsing",
+      "metric": "intent_exact_rate",
+      "value": 0.932432,
+      "numerator": 69,
+      "denominator": 74,
+      "formula": "exact intent matches / scored cases",
+      "note": "Pending human review"
+    },
+    {
+      "section": "parsing.activity",
+      "metric": "duration_minutes_exact_rate",
+      "value": 1.0,
+      "numerator": 23,
+      "denominator": 23,
+      "formula": "exact matches / explicitly scorable fields",
+      "note": "Pending human review; null means no scorable sample"
+    },
+    {
+      "section": "parsing.activity",
+      "metric": "explicit_energy_kcal_exact_rate",
+      "value": 1.0,
+      "numerator": 2,
+      "denominator": 2,
+      "formula": "exact matches / explicitly scorable fields",
+      "note": "Pending human review; null means no scorable sample"
+    },
+    {
+      "section": "parsing.activity",
+      "metric": "intensity_exact_rate",
+      "value": 1.0,
+      "numerator": 12,
+      "denominator": 12,
+      "formula": "exact matches / explicitly scorable fields",
+      "note": "Pending human review; null means no scorable sample"
+    },
+    {
+      "section": "parsing.activity",
+      "metric": "item_recognition_exact_rate",
+      "value": 0.653846,
+      "numerator": 17,
+      "denominator": 26,
+      "formula": "exact matches / explicitly scorable fields",
+      "note": "Pending human review; null means no scorable sample"
+    },
+    {
+      "section": "parsing.activity",
+      "metric": "name_exact_rate",
+      "value": 0.653846,
+      "numerator": 17,
+      "denominator": 26,
+      "formula": "exact matches / explicitly scorable fields",
+      "note": "Pending human review; null means no scorable sample"
+    },
+    {
+      "section": "parsing.food",
+      "metric": "explicit_energy_kcal_exact_rate",
+      "value": 1.0,
+      "numerator": 6,
+      "denominator": 6,
+      "formula": "exact matches / explicitly scorable fields",
+      "note": "Pending human review; null means no scorable sample"
+    },
+    {
+      "section": "parsing.food",
+      "metric": "item_recognition_exact_rate",
+      "value": 0.880952,
+      "numerator": 37,
+      "denominator": 42,
+      "formula": "exact matches / explicitly scorable fields",
+      "note": "Pending human review; null means no scorable sample"
+    },
+    {
+      "section": "parsing.food",
+      "metric": "meal_type_exact_rate",
+      "value": 0.966667,
+      "numerator": 29,
+      "denominator": 30,
+      "formula": "exact matches / explicitly scorable fields",
+      "note": "Pending human review; null means no scorable sample"
+    },
+    {
+      "section": "parsing.food",
+      "metric": "name_exact_rate",
+      "value": 1.0,
+      "numerator": 37,
+      "denominator": 37,
+      "formula": "exact matches / explicitly scorable fields",
+      "note": "Pending human review; null means no scorable sample"
+    },
+    {
+      "section": "parsing.food",
+      "metric": "quantity_exact_rate",
+      "value": 1.0,
+      "numerator": 28,
+      "denominator": 28,
+      "formula": "exact matches / explicitly scorable fields",
+      "note": "Pending human review; null means no scorable sample"
+    },
+    {
+      "section": "parsing",
+      "metric": "model_invocation_success_rate",
+      "value": 1.0,
+      "numerator": 148,
+      "denominator": 148,
+      "formula": "non-fallback invocations / all invocations",
+      "note": "Availability measure, not semantic correctness"
+    },
+    {
+      "section": "performance.rag_workflow",
+      "metric": "mean_ms",
+      "value": 953.9613783839741,
+      "numerator": null,
+      "denominator": 60,
+      "formula": "see performance definitions",
+      "note": ""
+    },
+    {
+      "section": "performance.rag_workflow",
+      "metric": "p50_ms",
+      "value": 1124.9278129835147,
+      "numerator": null,
+      "denominator": 60,
+      "formula": "see performance definitions",
+      "note": ""
+    },
+    {
+      "section": "performance.rag_workflow",
+      "metric": "p95_ms",
+      "value": 2047.7305820095353,
+      "numerator": null,
+      "denominator": 60,
+      "formula": "see performance definitions",
+      "note": ""
+    },
+    {
+      "section": "performance.rag_workflow",
+      "metric": "mean_input_tokens_per_task",
+      "value": 346.81666666666666,
+      "numerator": null,
+      "denominator": 60,
+      "formula": "see performance definitions",
+      "note": ""
+    },
+    {
+      "section": "performance.rag_workflow",
+      "metric": "mean_output_tokens_per_task",
+      "value": 131.78333333333333,
+      "numerator": null,
+      "denominator": 60,
+      "formula": "see performance definitions",
+      "note": ""
+    },
+    {
+      "section": "performance.rag_workflow",
+      "metric": "mean_configured_cost_usd_per_task",
+      "value": 8.545366666666666e-05,
+      "numerator": null,
+      "denominator": 60,
+      "formula": "see performance definitions",
+      "note": "configured USD estimates are not billing; CNY unavailable"
+    },
+    {
+      "section": "performance.rag_workflow",
+      "metric": "cost_cny",
+      "value": null,
+      "numerator": null,
+      "denominator": 60,
+      "formula": "see performance definitions",
+      "note": "configured USD estimates are not billing; CNY unavailable"
+    },
+    {
+      "section": "performance.rag_workflow",
+      "metric": "actual_billed_cost",
+      "value": null,
+      "numerator": null,
+      "denominator": 60,
+      "formula": "see performance definitions",
+      "note": "configured USD estimates are not billing; CNY unavailable"
+    },
+    {
+      "section": "performance.thirty_day_summary_uncached",
+      "metric": "mean_ms",
+      "value": 4415.120808349457,
+      "numerator": null,
+      "denominator": 20,
+      "formula": "see performance definitions",
+      "note": ""
+    },
+    {
+      "section": "performance.thirty_day_summary_uncached",
+      "metric": "p50_ms",
+      "value": 4478.591312494245,
+      "numerator": null,
+      "denominator": 20,
+      "formula": "see performance definitions",
+      "note": ""
+    },
+    {
+      "section": "performance.thirty_day_summary_uncached",
+      "metric": "p95_ms",
+      "value": 4956.2735829968005,
+      "numerator": null,
+      "denominator": 20,
+      "formula": "see performance definitions",
+      "note": ""
+    },
+    {
+      "section": "performance.thirty_day_summary_uncached",
+      "metric": "mean_input_tokens_per_task",
+      "value": 1202,
+      "numerator": null,
+      "denominator": 20,
+      "formula": "see performance definitions",
+      "note": ""
+    },
+    {
+      "section": "performance.thirty_day_summary_uncached",
+      "metric": "mean_output_tokens_per_task",
+      "value": 740.4,
+      "numerator": null,
+      "denominator": 20,
+      "formula": "see performance definitions",
+      "note": ""
+    },
+    {
+      "section": "performance.thirty_day_summary_uncached",
+      "metric": "mean_configured_cost_usd_per_task",
+      "value": 0.000375592,
+      "numerator": null,
+      "denominator": 20,
+      "formula": "see performance definitions",
+      "note": "configured USD estimates are not billing; CNY unavailable"
+    },
+    {
+      "section": "performance.thirty_day_summary_uncached",
+      "metric": "cost_cny",
+      "value": null,
+      "numerator": null,
+      "denominator": 20,
+      "formula": "see performance definitions",
+      "note": "configured USD estimates are not billing; CNY unavailable"
+    },
+    {
+      "section": "performance.thirty_day_summary_uncached",
+      "metric": "actual_billed_cost",
+      "value": null,
+      "numerator": null,
+      "denominator": 20,
+      "formula": "see performance definitions",
+      "note": "configured USD estimates are not billing; CNY unavailable"
+    },
+    {
+      "section": "performance.health_parsing_case",
+      "metric": "mean_ms",
+      "value": 2236,
+      "numerator": null,
+      "denominator": 74,
+      "formula": "see performance definitions",
+      "note": ""
+    },
+    {
+      "section": "performance.health_parsing_case",
+      "metric": "p50_ms",
+      "value": 2197,
+      "numerator": null,
+      "denominator": 74,
+      "formula": "see performance definitions",
+      "note": ""
+    },
+    {
+      "section": "performance.health_parsing_case",
+      "metric": "p95_ms",
+      "value": 2959,
+      "numerator": null,
+      "denominator": 74,
+      "formula": "see performance definitions",
+      "note": ""
+    },
+    {
+      "section": "performance.health_parsing_case",
+      "metric": "mean_input_tokens_per_task",
+      "value": 932.8648648648649,
+      "numerator": null,
+      "denominator": 74,
+      "formula": "see performance definitions",
+      "note": ""
+    },
+    {
+      "section": "performance.health_parsing_case",
+      "metric": "mean_output_tokens_per_task",
+      "value": 183.7027027027027,
+      "numerator": null,
+      "denominator": 74,
+      "formula": "see performance definitions",
+      "note": ""
+    },
+    {
+      "section": "performance.health_parsing_case",
+      "metric": "mean_configured_cost_usd_per_task",
+      "value": 0.00018203783783783784,
+      "numerator": null,
+      "denominator": 74,
+      "formula": "see performance definitions",
+      "note": "configured USD estimates are not billing; CNY unavailable"
+    },
+    {
+      "section": "performance.health_parsing_case",
+      "metric": "cost_cny",
+      "value": null,
+      "numerator": null,
+      "denominator": 74,
+      "formula": "see performance definitions",
+      "note": "configured USD estimates are not billing; CNY unavailable"
+    },
+    {
+      "section": "performance.health_parsing_case",
+      "metric": "actual_billed_cost",
+      "value": null,
+      "numerator": null,
+      "denominator": 74,
+      "formula": "see performance definitions",
+      "note": "configured USD estimates are not billing; CNY unavailable"
+    }
+  ],
+  "tests": {
+    "backend": {
+      "total": 140,
+      "passed": 139,
+      "failed": 1,
+      "errors": 0,
+      "skipped": 0,
+      "failures": [
+        {
+          "name": "test_thirty_day_summary_uses_backend_statistics_and_fingerprint_cache",
+          "message": "AssertionError: assert '2026-09-11T1....137781+08:00' == '2026-09-11T02:13:20.137781Z'\n  \n  - 2026-09-11T02:13:20.137781Z\n  ?             -             ^\n  + 2026-09-11T10:13:20.137781+08:00\n  ?            +              ^^^^^^"
+        }
+      ]
+    },
+    "mobile_components": {
+      "total": 83,
+      "passed": 83,
+      "failed": 0
+    },
+    "mobile_logic": {
+      "total": 5,
+      "passed": 5,
+      "failed": 0
+    },
+    "reliability": {
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "failures": []
+    },
+    "run_reexecution": {
+      "total": 1,
+      "passed": 0,
+      "failed": 1,
+      "errors": 0,
+      "skipped": 0,
+      "failures": [
+        {
+          "name": "test_same_run_request_reexecuted",
+          "message": "AssertionError: same run submission generated duplicate logical food records\nassert (8 - 6) == 1"
+        }
+      ]
+    }
+  },
+  "reliability": [
+    {
+      "scenario": "normal",
+      "rows_before": 0,
+      "rows_after": 1,
+      "extra_rows": 0,
+      "status": 201,
+      "replay_status": null
+    },
+    {
+      "scenario": "edited",
+      "rows_before": 1,
+      "rows_after": 2,
+      "extra_rows": 0,
+      "status": 201,
+      "replay_status": null
+    },
+    {
+      "scenario": "double_click",
+      "rows_before": 2,
+      "rows_after": 3,
+      "extra_rows": 0,
+      "status": 201,
+      "replay_status": 201
+    },
+    {
+      "scenario": "retry",
+      "rows_before": 3,
+      "rows_after": 4,
+      "extra_rows": 0,
+      "status": 201,
+      "replay_status": 201
+    },
+    {
+      "scenario": "lost_response",
+      "rows_before": 4,
+      "rows_after": 5,
+      "extra_rows": 0,
+      "status": 201,
+      "replay_status": 201
+    },
+    {
+      "scenario": "same_task",
+      "rows_before": 5,
+      "rows_after": 6,
+      "extra_rows": 0,
+      "status": 201,
+      "replay_status": 409
+    },
+    {
+      "scenario": "same_run_request_reexecuted",
+      "rows_before": 6,
+      "rows_after": 8,
+      "extra_rows": 1,
+      "run_ids": [
+        "f8c822b4-5bb3-413c-a993-60d11c74aca2",
+        "4610a57c-e5fa-4355-b9ea-59e1915fcd82"
+      ],
+      "confirmation_statuses": [
+        201,
+        201
+      ]
+    }
+  ],
+  "database_audit": {
+    "total_food_rows": 8,
+    "duplicate_groups": 1,
+    "excess_duplicate_rows": 1
+  },
+  "rag": {
+    "questions": 60,
+    "answerable": 40,
+    "unanswerable": 20,
+    "fallbacks": 0,
+    "failures_proxy": [
+      "rag_019",
+      "rag_022",
+      "rag_032",
+      "rag_033"
+    ]
+  },
+  "parsing": {
+    "configuration": {
+      "configuration_sha256": "3e9ca149a0bb6b4ff4121df951d69edee970814b3aa5bf97c4af2d8c170193bc",
+      "models": {
+        "activity_text_parse": {
+          "adapter_max_retries": 0,
+          "max_output_tokens": 2048,
+          "requested_model": "deepseek-v4-flash",
+          "router_max_retries": 1,
+          "structured_output": true,
+          "temperature": 0,
+          "timeout_seconds": 30
+        },
+        "food_text_parse": {
+          "adapter_max_retries": 0,
+          "max_output_tokens": 2048,
+          "requested_model": "deepseek-v4-flash",
+          "router_max_retries": 1,
+          "structured_output": true,
+          "temperature": 0,
+          "timeout_seconds": 30
+        },
+        "intent_classification": {
+          "adapter_max_retries": 0,
+          "max_output_tokens": 2048,
+          "requested_model": "deepseek-v4-flash",
+          "router_max_retries": 1,
+          "structured_output": true,
+          "temperature": 0,
+          "timeout_seconds": 30
+        }
+      },
+      "prompts": {
+        "activity_text_parse": {
+          "sha256": "e471a765ffcda324bc02a123f146ca055b34f737f984ae6a8dcc401161c89565",
+          "version": "activity-text-parse-1.0.0"
+        },
+        "food_text_parse": {
+          "sha256": "e395e5cae7307ed32bc3751b85fc9178a56c94dd2b72b0c988baf468794efc27",
+          "version": "food-text-parse-1.0.0"
+        },
+        "intent_classification": {
+          "sha256": "af3d967d5d0dc7bec8004168111bbed5a049ee9a976b9b46dd8a35f34f813c0a",
+          "version": "intent-router-1.0.1"
+        }
+      },
+      "provider": "deepseek",
+      "schemas": {
+        "activity_text_parse": {
+          "json_schema_sha256": "f152067ac029c923745dc4aa4f1a933403bf0cdba38f381f73cad741ae31c960",
+          "module": "app.schemas.agent",
+          "name": "ActivityParsed"
+        },
+        "food_text_parse": {
+          "json_schema_sha256": "9dcffd6242c65320a4822152528b8b20f298c6fc81d16684900dc87e6e9090c6",
+          "module": "app.schemas.agent",
+          "name": "FoodParsed"
+        },
+        "intent_classification": {
+          "json_schema_sha256": "97ddd00990ff6aee5e2d14f9f193a949a680c2b29aadb56ad3d4d9cbaac78ce8",
+          "module": "app.schemas.agent",
+          "name": "IntentPlan"
+        }
+      }
+    },
+    "counts": {
+      "ai_success_invocations": 148,
+      "case_statuses": {
+        "fail": 15,
+        "insufficient": 3,
+        "mixed": 2,
+        "partial_pass_unscored_fields": 45,
+        "pass": 6,
+        "unjudgeable": 3
+      },
+      "fallback_invocations": 0,
+      "invocations": 148,
+      "schema_limited_or_unjudgeable_cases": 8
+    },
+    "dataset": {
+      "activity_cases": 28,
+      "cases": 74,
+      "completed_rows": 74,
+      "food_cases": 46,
+      "path": "/Users/p668/Documents/journeyapp/evaluation/datasets/health_v1.json",
+      "remaining_rows": 0
+    },
+    "dataset_sha256": "a96ba6bce9c0ecee283cbbbc3557f9f66f867017f95094a7c503ecabbec6862c",
+    "dataset_version": "journey-health-record-parsing-v1",
+    "evaluation_version": "journey-health-parsing-eval-1.0.0",
+    "execution_mode": "real",
+    "generated_at": "2026-09-11T07:39:51.637388+00:00",
+    "gold_status": "agent_authored_pending_human_review",
+    "limitations": [
+      "gold is agent-authored and pending human review; no human-review claim is made",
+      "energy is scored only when an explicit kcal value appears in the input",
+      "quantity is scored only for an input-determinable explicit amount and unit; ambiguous or missing quantity is retained as unscored",
+      "FoodParsed and ActivityParsed each expose one name, so multi-item inputs remain explicit schema failures",
+      "operation metadata for modification/repeat/delete is recorded but is not represented in the current parsing schemas",
+      "fallback outputs are retained for diagnosis and excluded from every AI-success metric"
+    ],
+    "metrics": {
+      "activity": {
+        "duration_minutes": {
+          "exact": 1.0,
+          "fallback_matches_ignored": 0,
+          "matched": 23,
+          "matched_without_fallback_filter": 23,
+          "scored": 23,
+          "unscored": 5
+        },
+        "explicit_energy_kcal": {
+          "exact": 1.0,
+          "fallback_matches_ignored": 0,
+          "matched": 2,
+          "matched_without_fallback_filter": 2,
+          "scored": 2,
+          "unscored": 26
+        },
+        "intensity": {
+          "exact": 1.0,
+          "fallback_matches_ignored": 0,
+          "matched": 12,
+          "matched_without_fallback_filter": 12,
+          "scored": 12,
+          "unscored": 16
+        },
+        "item_recognition": {
+          "exact": 0.653846,
+          "fallback_matches_ignored": 0,
+          "matched": 17,
+          "matched_without_fallback_filter": 17,
+          "scored": 26,
+          "unscored": 2
+        },
+        "name": {
+          "exact": 0.653846,
+          "fallback_matches_ignored": 0,
+          "matched": 17,
+          "matched_without_fallback_filter": 17,
+          "scored": 26,
+          "unscored": 2
+        }
+      },
+      "case_pass_rate": {
+        "completed": 74,
+        "passed": 51,
+        "rate": 0.689189
+      },
+      "food": {
+        "explicit_energy_kcal": {
+          "exact": 1.0,
+          "fallback_matches_ignored": 0,
+          "matched": 6,
+          "matched_without_fallback_filter": 6,
+          "scored": 6,
+          "unscored": 40
+        },
+        "item_recognition": {
+          "exact": 0.880952,
+          "fallback_matches_ignored": 0,
+          "matched": 37,
+          "matched_without_fallback_filter": 37,
+          "scored": 42,
+          "unscored": 4
+        },
+        "meal_type": {
+          "exact": 0.966667,
+          "fallback_matches_ignored": 0,
+          "matched": 29,
+          "matched_without_fallback_filter": 29,
+          "scored": 30,
+          "unscored": 16
+        },
+        "name": {
+          "exact": 1.0,
+          "fallback_matches_ignored": 0,
+          "matched": 37,
+          "matched_without_fallback_filter": 37,
+          "scored": 37,
+          "unscored": 9
+        },
+        "quantity": {
+          "exact": 1.0,
+          "fallback_matches_ignored": 0,
+          "matched": 28,
+          "matched_without_fallback_filter": 28,
+          "scored": 28,
+          "unscored": 18
+        }
+      },
+      "fully_scored_case_pass_rate": {
+        "fully_scored": 7,
+        "passed": 6,
+        "rate": 0.857143
+      },
+      "route_intents_exact": {
+        "exact": 0.932432,
+        "fallback_matches_ignored": 0,
+        "matched": 69,
+        "matched_without_fallback_filter": 69,
+        "scored": 74,
+        "unscored": 0
+      }
+    },
+    "raw_jsonl": "/Users/p668/Documents/journeyapp/evaluation/raw/parsing.jsonl",
+    "scenario_counts": {
+      "activity_duration_only": {
+        "cases": 10,
+        "failed": 3,
+        "passed": 7
+      },
+      "activity_explicit_energy": {
+        "cases": 2,
+        "failed": 1,
+        "passed": 1
+      },
+      "activity_explicit_intensity": {
+        "cases": 9,
+        "failed": 3,
+        "passed": 6
+      },
+      "breakfast_explicit_quantity": {
+        "cases": 2,
+        "failed": 0,
+        "passed": 2
+      },
+      "delete_unjudgeable": {
+        "cases": 1,
+        "failed": 1,
+        "passed": 0
+      },
+      "drink_explicit_energy": {
+        "cases": 2,
+        "failed": 0,
+        "passed": 2
+      },
+      "drink_explicit_quantity": {
+        "cases": 4,
+        "failed": 0,
+        "passed": 4
+      },
+      "drink_missing_quantity": {
+        "cases": 2,
+        "failed": 1,
+        "passed": 1
+      },
+      "duplicate_input": {
+        "cases": 2,
+        "failed": 1,
+        "passed": 1
+      },
+      "duration_ambiguous": {
+        "cases": 1,
+        "failed": 0,
+        "passed": 1
+      },
+      "insufficient_duration": {
+        "cases": 2,
+        "failed": 2,
+        "passed": 0
+      },
+      "insufficient_record_detail": {
+        "cases": 1,
+        "failed": 1,
+        "passed": 0
+      },
+      "meal_missing_label": {
+        "cases": 1,
+        "failed": 0,
+        "passed": 1
+      },
+      "mixed_kind_schema_limit": {
+        "cases": 2,
+        "failed": 2,
+        "passed": 0
+      },
+      "modification": {
+        "cases": 1,
+        "failed": 0,
+        "passed": 1
+      },
+      "modification_ambiguous_quantity": {
+        "cases": 1,
+        "failed": 0,
+        "passed": 1
+      },
+      "modification_missing_intensity": {
+        "cases": 1,
+        "failed": 0,
+        "passed": 1
+      },
+      "multi_food_missing_quantity": {
+        "cases": 1,
+        "failed": 1,
+        "passed": 0
+      },
+      "multi_food_schema_limit": {
+        "cases": 4,
+        "failed": 4,
+        "passed": 0
+      },
+      "quantity_ambiguous": {
+        "cases": 3,
+        "failed": 0,
+        "passed": 3
+      },
+      "quantity_missing": {
+        "cases": 1,
+        "failed": 0,
+        "passed": 1
+      },
+      "single_explicit_energy": {
+        "cases": 2,
+        "failed": 0,
+        "passed": 2
+      },
+      "single_explicit_quantity": {
+        "cases": 6,
+        "failed": 0,
+        "passed": 6
+      },
+      "single_fuzzy_unit": {
+        "cases": 1,
+        "failed": 0,
+        "passed": 1
+      },
+      "snack_ambiguous_quantity": {
+        "cases": 3,
+        "failed": 1,
+        "passed": 2
+      },
+      "snack_explicit_energy": {
+        "cases": 2,
+        "failed": 0,
+        "passed": 2
+      },
+      "snack_explicit_quantity": {
+        "cases": 4,
+        "failed": 0,
+        "passed": 4
+      },
+      "snack_missing_quantity": {
+        "cases": 1,
+        "failed": 0,
+        "passed": 1
+      },
+      "unjudgeable_activity": {
+        "cases": 1,
+        "failed": 1,
+        "passed": 0
+      },
+      "unjudgeable_statement": {
+        "cases": 1,
+        "failed": 1,
+        "passed": 0
+      }
+    },
+    "schema_version": "journey-health-parsing-summary-1",
+    "started_at": "2026-09-11T07:37:04.199971+00:00",
+    "status": "complete",
+    "summary_path": "/Users/p668/Documents/journeyapp/evaluation/raw/parsing-summary.json",
+    "usage": {
+      "estimated_cost_usd": 0.0134708,
+      "input_tokens": 69032,
+      "latency_p50_ms": 2197,
+      "latency_p95_ms": 2959,
+      "output_tokens": 13594,
+      "retries": 0
+    }
+  },
+  "performance": {
+    "rag_workflow": {
+      "tasks": 60,
+      "successful_model_calls": 41,
+      "mean_ms": 953.9613783839741,
+      "p50_ms": 1124.9278129835147,
+      "p95_ms": 2047.7305820095353,
+      "mean_input_tokens_per_task": 346.81666666666666,
+      "mean_output_tokens_per_task": 131.78333333333333,
+      "mean_configured_cost_usd_per_task": 8.545366666666666e-05,
+      "cost_cny": null,
+      "actual_billed_cost": null
+    },
+    "thirty_day_summary_uncached": {
+      "tasks": 20,
+      "successful_model_calls": 20,
+      "mean_ms": 4415.120808349457,
+      "p50_ms": 4478.591312494245,
+      "p95_ms": 4956.2735829968005,
+      "mean_input_tokens_per_task": 1202,
+      "mean_output_tokens_per_task": 740.4,
+      "mean_configured_cost_usd_per_task": 0.000375592,
+      "cost_cny": null,
+      "actual_billed_cost": null
+    },
+    "health_parsing_case": {
+      "tasks": 74,
+      "mean_ms": 2236,
+      "p50_ms": 2197,
+      "p95_ms": 2959,
+      "mean_input_tokens_per_task": 932.8648648648649,
+      "mean_output_tokens_per_task": 183.7027027027027,
+      "mean_configured_cost_usd_per_task": 0.00018203783783783784,
+      "cost_cny": null,
+      "actual_billed_cost": null
+    }
+  },
+  "history": {
+    "schema_version": "journey-evidence-inventory-1",
+    "generated_at": "2026-09-11",
+    "scope": {
+      "repository": "/Users/p668/Documents/journeyapp",
+      "branch": "v0.2",
+      "head": {
+        "short": "c6a1d14",
+        "full": "c6a1d14b375841308187e9be635f391310a18751",
+        "subject": "docs: refine onboarding and portfolio demo guide",
+        "date": "2026-09-02"
+      },
+      "read_only": true,
+      "excluded": [
+        "No source edits or project-file writes",
+        "No database-clearing or destructive test runs",
+        "No .env or secret-value reads",
+        "No external messages, commits, pushes, or releases"
+      ]
+    },
+    "repository_state": {
+      "current_agents_files": [],
+      "historical_agents_files_seen_in_2654c43": [
+        "AGENTS.md",
+        "apps/mobile/AGENTS.md"
+      ],
+      "historical_files_are_not_active_constraints": true,
+      "tracked_modified_count": 36,
+      "untracked_count": 12,
+      "important_boundary": "Current source, tests, and docs for FIX-05 through FIX-13 are worktree evidence only; they are not represented by a reachable commit after c6a1d14."
+    },
+    "evidence_policy": {
+      "status_legend": {
+        "committed_code_and_test": "A reachable commit contains the implementation paths and relevant automated tests. This proves repository history at that commit, not current runtime behavior.",
+        "committed_partial": "Committed implementation/test evidence exists, but the issue itself retains a material unverified boundary or a quality gate failure.",
+        "worktree_static": "Current source and test paths support the behavior, but the changes are uncommitted; no current backend execution artifact was independently verified in this pass. A parent-thread runtime report is recorded separately and is not treated as an artifact.",
+        "worktree_claim_with_mobile_artifact": "Current source/test paths plus the untracked mobile test artifact support the client side; backend or release claims remain unverified here.",
+        "docs_claim_only": "A document asserts completion or runtime behavior, but no matching current code/test/report evidence was found for that claim.",
+        "planned_gap": "A planned problem exists in the development document but has no corresponding issue entry or sufficient evidence in the current issue document."
+      },
+      "deduplication": {
+        "evidence_key": "normalize(issue_key, chain_id, evidence_kind, commit, path, test_name, report_metric)",
+        "normalization": [
+          "Trim whitespace and normalize path separators to '/'.",
+          "Use the semantic issue key, not only the display number; v0.2 FIX-05 through FIX-10 have collisions.",
+          "Treat a parameterized test declaration and its expanded executed cases as one test identity plus an execution_count.",
+          "Treat the same path cited by multiple claims as one path evidence item and retain all issue links separately.",
+          "Treat a commit hash as the identity of a historical implementation snapshot; do not merge it with dirty worktree evidence.",
+          "Deduplicate reports by report path plus metric name; repeated prose claims do not create additional evidence."
+        ],
+        "statistical_algorithm": [
+          "Parse issue headings from docs/v0.1问题文档.md, docs/v0.2开发文档.md, and docs/v0.2问题文档.md.",
+          "Build semantic issue records from heading number plus title and preserve source document and line span.",
+          "Join each issue to evidence only when a commit/path/test/report explicitly names or implements the behavior; otherwise keep the claim as docs_claim_only.",
+          "Count unique issue keys by evidence status after the evidence_key deduplication step.",
+          "Count automated tests from the execution artifact when available; report static declarations separately because test.each expands at runtime.",
+          "Compute claim-only ratio as docs_claim_only / total_issue_keys and committed ratio as committed statuses / total_issue_keys."
+        ]
+      }
+    },
+    "primary_user_chains": [
+      {
+        "chain_id": "auth_onboarding",
+        "name": "注册、登录、会话恢复与进入首页",
+        "user_trigger": "登录页选择登录或创建账号，成功后进入首页；刷新令牌或退出时维护本地会话。",
+        "product_flow_evidence": [
+          "docs/作品集演示视频录制流程.md:27-30"
+        ],
+        "client_paths": [
+          "apps/mobile/src/app/sign-in.tsx:58-139",
+          "apps/mobile/src/providers/auth-provider.tsx",
+          "apps/mobile/src/lib/api.ts:189-203",
+          "apps/mobile/src/lib/session-storage.ts"
+        ],
+        "backend_paths": [
+          "backend/app/api/v1/auth.py:20-50",
+          "backend/app/services/auth.py:53-229",
+          "backend/app/models/auth_session.py"
+        ],
+        "tests": [
+          "apps/mobile/tests/sign-in-screen.test.tsx:37-98",
+          "apps/mobile/tests/api.test.ts:79-82,164-181",
+          "backend/tests/test_auth.py:4-118",
+          "backend/tests/test_bootstrap_and_contract.py:13-34"
+        ],
+        "linked_issues": [
+          "V01-01",
+          "FIX-01",
+          "v0.2-issue-FIX-05-registration"
+        ]
+      },
+      {
+        "chain_id": "profile_goal",
+        "name": "画像、当前体重、目标与能量估算",
+        "user_trigger": "用户在我的页面编辑画像或目标，当前体重变化作为新时间序列记录保存。",
+        "product_flow_evidence": [
+          "docs/作品集演示视频录制流程.md:33-37"
+        ],
+        "client_paths": [
+          "apps/mobile/src/app/(tabs)/profile.tsx",
+          "apps/mobile/src/app/settings/profile.tsx:39-122",
+          "apps/mobile/src/app/settings/goal.tsx",
+          "apps/mobile/src/lib/energy.ts"
+        ],
+        "backend_paths": [
+          "backend/app/api/v1/profile.py:19-54",
+          "backend/app/services/profile.py:21-166",
+          "backend/app/services/energy.py"
+        ],
+        "tests": [
+          "apps/mobile/tests/profile-settings-screen.test.tsx:66-101",
+          "apps/mobile/tests/journey-summary.test.ts:46-76",
+          "backend/tests/test_profile.py:12-67",
+          "backend/tests/test_sync_conflicts.py:13-59"
+        ],
+        "linked_issues": [
+          "V01-04",
+          "v0.2-issue-FIX-06-profile-weight",
+          "v0.2-issue-FIX-09-candidate-and-metrics"
+        ]
+      },
+      {
+        "chain_id": "manual_records_sync",
+        "name": "手动饮食、运动、体重记录与离线同步",
+        "user_trigger": "首页快速记录或 Journey 编辑记录；断网时写入本地副本，恢复网络后同步。",
+        "product_flow_evidence": [
+          "docs/作品集演示视频录制流程.md:56-60"
+        ],
+        "client_paths": [
+          "apps/mobile/src/app/record/[kind].tsx:160-285",
+          "apps/mobile/src/providers/sync-provider.tsx:135-190,289-450",
+          "apps/mobile/src/lib/local-replica.ts:101-220",
+          "apps/mobile/src/lib/pending-storage.ts"
+        ],
+        "backend_paths": [
+          "backend/app/api/v1/food_records.py:21-94",
+          "backend/app/api/v1/activity_records.py:21-94",
+          "backend/app/api/v1/weight_records.py:21-94",
+          "backend/app/services/records.py:39-319",
+          "backend/app/services/common.py:43-164",
+          "backend/app/api/v1/aggregates.py:16-43"
+        ],
+        "tests": [
+          "apps/mobile/tests/sync-provider.test.tsx:116-335",
+          "apps/mobile/tests/local-replica.test.ts:64-151",
+          "apps/mobile/tests/pending-storage.test.ts:59-92",
+          "backend/tests/test_records_and_aggregates.py:27-160",
+          "backend/tests/test_sync_conflicts.py:61-110",
+          "backend/tests/test_core_e2e.py:13-143"
+        ],
+        "linked_issues": [
+          "V01-04",
+          "v0.2-issue-FIX-06-profile-weight",
+          "v0.2-issue-FIX-08-candidate-confirmation",
+          "v0.2-issue-FIX-11-empty-home"
+        ]
+      },
+      {
+        "chain_id": "agent_candidate_confirmation",
+        "name": "自然语言拆分、候选生成、用户确认与真实记录落地",
+        "user_trigger": "首页统一输入框提交一段包含饮食和运动的自然语言。",
+        "product_flow_evidence": [
+          "docs/作品集演示视频录制流程.md:39-60"
+        ],
+        "client_paths": [
+          "apps/mobile/src/app/(tabs)/index.tsx:157-296,318-363",
+          "apps/mobile/src/lib/api.ts:264-307,319-329",
+          "apps/mobile/src/providers/sync-provider.tsx"
+        ],
+        "backend_paths": [
+          "backend/app/api/v1/agent.py:72-127",
+          "backend/app/services/agent.py:173-1106",
+          "backend/app/agent/intent_router.py",
+          "backend/app/agent/specialists.py",
+          "backend/app/agent/tools.py",
+          "backend/app/agent/execution_graph.py"
+        ],
+        "tests": [
+          "apps/mobile/tests/home-screen.test.tsx:135-338",
+          "backend/tests/test_agent_api.py:17-185",
+          "backend/tests/test_agent_v2.py:27-220",
+          "backend/tests/test_agent_v3.py:28-302",
+          "backend/tests/test_core_e2e.py:50-143",
+          "backend/blackbox_tests/test_agent_blackbox.py:40-162"
+        ],
+        "reports": [
+          "evals/reports/REAL_AGENT_V2_PROVIDER_ACCEPTANCE_2.json: gate_passed=true, policy_and_confirmation_pass_rate=1.0",
+          "evals/reports/REAL_AGENT_V3_PROVIDER_ACCEPTANCE.json: gate_passed=true, checkpoint_plan_pass_rate=1.0 and recovery_choice_pass_rate=1.0",
+          "evals/reports/latest.json: mock intent_exact_accuracy=1.0, mixed_intent_exact_accuracy=1.0, high_risk_rule_pass_rate=1.0"
+        ],
+        "linked_issues": [
+          "V01-02",
+          "FIX-01",
+          "v0.2-issue-FIX-08-candidate-confirmation",
+          "v0.2-issue-FIX-09-candidate-and-metrics"
+        ]
+      },
+      {
+        "chain_id": "journey_summary",
+        "name": "7天/30天 Journey 聚合、教练总结与依据",
+        "user_trigger": "用户进入 Journey，达到对应记录日门槛后生成或切换周期总结。",
+        "product_flow_evidence": [
+          "docs/作品集演示视频录制流程.md:62-66"
+        ],
+        "client_paths": [
+          "apps/mobile/src/app/(tabs)/journey.tsx:91-218",
+          "apps/mobile/src/lib/journey-summary.ts",
+          "apps/mobile/src/lib/api.ts:205-210"
+        ],
+        "backend_paths": [
+          "backend/app/api/v1/agent.py:25-50",
+          "backend/app/services/agent_summary.py:50-424",
+          "backend/app/agent/skills/journey_coach.py:21-232",
+          "backend/app/models/agent.py:AgentSummaryCache",
+          "backend/alembic/versions/0009_agent_summary_cache.py"
+        ],
+        "tests": [
+          "apps/mobile/tests/journey-screen.test.tsx:176-270",
+          "apps/mobile/tests/journey-summary.test.ts:46-76",
+          "apps/mobile/tests/api.test.ts:103-118",
+          "backend/tests/test_agent_summary.py:34-290"
+        ],
+        "linked_issues": [
+          "v0.2-issue-FIX-10-summary",
+          "v0.2-issue-FIX-12-period-summary",
+          "v0.2-issue-FIX-13-coaching"
+        ]
+      },
+      {
+        "chain_id": "privacy_external_ai",
+        "name": "外部 AI 授权、最小上下文、撤回与 Agent 数据删除",
+        "user_trigger": "用户从我的页面查看政策、明确授权或撤回并删除当前账号 Agent 数据。",
+        "product_flow_evidence": [
+          "docs/作品集演示视频录制流程.md:68-72"
+        ],
+        "client_paths": [
+          "apps/mobile/src/app/settings/agent-privacy.tsx",
+          "apps/mobile/src/lib/api.ts:120-188,330-356",
+          "apps/mobile/src/app/(tabs)/index.tsx:84-100,168-196",
+          "apps/mobile/src/app/food-image.tsx:127-199"
+        ],
+        "backend_paths": [
+          "backend/app/api/v1/agent.py:53-70",
+          "backend/app/services/agent_privacy.py:41-276",
+          "backend/app/core/privacy.py:1-310",
+          "backend/app/core/provider_review.py",
+          "backend/app/core/settings.py",
+          "infra/privacy/backup.mjs",
+          "backend/app/purge_agent_data.py"
+        ],
+        "tests": [
+          "apps/mobile/tests/agent-privacy-screen.test.tsx:48-114",
+          "apps/mobile/tests/environment.test.ts:20-63",
+          "apps/mobile/tests/record-agent-deletion.test.tsx:48-90",
+          "backend/tests/test_agent_privacy.py:98-690",
+          "backend/tests/test_provider_review.py:24-66",
+          "backend/tests/test_restore_privacy.py:18-105",
+          "backend/tests/test_settings.py:6-249",
+          "infra/privacy/backup.test.mjs"
+        ],
+        "linked_issues": [
+          "FIX-01",
+          "FIX-03",
+          "v0.2-issue-FIX-07-local-mode"
+        ]
+      },
+      {
+        "chain_id": "food_image_experiment",
+        "name": "食物图片实验、尺度提示、候选校正与手动回退",
+        "user_trigger": "Development 或本机个人模式中用户主动选择图片并确认上传。",
+        "product_flow_evidence": [
+          "README.md:1-20",
+          "docs/作品集演示视频录制流程.md:68-72"
+        ],
+        "client_paths": [
+          "apps/mobile/src/app/food-image.tsx:203-300",
+          "apps/mobile/src/config/environment.ts"
+        ],
+        "backend_paths": [
+          "backend/app/api/v1/food_images.py:13-32",
+          "backend/app/media/food_image.py",
+          "backend/app/schemas/media.py"
+        ],
+        "tests": [
+          "apps/mobile/tests/food-image-screen.test.tsx:102-263",
+          "backend/tests/test_food_image_api.py:40-272",
+          "backend/tests/test_food_image_unit.py:11-121",
+          "evals/test_food_image_scale_pair.py",
+          "evals/test_food_image_recognition.py"
+        ],
+        "reports": [
+          "evals/reports/STAGE9_QWEN_REAL_BASELINE.json: gate_passed=false, top3_name_hit_rate=0.288889",
+          "evals/reports/STAGE9_QWEN_REAL_AFTER_V1_2.json: gate_passed=false, top3_name_hit_rate=0.844444 and portion_median_relative_error=0.374758",
+          "evals/reports/STAGE9_QWEN_RECOGNITION_V2.json: gate_passed=false, overall_food_top3_name_hit_rate=0.672727 and chinese_home_meal_top3_name_hit_rate=0.6",
+          "evals/reports/STAGE9_QWEN_V1_3_HOLDOUT.json: gate_passed=false, top3_name_hit_rate=0.766667"
+        ],
+        "linked_issues": [
+          "V01-05",
+          "FIX-03",
+          "v0.2-issue-FIX-07-local-mode"
+        ]
+      },
+      {
+        "chain_id": "life_inspiration",
+        "name": "主动分享公开链接、预览、确认保存与删除生活灵感",
+        "user_trigger": "用户粘贴白名单 HTTPS 公开链接，预览后主动确认保存。",
+        "product_flow_evidence": [
+          "apps/mobile/src/app/inspirations.tsx:55-111"
+        ],
+        "client_paths": [
+          "apps/mobile/src/app/inspirations.tsx:31-189",
+          "apps/mobile/src/lib/api.ts:246-261"
+        ],
+        "backend_paths": [
+          "backend/app/api/v1/inspirations.py:23-74",
+          "backend/app/services/inspirations.py:70-327",
+          "backend/alembic/versions/0007_life_inspirations.py"
+        ],
+        "tests": [
+          "apps/mobile/tests/inspirations-screen.test.tsx:45-102",
+          "backend/tests/test_inspirations.py:33-231"
+        ],
+        "linked_issues": [
+          "supporting_feature_life_inspiration"
+        ]
+      },
+      {
+        "chain_id": "health_delivery",
+        "name": "服务 readiness、构建变体、CI 与跨平台交付",
+        "user_trigger": "开发者启动本地服务、构建 Web/iOS/Android 或执行 CI 门禁。",
+        "product_flow_evidence": [
+          "README.md:45-104",
+          "docs/作品集演示视频录制流程.md:74-80"
+        ],
+        "client_paths": [
+          "apps/mobile/app.config.js",
+          "apps/mobile/eas.json",
+          "infra/verify_app_variants.mjs",
+          "apps/mobile/components/home-overview.tsx"
+        ],
+        "backend_paths": [
+          "backend/app/api/routes/health.py",
+          "compose.yaml",
+          ".github/workflows/ci.yml",
+          "backend/Dockerfile"
+        ],
+        "tests": [
+          "backend/tests/test_health.py:8-51",
+          "apps/mobile/tests/environment.test.ts:20-63",
+          "apps/mobile/tests/layout-contract.test.ts:10-48",
+          "apps/mobile/e2e/core-flow.spec.ts"
+        ],
+        "linked_issues": [
+          "V01-01",
+          "FIX-01",
+          "FIX-03",
+          "v0.2-dev-FIX-04-service-status",
+          "v0.2-dev-FIX-10-release-evidence"
+        ]
+      }
+    ],
+    "issue_registry": {
+      "documents": {
+        "v0.1_problem_doc": {
+          "path": "docs/v0.1问题文档.md",
+          "issue_keys": [
+            "V01-01",
+            "V01-02",
+            "V01-03",
+            "V01-04",
+            "V01-05"
+          ]
+        },
+        "v0.2_development_doc": {
+          "path": "docs/v0.2开发文档.md",
+          "issue_keys": [
+            "v0.2-dev-FIX-01-capability-leak",
+            "v0.2-dev-FIX-02-citation",
+            "v0.2-dev-FIX-03-privacy",
+            "v0.2-dev-FIX-04-service-status",
+            "v0.2-dev-FIX-05-agent-run",
+            "v0.2-dev-FIX-06-memory",
+            "v0.2-dev-FIX-07-rag",
+            "v0.2-dev-FIX-08-otel",
+            "v0.2-dev-FIX-09-user-ui",
+            "v0.2-dev-FIX-10-release-evidence"
+          ]
+        },
+        "v0.2_problem_doc_current": {
+          "path": "docs/v0.2问题文档.md",
+          "issue_keys": [
+            "v0.2-issue-FIX-01-capability-leak",
+            "v0.2-issue-FIX-02-citation",
+            "v0.2-issue-FIX-03-privacy",
+            "v0.2-issue-FIX-05-registration",
+            "v0.2-issue-FIX-06-profile-weight",
+            "v0.2-issue-FIX-07-local-mode",
+            "v0.2-issue-FIX-08-candidate-confirmation",
+            "v0.2-issue-FIX-09-candidate-and-metrics",
+            "v0.2-issue-FIX-10-summary",
+            "v0.2-issue-FIX-11-empty-home",
+            "v0.2-issue-FIX-12-period-summary",
+            "v0.2-issue-FIX-13-coaching"
+          ]
+        }
+      },
+      "committed_fixes": [
+        {
+          "issue_key": "V01-01",
+          "title": "旧微信小程序迁移到跨平台交付",
+          "status": "committed_code_and_test",
+          "doc_evidence": [
+            "docs/v0.1问题文档.md:8-24"
+          ],
+          "commits": [
+            "2654c43"
+          ],
+          "paths": [
+            "apps/mobile/",
+            "backend/app/api/v1/",
+            "compose.yaml",
+            ".github/workflows/ci.yml"
+          ],
+          "tests": [
+            "backend/tests/test_bootstrap_and_contract.py",
+            "apps/mobile/tests/layout-contract.test.ts",
+            "apps/mobile/e2e/core-flow.spec.ts"
+          ],
+          "boundary": "构建路径和共享 API 有仓库证据；商店发布、公网生产和真机覆盖没有由此清单确认。"
+        },
+        {
+          "issue_key": "V01-02",
+          "title": "Agent 写入前必须经用户确认",
+          "status": "committed_code_and_test",
+          "doc_evidence": [
+            "docs/v0.1问题文档.md:26-42"
+          ],
+          "commits": [
+            "2654c43",
+            "ee88b7e"
+          ],
+          "paths": [
+            "backend/app/services/agent.py:106-173,1106-",
+            "backend/app/agent/policy.py",
+            "backend/app/models/idempotency.py",
+            "apps/mobile/src/app/(tabs)/index.tsx"
+          ],
+          "tests": [
+            "backend/tests/test_agent_api.py:test_agent_multi_intent_candidates_require_confirmation",
+            "backend/tests/test_agent_api.py:test_confirmation_is_owned_idempotent_and_writes_once",
+            "backend/tests/test_agent_v3.py:test_mixed_write_plan_pauses_confirms_and_resumes_with_fresh_data",
+            "backend/blackbox_tests/test_agent_blackbox.py:test_agent_checkpoint_confirm_resume_over_real_http"
+          ],
+          "reports": [
+            "evals/reports/REAL_AGENT_V2_PROVIDER_ACCEPTANCE_2.json",
+            "evals/reports/REAL_AGENT_V3_PROVIDER_ACCEPTANCE.json"
+          ],
+          "boundary": "证据覆盖有界工作流；不支持无限自治、群聊或医疗决策。"
+        },
+        {
+          "issue_key": "V01-03",
+          "title": "RAG 知识回答使用受控依据并在不足时拒答",
+          "status": "committed_partial",
+          "doc_evidence": [
+            "docs/v0.1问题文档.md:44-61"
+          ],
+          "commits": [
+            "ee88b7e",
+            "257a36a"
+          ],
+          "paths": [
+            "backend/app/knowledge/retriever.py",
+            "backend/app/knowledge/sources/journey_core_v1.json",
+            "backend/app/agent/workflows.py:44-190",
+            "evals/run_rag_eval.py"
+          ],
+          "tests": [
+            "backend/tests/test_agent_unit.py:test_rag_no_answer_does_not_generate_without_evidence",
+            "backend/tests/test_agent_unit.py:test_rag_citation_verifier_falls_back_when_model_citations_are_missing_or_invalid",
+            "backend/tests/test_agent_unit.py:test_rag_citation_verifier_preserves_valid_model_citation",
+            "backend/tests/test_agent_unit.py:test_rag_citation_verifier_abstains_when_fallback_has_no_valid_chunk_id",
+            "evals/test_rag_eval.py"
+          ],
+          "reports": [
+            "evals/reports/baseline-before.json: citation_support_rate=0.0, no_answer_accuracy=0.75, gate failures",
+            "evals/reports/latest.json: provider=mock, citation_support_rate=1.0 and no_answer_accuracy=1.0"
+          ],
+          "boundary": "v0.1 文档保留 90% 完成度；latest 是 Mock 报告，不能覆盖真实 Provider 的历史 Citation Correctness 0.9083。"
+        },
+        {
+          "issue_key": "V01-04",
+          "title": "离线记录、同步、冲突与退出清理",
+          "status": "committed_code_and_test",
+          "doc_evidence": [
+            "docs/v0.1问题文档.md:63-79"
+          ],
+          "commits": [
+            "ee88b7e"
+          ],
+          "paths": [
+            "apps/mobile/src/lib/local-replica.ts",
+            "apps/mobile/src/providers/sync-provider.tsx",
+            "apps/mobile/src/lib/pending-storage.ts",
+            "backend/app/services/common.py",
+            "backend/app/models/idempotency.py",
+            "backend/alembic/versions/0006_local_first_versions.py"
+          ],
+          "tests": [
+            "apps/mobile/tests/local-replica.test.ts",
+            "apps/mobile/tests/pending-storage.test.ts",
+            "apps/mobile/tests/sync-provider.test.tsx",
+            "backend/tests/test_sync_conflicts.py",
+            "backend/tests/test_records_and_aggregates.py"
+          ],
+          "boundary": "仓库测试基线存在；真实设备密钥取证、规模化故障注入和公开生产验证未由此清单确认。"
+        },
+        {
+          "issue_key": "V01-05",
+          "title": "食物图片质量风险关闭，能力保持实验性",
+          "status": "committed_partial",
+          "doc_evidence": [
+            "docs/v0.1问题文档.md:81-99"
+          ],
+          "commits": [
+            "2654c43",
+            "ee88b7e",
+            "257a36a"
+          ],
+          "paths": [
+            "apps/mobile/src/app/food-image.tsx",
+            "backend/app/media/food_image.py",
+            "backend/app/api/v1/food_images.py",
+            "evals/food_image_real/",
+            "evals/food_image_recognition_holdout/"
+          ],
+          "tests": [
+            "apps/mobile/tests/food-image-screen.test.tsx",
+            "backend/tests/test_food_image_api.py",
+            "backend/tests/test_food_image_unit.py",
+            "evals/test_food_image_recognition.py",
+            "evals/test_food_image_scale_pair.py"
+          ],
+          "reports": [
+            "evals/reports/STAGE9_QWEN_REAL_BASELINE.json: gate_passed=false",
+            "evals/reports/STAGE9_QWEN_RECOGNITION_V2.json: overall_food_top3_name_hit_rate=0.672727, chinese_home_meal_top3_name_hit_rate=0.6",
+            "evals/reports/STAGE9_QWEN_V1_3_HOLDOUT.json: gate_passed=false"
+          ],
+          "boundary": "No-Go/实验候选+用户校正有证据；图片正式产品质量没有修好，也没有发布。"
+        },
+        {
+          "issue_key": "v0.2-issue-FIX-01-capability-leak",
+          "title": "实验与内部能力可能泄漏到正式环境",
+          "status": "committed_code_and_test",
+          "doc_evidence": [
+            "docs/v0.2问题文档.md:8-40"
+          ],
+          "commits": [
+            "257a36a"
+          ],
+          "paths": [
+            "apps/mobile/app.config.js",
+            "apps/mobile/src/config/environment.ts",
+            "apps/mobile/src/app/sign-in.tsx",
+            "apps/mobile/src/app/(tabs)/index.tsx",
+            "backend/app/core/settings.py",
+            "compose.staging.yaml",
+            "compose.production.yaml",
+            "infra/verify_app_variants.mjs"
+          ],
+          "tests": [
+            "apps/mobile/tests/environment.test.ts:test_fails_closed_when_the_runtime_manifest_is_missing",
+            "apps/mobile/tests/environment.test.ts:test_ignores_enabled_flags_outside_the_development_variant",
+            "apps/mobile/tests/sign-in-screen.test.tsx:test_hides_the_local_test_account_unless_the_development_manifest_enables_it",
+            "apps/mobile/tests/home-screen.test.tsx:test_keeps_internal_Agent_details_out_of_the_ordinary_user_result",
+            "backend/tests/test_settings.py:test_test_account_seed_is_rejected_outside_local_test",
+            "backend/tests/test_settings.py:test_mock_agent_is_rejected_outside_local_test",
+            "backend/tests/test_agent_unit.py:test_rag_citation_verifier_falls_back_when_model_citations_are_missing_or_invalid",
+            "infra/verify_app_variants.mjs"
+          ],
+          "boundary": "257a36a 证明工程门禁在该提交；当前工作树重改了相关路径，任何当前分支声明需以当前 diff 重新验证。"
+        },
+        {
+          "issue_key": "v0.2-issue-FIX-02-citation",
+          "title": "知识回答 Citation Verifier",
+          "status": "committed_code_and_test",
+          "doc_evidence": [
+            "docs/v0.2问题文档.md:42-69"
+          ],
+          "commits": [
+            "257a36a"
+          ],
+          "paths": [
+            "backend/app/agent/workflows.py:44-190",
+            "backend/app/schemas/agent.py",
+            "backend/tests/test_agent_unit.py"
+          ],
+          "tests": [
+            "backend/tests/test_agent_unit.py:test_rag_citation_verifier_falls_back_when_model_citations_are_missing_or_invalid",
+            "backend/tests/test_agent_unit.py:test_rag_citation_verifier_preserves_valid_model_citation",
+            "backend/tests/test_agent_unit.py:test_rag_citation_verifier_abstains_when_fallback_has_no_valid_chunk_id"
+          ],
+          "reports": [
+            "evals/reports/latest.json: provider=mock, citation_support_rate=1.0"
+          ],
+          "boundary": "真实 Provider 复验与真实质量指标仍未由当前证据确认。"
+        },
+        {
+          "issue_key": "v0.2-issue-FIX-03-privacy",
+          "title": "外部模型授权与可验证数据生命周期",
+          "status": "committed_partial",
+          "doc_evidence": [
+            "docs/v0.2问题文档.md:71-243"
+          ],
+          "commits": [
+            "257a36a"
+          ],
+          "paths": [
+            "backend/app/core/privacy.py",
+            "backend/app/services/agent_privacy.py",
+            "backend/app/core/provider_review.py",
+            "backend/app/check_agent_privacy_release.py",
+            "backend/app/purge_agent_data.py",
+            "backend/alembic/versions/0008_agent_privacy.py",
+            "infra/privacy/backup.mjs",
+            "infra/staging/restore.sh",
+            "apps/mobile/src/app/settings/agent-privacy.tsx"
+          ],
+          "tests": [
+            "backend/tests/test_agent_privacy.py",
+            "backend/tests/test_provider_review.py",
+            "backend/tests/test_restore_privacy.py",
+            "backend/tests/test_settings.py",
+            "apps/mobile/tests/agent-privacy-screen.test.tsx",
+            "apps/mobile/tests/record-agent-deletion.test.tsx",
+            "infra/privacy/backup.test.mjs"
+          ],
+          "reports": [
+            "docs/v0.2问题文档.md:142-151 reports 9/10 checks passing and external/provider operations partial"
+          ],
+          "boundary": "账号授权、最小上下文、活跃数据删除和隔离恢复有代码/测试；供应商删除回执、真实审核责任人、定时备份清理、密钥托管与正式发布仍缺。"
+        }
+      ],
+      "worktree_only_issue_claims": [
+        {
+          "issue_key": "v0.2-issue-FIX-05-registration",
+          "title": "注册表单静默禁用",
+          "status": "worktree_claim_with_mobile_artifact",
+          "doc_evidence": [
+            "docs/v0.2问题文档.md:245-267"
+          ],
+          "commits": [],
+          "paths": [
+            "apps/mobile/src/app/sign-in.tsx:14-76,120-132",
+            "apps/mobile/tests/sign-in-screen.test.tsx:55-103"
+          ],
+          "tests": [
+            "apps/mobile/tests/sign-in-screen.test.tsx:test_registration_validates_fields_and_sends_the_stable_contract",
+            "apps/mobile/tests/sign-in-screen.test.tsx:test_registration_explains_every_invalid_field_before_enabling_submission"
+          ],
+          "artifact": "evaluation/raw/mobile.log: 17 suites and 83 tests passed on 2026-09-11; this is an untracked client artifact.",
+          "boundary": "没有提交后的 commit，也没有单独的后端当前执行报告。"
+        },
+        {
+          "issue_key": "v0.2-issue-FIX-06-profile-weight",
+          "title": "编辑画像补充当前体重",
+          "status": "worktree_static",
+          "doc_evidence": [
+            "docs/v0.2问题文档.md:268-288"
+          ],
+          "commits": [],
+          "paths": [
+            "apps/mobile/src/app/settings/profile.tsx:39-122",
+            "apps/mobile/tests/profile-settings-screen.test.tsx:66-101",
+            "apps/mobile/src/providers/sync-provider.tsx"
+          ],
+          "tests": [
+            "apps/mobile/tests/profile-settings-screen.test.tsx:test_records_current_weight_while_saving_the_profile_and_preserves_the_weight_history_model",
+            "apps/mobile/tests/profile-settings-screen.test.tsx:test_rejects_an_impossible_current_weight_before_saving_anything"
+          ],
+          "boundary": "当前代码和测试存在于 dirty worktree；没有提交或当前 backend runtime artifact。"
+        },
+        {
+          "issue_key": "v0.2-issue-FIX-07-local-mode",
+          "title": "个人本机模式解除企业发布门禁但保留账号授权",
+          "status": "worktree_static",
+          "doc_evidence": [
+            "docs/v0.2问题文档.md:289-320"
+          ],
+          "commits": [],
+          "paths": [
+            "backend/app/core/settings.py",
+            "backend/app/services/agent_privacy.py",
+            "backend/app/media/food_image.py",
+            "backend/tests/test_agent_privacy.py",
+            "backend/tests/test_food_image_api.py",
+            "backend/tests/test_settings.py"
+          ],
+          "tests": [
+            "backend/tests/test_agent_privacy.py:test_local_personal_mode_skips_deployment_review_but_keeps_account_consent",
+            "backend/tests/test_food_image_api.py:test_local_personal_mode_allows_external_image_after_per_upload_confirmation",
+            "backend/tests/test_settings.py:test_provider_review_can_only_be_optional_for_local_personal_use"
+          ],
+          "boundary": "文档声称运行态 DeepSeek/Qwen 已验证，但没有可读取的当前 runtime report；实际 .env 未读取。"
+        },
+        {
+          "issue_key": "v0.2-issue-FIX-08-candidate-confirmation",
+          "title": "候选一键确认、首页刷新与部分失败恢复",
+          "status": "worktree_claim_with_mobile_artifact",
+          "doc_evidence": [
+            "docs/v0.2问题文档.md:321-356"
+          ],
+          "commits": [],
+          "paths": [
+            "apps/mobile/src/app/(tabs)/index.tsx:208-296,318-363",
+            "apps/mobile/tests/home-screen.test.tsx:135-338",
+            "backend/app/agent/tools.py:51-207",
+            "backend/tests/test_agent_api.py"
+          ],
+          "tests": [
+            "apps/mobile/tests/home-screen.test.tsx:test_renders_inline_defaults_without_exposing_internal_Agent_details",
+            "apps/mobile/tests/home-screen.test.tsx:test_confirms_food_and_activity_with_one_button_and_refreshes_today_immediately",
+            "apps/mobile/tests/home-screen.test.tsx:test_keeps_only_the_failed_candidate_available_after_a_partial_confirmation"
+          ],
+          "artifact": "evaluation/raw/mobile.log and evaluation/raw/mobile.json agree on 17/17 suites and 83/83 tests passed.",
+          "boundary": "iOS simulator evidence is a docs claim; no current simulator capture or backend current execution artifact was independently verified in this pass."
+        },
+        {
+          "issue_key": "v0.2-issue-FIX-09-candidate-and-metrics",
+          "title": "候选属性就地修改与体重/能量指标含义",
+          "status": "worktree_claim_with_mobile_artifact",
+          "doc_evidence": [
+            "docs/v0.2问题文档.md:357-394"
+          ],
+          "commits": [],
+          "paths": [
+            "apps/mobile/src/app/(tabs)/index.tsx:208-216",
+            "apps/mobile/src/lib/journey-summary.ts",
+            "backend/app/agent/context.py:16-66",
+            "backend/app/agent/tools.py",
+            "apps/mobile/tests/home-screen.test.tsx:155-195",
+            "apps/mobile/tests/journey-summary.test.ts:46-76",
+            "backend/tests/test_agent_unit.py:234-245"
+          ],
+          "tests": [
+            "apps/mobile/tests/home-screen.test.tsx:test_updates_the_food_meal_inline_before_confirming_the_candidate",
+            "apps/mobile/tests/journey-summary.test.ts:one_weight_measurement_is_insufficient_to_calculate_a_change",
+            "apps/mobile/tests/journey-summary.test.ts:energy_equivalent_uses_only_days_with_food_records_and_does_not_claim_body_composition",
+            "backend/tests/test_agent_unit.py:test_weight_change_requires_two_measurements"
+          ],
+          "artifact": "evaluation/raw/mobile.log: 83/83 tests passed, including journey-summary.test.ts.",
+          "boundary": "新增逻辑未提交；真实 AI 引用说明与实际运行态仍未在此轮独立确认。"
+        },
+        {
+          "issue_key": "v0.2-issue-FIX-10-summary",
+          "title": "专用结构化周期总结与缓存",
+          "status": "worktree_static",
+          "doc_evidence": [
+            "docs/v0.2问题文档.md:395-433"
+          ],
+          "commits": [],
+          "paths": [
+            "apps/mobile/src/app/(tabs)/journey.tsx",
+            "apps/mobile/src/lib/journey-summary.ts",
+            "apps/mobile/tests/journey-screen.test.tsx",
+            "backend/app/api/v1/agent.py:25-50",
+            "backend/app/services/agent_summary.py:50-424",
+            "backend/tests/test_agent_summary.py",
+            "backend/alembic/versions/0009_agent_summary_cache.py"
+          ],
+          "tests": [
+            "apps/mobile/tests/journey-screen.test.tsx:test_keeps_7-day_and_30-day_summaries_independent_and_closes_only_the_active_period",
+            "apps/mobile/tests/api.test.ts:%i-day_summary_uses_its_dedicated_authenticated_endpoint_without_a_prompt_body",
+            "backend/tests/test_agent_summary.py:test_thirty_day_summary_uses_backend_statistics_and_fingerprint_cache"
+          ],
+          "boundary": "代码、测试和迁移均未提交；文档声称后端 149 passed，但当前目录无对应执行产物。"
+        },
+        {
+          "issue_key": "v0.2-issue-FIX-11-empty-home",
+          "title": "首页无记录显示为空状态而非系统错误",
+          "status": "worktree_claim_with_mobile_artifact",
+          "doc_evidence": [
+            "docs/v0.2问题文档.md:434-450"
+          ],
+          "commits": [],
+          "paths": [
+            "apps/mobile/src/app/(tabs)/index.tsx:381-387",
+            "apps/mobile/tests/home-screen.test.tsx:385-404"
+          ],
+          "tests": [
+            "apps/mobile/tests/home-screen.test.tsx:test_shows_loading_a_friendly_empty_fallback_and_offline_Agent_degradation_explicitly"
+          ],
+          "artifact": "evaluation/raw/mobile.log: 83/83 tests passed.",
+          "boundary": "当前 worktree-only；没有单独后端或真实浏览器运行证据。"
+        },
+        {
+          "issue_key": "v0.2-issue-FIX-12-period-summary",
+          "title": "7天/30天总结状态隔离、关闭和门槛",
+          "status": "worktree_static",
+          "doc_evidence": [
+            "docs/v0.2问题文档.md:451-481"
+          ],
+          "commits": [],
+          "paths": [
+            "apps/mobile/src/app/(tabs)/journey.tsx",
+            "apps/mobile/tests/journey-screen.test.tsx:193-270",
+            "backend/app/services/agent_summary.py:43-47,246-273",
+            "backend/tests/test_agent_summary.py:229-290"
+          ],
+          "tests": [
+            "apps/mobile/tests/journey-screen.test.tsx:test_keeps_7-day_and_30-day_summaries_independent_and_closes_only_the_active_period",
+            "apps/mobile/tests/journey-screen.test.tsx:test_generates_actionable_7-day_guidance_once_two_recorded_days_are_available",
+            "apps/mobile/tests/journey-screen.test.tsx:test_shows_the_different_7-day_and_30-day_recording_thresholds_before_generation",
+            "backend/tests/test_agent_summary.py:test_summary_periods_enforce_separate_recorded_day_thresholds"
+          ],
+          "boundary": "当前 worktree-only；没有对应 backend test run artifact。"
+        },
+        {
+          "issue_key": "v0.2-issue-FIX-13-coaching",
+          "title": "AI 总结增加证据、含义、计划与数字验收",
+          "status": "worktree_static",
+          "doc_evidence": [
+            "docs/v0.2问题文档.md:482-529"
+          ],
+          "commits": [],
+          "paths": [
+            "backend/app/agent/skills/journey_coach.py:21-232",
+            "backend/app/services/agent_summary.py:274-385",
+            "backend/app/core/privacy.py:196-306",
+            "apps/mobile/src/app/(tabs)/journey.tsx",
+            "backend/tests/test_agent_summary.py:34-226",
+            "apps/mobile/tests/journey-screen.test.tsx"
+          ],
+          "tests": [
+            "backend/tests/test_agent_summary.py:test_coach_quality_gate_rejects_repetitive_advice",
+            "backend/tests/test_agent_summary.py:test_thirty_day_summary_only_retrieves_knowledge_when_goal_data_needs_it",
+            "backend/tests/test_agent_privacy.py:test_thirty_day_summary_prompt_only_sends_allowlisted_aggregates",
+            "apps/mobile/tests/journey-screen.test.tsx:test_generates_actionable_7-day_guidance_once_two_recorded_days_are_available"
+          ],
+          "boundary": "当前 implementation/test is uncommitted; document's 151 passed claim is not backed by a current backend execution artifact here."
+        }
+      ],
+      "planned_gaps_and_number_collisions": [
+        {
+          "issue_key": "v0.2-dev-FIX-04-service-status",
+          "display_id": "FIX-04",
+          "status": "planned_gap",
+          "development_doc": "docs/v0.2开发文档.md:15",
+          "problem": "首页把网络连接直接显示为 Agent 在线，计划要求区分 API readiness、Provider、预算和熔断状态。",
+          "current_issue_doc": "docs/v0.2问题文档.md has no FIX-04 heading.",
+          "nearby_evidence": [
+            "apps/mobile/tests/home-screen.test.tsx:test_shows_loading_a_friendly_empty_fallback_and_offline_Agent_degradation_explicitly",
+            "backend/tests/test_health.py"
+          ],
+          "decision": "Do not mark the development FIX-04 complete from the local network/offline UI tests; readiness/provider/budget/circuit-breaker coverage is not established by this inventory."
+        },
+        {
+          "display_id": "FIX-05",
+          "status": "number_collision",
+          "development_doc": "docs/v0.2开发文档.md:16 -> v0.2-dev-FIX-05-agent-run",
+          "problem_in_development_doc": "长 Agent 请求改为持久化异步 Run、进度、取消、重连和幂等恢复。",
+          "current_issue_doc": "docs/v0.2问题文档.md:245 -> v0.2-issue-FIX-05-registration",
+          "problem_in_current_issue_doc": "注册表单字段校验和错误提示。",
+          "decision": "Keep as two semantic issue keys; never deduplicate by display number."
+        },
+        {
+          "display_id": "FIX-06",
+          "status": "number_collision",
+          "development_doc": "docs/v0.2开发文档.md:17 -> v0.2-dev-FIX-06-memory",
+          "current_issue_doc": "docs/v0.2问题文档.md:268 -> v0.2-issue-FIX-06-profile-weight",
+          "decision": "Keep memory and profile-weight claims separate."
+        },
+        {
+          "display_id": "FIX-07",
+          "status": "number_collision",
+          "development_doc": "docs/v0.2开发文档.md:18 -> v0.2-dev-FIX-07-rag",
+          "current_issue_doc": "docs/v0.2问题文档.md:289 -> v0.2-issue-FIX-07-local-mode",
+          "decision": "Keep RAG and local personal mode claims separate."
+        },
+        {
+          "display_id": "FIX-08",
+          "status": "number_collision",
+          "development_doc": "docs/v0.2开发文档.md:19 -> v0.2-dev-FIX-08-otel",
+          "current_issue_doc": "docs/v0.2问题文档.md:321 -> v0.2-issue-FIX-08-candidate-confirmation",
+          "decision": "Keep observability and candidate UX claims separate."
+        },
+        {
+          "display_id": "FIX-09",
+          "status": "number_collision",
+          "development_doc": "docs/v0.2开发文档.md:20 -> v0.2-dev-FIX-09-user-ui",
+          "current_issue_doc": "docs/v0.2问题文档.md:357 -> v0.2-issue-FIX-09-candidate-and-metrics",
+          "decision": "Keep general user UI/theme and candidate/metrics claims separate."
+        },
+        {
+          "display_id": "FIX-10",
+          "status": "number_collision",
+          "development_doc": "docs/v0.2开发文档.md:21 -> v0.2-dev-FIX-10-release-evidence",
+          "current_issue_doc": "docs/v0.2问题文档.md:395 -> v0.2-issue-FIX-10-summary",
+          "decision": "Keep release evidence and summary implementation claims separate."
+        }
+      ]
+    },
+    "test_inventory": {
+      "current_mobile_execution_artifact": {
+        "log_path": "evaluation/raw/mobile.log",
+        "json_path": "evaluation/raw/mobile.json",
+        "artifact_mtime": "2026-09-11T10:06:14+0800",
+        "command_in_log": "jest --runInBand --json --outputFile=/Users/p668/Documents/journeyapp/evaluation/raw/mobile.json",
+        "result": {
+          "suites_total": 17,
+          "suites_passed": 17,
+          "tests_total": 83,
+          "tests_passed": 83,
+          "tests_failed": 0,
+          "was_interrupted": false,
+          "reported_time_seconds": 4.38
+        },
+        "tests_by_file": {
+          "apps/mobile/tests/api.test.ts": 11,
+          "apps/mobile/tests/agent-privacy-screen.test.tsx": 5,
+          "apps/mobile/tests/auth-provider.test.tsx": 1,
+          "apps/mobile/tests/environment.test.ts": 3,
+          "apps/mobile/tests/food-image-screen.test.tsx": 9,
+          "apps/mobile/tests/home-screen.test.tsx": 11,
+          "apps/mobile/tests/inspirations-screen.test.tsx": 4,
+          "apps/mobile/tests/journey-screen.test.tsx": 4,
+          "apps/mobile/tests/journey-summary.test.ts": 3,
+          "apps/mobile/tests/layout-contract.test.ts": 8,
+          "apps/mobile/tests/local-replica.test.ts": 4,
+          "apps/mobile/tests/pending-storage.test.ts": 3,
+          "apps/mobile/tests/profile-settings-screen.test.tsx": 2,
+          "apps/mobile/tests/record-agent-deletion.test.tsx": 2,
+          "apps/mobile/tests/sign-in-screen.test.tsx": 5,
+          "apps/mobile/tests/sync-provider.test.tsx": 5,
+          "apps/mobile/tests/ui.test.tsx": 3
+        },
+        "interpretation": "This supports current client tests only; it is untracked and does not establish backend, browser, simulator, or release behavior."
+      },
+      "parent_reported_runtime_evidence": {
+        "source": "parent agent report received 2026-09-11",
+        "backend": {
+          "tests_total": 140,
+          "passed": 139,
+          "failed": 1,
+          "pass_rate": 0.9928571429,
+          "failure": "summary cache timestamp string differs in UTC/+08 representation",
+          "status": "reported_not_independently_replayed"
+        },
+        "new_confirmation_scenarios": {
+          "passed": 6,
+          "status": "reported_not_independently_replayed",
+          "path_or_test": "not supplied in report"
+        },
+        "interpretation": "Supplementary runtime evidence only; the exact command/test path was not supplied, and one backend test remains failing. These results do not convert current worktree-only FIX-05 through FIX-13 entries into committed fixes."
+      },
+      "current_backend_static_inventory": {
+        "pytest_files": 19,
+        "test_declarations": 113,
+        "blackbox_files": 1,
+        "blackbox_test_declarations": 2,
+        "eval_test_files": 6,
+        "method": "rg declaration count; parameterized expansion and pass/fail status are not inferred.",
+        "execution_status": "Our pass did not locate a current backend test artifact. The parent report supplies a non-independent result of 139/140 with one summary-cache timestamp failure. evaluation/raw/postgres-init.log records an attempted temporary PostgreSQL init failing with Operation not permitted on shmget; no test result should be inferred from that log."
+      },
+      "representative_backend_test_declarations_by_file": {
+        "backend/tests/test_agent_api.py": 7,
+        "backend/tests/test_agent_privacy.py": 18,
+        "backend/tests/test_agent_summary.py": 4,
+        "backend/tests/test_agent_unit.py": 17,
+        "backend/tests/test_agent_v2.py": 7,
+        "backend/tests/test_agent_v3.py": 6,
+        "backend/tests/test_auth.py": 6,
+        "backend/tests/test_bootstrap_and_contract.py": 2,
+        "backend/tests/test_core_e2e.py": 1,
+        "backend/tests/test_food_image_api.py": 7,
+        "backend/tests/test_food_image_unit.py": 2,
+        "backend/tests/test_health.py": 3,
+        "backend/tests/test_inspirations.py": 6,
+        "backend/tests/test_profile.py": 2,
+        "backend/tests/test_provider_review.py": 2,
+        "backend/tests/test_records_and_aggregates.py": 3,
+        "backend/tests/test_restore_privacy.py": 1,
+        "backend/tests/test_settings.py": 16,
+        "backend/tests/test_sync_conflicts.py": 3
+      }
+    },
+    "historical_commits": [
+      {
+        "ref": "2654c43",
+        "date": "2026-08-05",
+        "subject": "refactor: migrate Journey to cross-platform agent app",
+        "evidence_role": "Cross-platform Expo/FastAPI/PostgreSQL baseline, Agent v1/v2/v3 boundaries, initial API/test/eval inventory."
+      },
+      {
+        "ref": "ee88b7e",
+        "date": "2026-08-21",
+        "subject": "feat: finalize Journey portfolio demo",
+        "evidence_role": "Local-first replica/outbox/conflict flow, inspirations, Agent v3 and RAG eval/report additions."
+      },
+      {
+        "ref": "e12da31",
+        "date": "2026-08-21",
+        "subject": "feat: publish Journey portfolio demo",
+        "evidence_role": "Reachable published baseline containing the core test suites, eval datasets and reports later refined by ee88b7e."
+      },
+      {
+        "ref": "257a36a",
+        "date": "2026-09-01",
+        "subject": "feat: complete Journey v0.2 privacy safeguards",
+        "evidence_role": "Committed FIX-01/FIX-02 engineering safeguards and FIX-03 authorization, privacy, deletion, backup and restore controls."
+      },
+      {
+        "ref": "c6a1d14",
+        "date": "2026-09-02",
+        "subject": "docs: refine onboarding and portfolio demo guide",
+        "evidence_role": "Current HEAD; updates onboarding/CI/demo documentation only."
+      }
+    ],
+    "quantitative_summary": {
+      "issue_counts": {
+        "v01_issue_keys": 5,
+        "v02_development_issue_keys": 10,
+        "v02_current_problem_doc_issue_keys": 12,
+        "v02_shared_display_numbers": 9,
+        "v02_semantic_number_collisions": 6,
+        "v02_current_problem_doc_missing_display_number": [
+          "FIX-04"
+        ],
+        "v02_current_problem_doc_additions_after_257a36a": 9,
+        "v02_current_problem_doc_only_new_numbers": [
+          "FIX-11",
+          "FIX-12",
+          "FIX-13"
+        ]
+      },
+      "evidence_status_counts_for_12_current_v02_problem_entries": {
+        "committed_code_and_test": 2,
+        "committed_partial": 1,
+        "worktree_claim_with_mobile_artifact": 4,
+        "worktree_static": 5,
+        "docs_claim_only": 0,
+        "formula": "2 + 1 + 4 + 5 = 12; worktree statuses are not counted as committed fixes."
+      },
+      "historical_v01_status_counts": {
+        "committed_code_and_test": 3,
+        "committed_partial": 2,
+        "formula": "V01-01, V01-02, V01-04 committed; V01-03 retains citation-quality boundary; V01-05 closes risk while quality gates remain failed."
+      },
+      "current_client_test_counts": {
+        "executed_suites": 17,
+        "executed_tests": 83,
+        "passed_tests": 83,
+        "pass_rate": 1.0
+      },
+      "current_backend_execution_counts": {
+        "executed_tests": 140,
+        "passed_tests": 139,
+        "failed_tests": 1,
+        "pass_rate": 0.9928571429,
+        "source": "parent agent report received 2026-09-11",
+        "status": "reported_not_independently_replayed",
+        "reason": "Parent report states 139/140 passed; the one failure is a summary-cache timestamp string mismatch between UTC and +08 representations. Exact command/test path was not supplied."
+      }
+    },
+    "limitations_and_follow_up": [
+      "The current worktree is dirty; claims tied to 257a36a must be separated from later uncommitted edits before calling the whole worktree released.",
+      "The current issue document states FIX-05 through FIX-13 as completed, but these entries are uncommitted and several backend pass counts exist only in prose.",
+      "The untracked mobile artifact is internally consistent at 17/17 suites and 83/83 tests, but its JSON endTime is null; the accompanying log supplies the reported completion line.",
+      "No current backend test, coverage, migration, browser E2E, iOS simulator, Android, provider, or production deployment artifact was independently confirmed in this pass. The parent report supplies 139/140 backend tests and 6 new confirmation scenarios as non-independent runtime evidence; one backend test remains failing and the exact command/test path was not supplied.",
+      "The current backend temporary PostgreSQL initialization failed at shmget Operation not permitted; do not interpret that as a product test failure or success. The parent-reported 139/140 result was not replayed here.",
+      "Mock eval latest.json passes its configured gates, while historical real Qwen image reports remain below quality gates; do not combine these metrics.",
+      "Supplier-side deletion, real provider authorization, backup scheduling/key management, and public release remain material boundaries explicitly documented for FIX-03."
+    ],
+    "parent_verified_current_run": {
+      "backend_artifact": "evaluation/raw/backend.xml",
+      "passed": 139,
+      "total": 140,
+      "reliability_artifact": [
+        "evaluation/raw/reliability.xml",
+        "evaluation/raw/run-reexecution.xml"
+      ],
+      "note": "Supersedes worker progress snapshot; temporary PostgreSQL start succeeded on escalated retry. This file is evidence inventory, not final metric authority."
+    },
+    "accepted_resume_fix_count": {
+      "count": 2,
+      "classification": {
+        "functional": 1,
+        "exception": 0,
+        "data": 1
+      },
+      "items": [
+        {
+          "id": "v0.2-FIX-01",
+          "category": "functional",
+          "commit": "257a36adbd07e46b3c781c75cdd6826e122faf8a",
+          "evidence": "docs/v0.2问题文档.md:8; environment gates and regression tests"
+        },
+        {
+          "id": "v0.2-FIX-02",
+          "category": "data",
+          "commit": "257a36adbd07e46b3c781c75cdd6826e122faf8a",
+          "evidence": "docs/v0.2问题文档.md:42; citation validation and regression tests"
+        }
+      ],
+      "rule": "Count one documented defect group once only when committed code and regression test evidence both exist; exclude migration/new capability work, partial closure, uncommitted claims and evaluation harness corrections. This is a conservative verified subset, not an exhaustive lifetime bug total. AI authorship not established."
+    }
+  }
+}

@@ -126,6 +126,27 @@ class AgentConfirmation(Base):
     )
 
 
+class AgentSummaryCache(Base):
+    __tablename__ = "agent_summary_caches"
+    __table_args__ = (Index("ix_agent_summary_caches_updated", "updated_at"),)
+
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), primary_key=True
+    )
+    period_days: Mapped[int] = mapped_column(Integer, primary_key=True)
+    fingerprint: Mapped[str] = mapped_column(String(64), nullable=False)
+    statistics: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
+    content: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
+    citations: Mapped[list[dict[str, Any]]] = mapped_column(JSON, default=list, nullable=False)
+    provider: Mapped[str] = mapped_column(String(40), nullable=False)
+    model: Mapped[str] = mapped_column(String(160), nullable=False)
+    fallback_used: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    generated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utc_now, onupdate=utc_now, nullable=False
+    )
+
+
 @event.listens_for(Session, "before_flush")
 def redact_agent_operational_data(session, flush_context, instances) -> None:
     for item in session.new | session.dirty:

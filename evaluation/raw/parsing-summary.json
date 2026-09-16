@@ -1,0 +1,371 @@
+{
+  "configuration": {
+    "configuration_sha256": "3e9ca149a0bb6b4ff4121df951d69edee970814b3aa5bf97c4af2d8c170193bc",
+    "models": {
+      "activity_text_parse": {
+        "adapter_max_retries": 0,
+        "max_output_tokens": 2048,
+        "requested_model": "deepseek-v4-flash",
+        "router_max_retries": 1,
+        "structured_output": true,
+        "temperature": 0,
+        "timeout_seconds": 30
+      },
+      "food_text_parse": {
+        "adapter_max_retries": 0,
+        "max_output_tokens": 2048,
+        "requested_model": "deepseek-v4-flash",
+        "router_max_retries": 1,
+        "structured_output": true,
+        "temperature": 0,
+        "timeout_seconds": 30
+      },
+      "intent_classification": {
+        "adapter_max_retries": 0,
+        "max_output_tokens": 2048,
+        "requested_model": "deepseek-v4-flash",
+        "router_max_retries": 1,
+        "structured_output": true,
+        "temperature": 0,
+        "timeout_seconds": 30
+      }
+    },
+    "prompts": {
+      "activity_text_parse": {
+        "sha256": "e471a765ffcda324bc02a123f146ca055b34f737f984ae6a8dcc401161c89565",
+        "version": "activity-text-parse-1.0.0"
+      },
+      "food_text_parse": {
+        "sha256": "e395e5cae7307ed32bc3751b85fc9178a56c94dd2b72b0c988baf468794efc27",
+        "version": "food-text-parse-1.0.0"
+      },
+      "intent_classification": {
+        "sha256": "af3d967d5d0dc7bec8004168111bbed5a049ee9a976b9b46dd8a35f34f813c0a",
+        "version": "intent-router-1.0.1"
+      }
+    },
+    "provider": "deepseek",
+    "schemas": {
+      "activity_text_parse": {
+        "json_schema_sha256": "f152067ac029c923745dc4aa4f1a933403bf0cdba38f381f73cad741ae31c960",
+        "module": "app.schemas.agent",
+        "name": "ActivityParsed"
+      },
+      "food_text_parse": {
+        "json_schema_sha256": "9dcffd6242c65320a4822152528b8b20f298c6fc81d16684900dc87e6e9090c6",
+        "module": "app.schemas.agent",
+        "name": "FoodParsed"
+      },
+      "intent_classification": {
+        "json_schema_sha256": "97ddd00990ff6aee5e2d14f9f193a949a680c2b29aadb56ad3d4d9cbaac78ce8",
+        "module": "app.schemas.agent",
+        "name": "IntentPlan"
+      }
+    }
+  },
+  "counts": {
+    "ai_success_invocations": 148,
+    "case_statuses": {
+      "fail": 15,
+      "insufficient": 3,
+      "mixed": 2,
+      "partial_pass_unscored_fields": 45,
+      "pass": 6,
+      "unjudgeable": 3
+    },
+    "fallback_invocations": 0,
+    "invocations": 148,
+    "schema_limited_or_unjudgeable_cases": 8
+  },
+  "dataset": {
+    "activity_cases": 28,
+    "cases": 74,
+    "completed_rows": 74,
+    "food_cases": 46,
+    "path": "/Users/p668/Documents/journeyapp/evaluation/datasets/health_v1.json",
+    "remaining_rows": 0
+  },
+  "dataset_sha256": "a96ba6bce9c0ecee283cbbbc3557f9f66f867017f95094a7c503ecabbec6862c",
+  "dataset_version": "journey-health-record-parsing-v1",
+  "evaluation_version": "journey-health-parsing-eval-1.0.0",
+  "execution_mode": "real",
+  "generated_at": "2026-09-11T07:39:51.637388+00:00",
+  "gold_status": "agent_authored_pending_human_review",
+  "limitations": [
+    "gold is agent-authored and pending human review; no human-review claim is made",
+    "energy is scored only when an explicit kcal value appears in the input",
+    "quantity is scored only for an input-determinable explicit amount and unit; ambiguous or missing quantity is retained as unscored",
+    "FoodParsed and ActivityParsed each expose one name, so multi-item inputs remain explicit schema failures",
+    "operation metadata for modification/repeat/delete is recorded but is not represented in the current parsing schemas",
+    "fallback outputs are retained for diagnosis and excluded from every AI-success metric"
+  ],
+  "metrics": {
+    "activity": {
+      "duration_minutes": {
+        "exact": 1.0,
+        "fallback_matches_ignored": 0,
+        "matched": 23,
+        "matched_without_fallback_filter": 23,
+        "scored": 23,
+        "unscored": 5
+      },
+      "explicit_energy_kcal": {
+        "exact": 1.0,
+        "fallback_matches_ignored": 0,
+        "matched": 2,
+        "matched_without_fallback_filter": 2,
+        "scored": 2,
+        "unscored": 26
+      },
+      "intensity": {
+        "exact": 1.0,
+        "fallback_matches_ignored": 0,
+        "matched": 12,
+        "matched_without_fallback_filter": 12,
+        "scored": 12,
+        "unscored": 16
+      },
+      "item_recognition": {
+        "exact": 0.653846,
+        "fallback_matches_ignored": 0,
+        "matched": 17,
+        "matched_without_fallback_filter": 17,
+        "scored": 26,
+        "unscored": 2
+      },
+      "name": {
+        "exact": 0.653846,
+        "fallback_matches_ignored": 0,
+        "matched": 17,
+        "matched_without_fallback_filter": 17,
+        "scored": 26,
+        "unscored": 2
+      }
+    },
+    "case_pass_rate": {
+      "completed": 74,
+      "passed": 51,
+      "rate": 0.689189
+    },
+    "food": {
+      "explicit_energy_kcal": {
+        "exact": 1.0,
+        "fallback_matches_ignored": 0,
+        "matched": 6,
+        "matched_without_fallback_filter": 6,
+        "scored": 6,
+        "unscored": 40
+      },
+      "item_recognition": {
+        "exact": 0.880952,
+        "fallback_matches_ignored": 0,
+        "matched": 37,
+        "matched_without_fallback_filter": 37,
+        "scored": 42,
+        "unscored": 4
+      },
+      "meal_type": {
+        "exact": 0.966667,
+        "fallback_matches_ignored": 0,
+        "matched": 29,
+        "matched_without_fallback_filter": 29,
+        "scored": 30,
+        "unscored": 16
+      },
+      "name": {
+        "exact": 1.0,
+        "fallback_matches_ignored": 0,
+        "matched": 37,
+        "matched_without_fallback_filter": 37,
+        "scored": 37,
+        "unscored": 9
+      },
+      "quantity": {
+        "exact": 1.0,
+        "fallback_matches_ignored": 0,
+        "matched": 28,
+        "matched_without_fallback_filter": 28,
+        "scored": 28,
+        "unscored": 18
+      }
+    },
+    "fully_scored_case_pass_rate": {
+      "fully_scored": 7,
+      "passed": 6,
+      "rate": 0.857143
+    },
+    "route_intents_exact": {
+      "exact": 0.932432,
+      "fallback_matches_ignored": 0,
+      "matched": 69,
+      "matched_without_fallback_filter": 69,
+      "scored": 74,
+      "unscored": 0
+    }
+  },
+  "raw_jsonl": "/Users/p668/Documents/journeyapp/evaluation/raw/parsing.jsonl",
+  "scenario_counts": {
+    "activity_duration_only": {
+      "cases": 10,
+      "failed": 3,
+      "passed": 7
+    },
+    "activity_explicit_energy": {
+      "cases": 2,
+      "failed": 1,
+      "passed": 1
+    },
+    "activity_explicit_intensity": {
+      "cases": 9,
+      "failed": 3,
+      "passed": 6
+    },
+    "breakfast_explicit_quantity": {
+      "cases": 2,
+      "failed": 0,
+      "passed": 2
+    },
+    "delete_unjudgeable": {
+      "cases": 1,
+      "failed": 1,
+      "passed": 0
+    },
+    "drink_explicit_energy": {
+      "cases": 2,
+      "failed": 0,
+      "passed": 2
+    },
+    "drink_explicit_quantity": {
+      "cases": 4,
+      "failed": 0,
+      "passed": 4
+    },
+    "drink_missing_quantity": {
+      "cases": 2,
+      "failed": 1,
+      "passed": 1
+    },
+    "duplicate_input": {
+      "cases": 2,
+      "failed": 1,
+      "passed": 1
+    },
+    "duration_ambiguous": {
+      "cases": 1,
+      "failed": 0,
+      "passed": 1
+    },
+    "insufficient_duration": {
+      "cases": 2,
+      "failed": 2,
+      "passed": 0
+    },
+    "insufficient_record_detail": {
+      "cases": 1,
+      "failed": 1,
+      "passed": 0
+    },
+    "meal_missing_label": {
+      "cases": 1,
+      "failed": 0,
+      "passed": 1
+    },
+    "mixed_kind_schema_limit": {
+      "cases": 2,
+      "failed": 2,
+      "passed": 0
+    },
+    "modification": {
+      "cases": 1,
+      "failed": 0,
+      "passed": 1
+    },
+    "modification_ambiguous_quantity": {
+      "cases": 1,
+      "failed": 0,
+      "passed": 1
+    },
+    "modification_missing_intensity": {
+      "cases": 1,
+      "failed": 0,
+      "passed": 1
+    },
+    "multi_food_missing_quantity": {
+      "cases": 1,
+      "failed": 1,
+      "passed": 0
+    },
+    "multi_food_schema_limit": {
+      "cases": 4,
+      "failed": 4,
+      "passed": 0
+    },
+    "quantity_ambiguous": {
+      "cases": 3,
+      "failed": 0,
+      "passed": 3
+    },
+    "quantity_missing": {
+      "cases": 1,
+      "failed": 0,
+      "passed": 1
+    },
+    "single_explicit_energy": {
+      "cases": 2,
+      "failed": 0,
+      "passed": 2
+    },
+    "single_explicit_quantity": {
+      "cases": 6,
+      "failed": 0,
+      "passed": 6
+    },
+    "single_fuzzy_unit": {
+      "cases": 1,
+      "failed": 0,
+      "passed": 1
+    },
+    "snack_ambiguous_quantity": {
+      "cases": 3,
+      "failed": 1,
+      "passed": 2
+    },
+    "snack_explicit_energy": {
+      "cases": 2,
+      "failed": 0,
+      "passed": 2
+    },
+    "snack_explicit_quantity": {
+      "cases": 4,
+      "failed": 0,
+      "passed": 4
+    },
+    "snack_missing_quantity": {
+      "cases": 1,
+      "failed": 0,
+      "passed": 1
+    },
+    "unjudgeable_activity": {
+      "cases": 1,
+      "failed": 1,
+      "passed": 0
+    },
+    "unjudgeable_statement": {
+      "cases": 1,
+      "failed": 1,
+      "passed": 0
+    }
+  },
+  "schema_version": "journey-health-parsing-summary-1",
+  "started_at": "2026-09-11T07:37:04.199971+00:00",
+  "status": "complete",
+  "summary_path": "/Users/p668/Documents/journeyapp/evaluation/raw/parsing-summary.json",
+  "usage": {
+    "estimated_cost_usd": 0.0134708,
+    "input_tokens": 69032,
+    "latency_p50_ms": 2197,
+    "latency_p95_ms": 2959,
+    "output_tokens": 13594,
+    "retries": 0
+  }
+}

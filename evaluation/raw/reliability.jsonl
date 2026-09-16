@@ -1,0 +1,7 @@
+{"scenario": "normal", "rows_before": 0, "rows_after": 1, "extra_rows": 0, "status": 201, "replay_status": null}
+{"scenario": "edited", "rows_before": 1, "rows_after": 2, "extra_rows": 0, "status": 201, "replay_status": null}
+{"scenario": "double_click", "rows_before": 2, "rows_after": 3, "extra_rows": 0, "status": 201, "replay_status": 201}
+{"scenario": "retry", "rows_before": 3, "rows_after": 4, "extra_rows": 0, "status": 201, "replay_status": 201}
+{"scenario": "lost_response", "rows_before": 4, "rows_after": 5, "extra_rows": 0, "status": 201, "replay_status": 201}
+{"scenario": "same_task", "rows_before": 5, "rows_after": 6, "extra_rows": 0, "status": 201, "replay_status": 409}
+{"scenario": "same_run_request_reexecuted", "rows_before": 6, "rows_after": 8, "extra_rows": 1, "run_ids": ["f8c822b4-5bb3-413c-a993-60d11c74aca2", "4610a57c-e5fa-4355-b9ea-59e1915fcd82"], "confirmation_statuses": [201, 201]}

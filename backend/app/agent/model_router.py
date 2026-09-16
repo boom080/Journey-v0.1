@@ -301,11 +301,15 @@ class ModelRouter:
         system_prompt: str,
         user_prompt: str,
         fallback_factory: Callable[[], OutputT],
+        max_retries: int | None = None,
     ) -> ModelInvocation:
         self.authorize()
         model = self.model_for(capability)
         started = time.perf_counter()
-        attempts = self.settings.agent_max_retries + 1
+        configured_retries = (
+            self.settings.agent_max_retries if max_retries is None else max(0, max_retries)
+        )
+        attempts = configured_retries + 1
         last_error: Exception | None = None
         private_values = self.private_values()
         with tracer.start_as_current_span(
